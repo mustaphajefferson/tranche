@@ -52,8 +52,14 @@ button{font:inherit;color:inherit}
 .l-tag{font-family:var(--f-text);font-style:italic;font-size:clamp(18px,2.2vw,26px);margin:0;max-width:26ch;line-height:1.3}
 .l-cta{border:0;background:var(--rub);color:#fff;padding:18px 30px;border-radius:999px;font-weight:700;font-stretch:90%;font-size:16px;cursor:pointer;transition:transform .35s var(--ease)}
 .l-cta:hover{transform:scale(1.06) rotate(-2deg)}
-.l-shelf{display:flex;align-items:flex-end;gap:2px;height:150px;margin:0 -16px;overflow:hidden;border-bottom:2px solid var(--ink)}
-.l-shelf span{flex:none;border-radius:2px 2px 0 0;animation:rise 1s var(--ease) both}
+.l-shelf{height:160px;margin:0 -16px;overflow:hidden;border-bottom:2px solid var(--ink)}
+.l-track{display:flex;align-items:flex-end;gap:2px;height:100%;width:max-content;animation:drift 90s linear 2.2s infinite}
+.l-track span{flex:none;border-radius:2px 2px 0 0;animation:rise 1s var(--ease) both;transition:transform .35s var(--ease)}
+.l-track span:hover{transform:translateY(-14px)}
+@keyframes drift{to{transform:translateX(-50%)}}
+.l-title .ch{display:inline-block;animation:letter 1.1s var(--ease) both}
+@keyframes letter{from{opacity:0;transform:translateY(.35em) rotate(-8deg);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
+.l-tag,.l-cta{animation:fadein .9s 1.4s both}
 @keyframes rise{from{transform:translateY(105%)}to{transform:none}}
 
 /* ---------- Scène ---------- */
@@ -80,6 +86,7 @@ button{font:inherit;color:inherit}
   background:linear-gradient(90deg,rgba(0,0,0,.3),rgba(0,0,0,0) 12%),var(--c);border-radius:0 2px 2px 0}
 .pg{position:absolute;left:0;top:0;width:calc(var(--h)*.64);height:7px;transform-origin:0 0;transform:rotateX(-90deg);background:repeating-linear-gradient(0deg,var(--pages) 0 1px,#cfc7b4 1px 2px)}
 .cov,.pg{visibility:hidden}
+.cov.img{background-size:cover;background-position:center}
 .book:hover .cov,.book:hover .pg,.book:focus-visible .cov{visibility:visible}
 .book:hover .spine,.book:focus-visible .spine{transform:perspective(900px) translateY(-12px) translateZ(40px) rotateY(-34deg)}
 .book.dusty .spine{filter:saturate(.1) contrast(.75) brightness(1.08)}
@@ -105,11 +112,15 @@ button{font:inherit;color:inherit}
 .fab{position:fixed;z-index:12;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--rub);cursor:pointer;
   display:grid;place-items:center;transition:transform .45s var(--ease)}
 .fab svg{width:34px;height:34px}
-.fab[aria-expanded="true"]{transform:rotate(135deg)}
-.menu{position:fixed;z-index:11;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(90px + env(safe-area-inset-bottom,0px));width:min(300px,calc(100vw - 32px));
+.fab:hover{transform:rotate(90deg) scale(1.08)}
+.book.fresh .sf{box-shadow:0 0 0 3px var(--rub)}
+.tr{position:fixed;z-index:12;top:calc(18px + env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:6px}
+.tlink{border:0;background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:999px;padding:6px 14px 8px;font-family:var(--f-big);font-weight:700;font-size:22px;cursor:pointer;color:var(--ink);transition:color .25s}
+.tlink:hover,.tlink[aria-expanded="true"]{color:var(--rub)}
+.menu{position:fixed;z-index:11;right:max(16px,env(safe-area-inset-right,0px));top:calc(70px + env(safe-area-inset-top,0px));width:min(300px,calc(100vw - 32px));
   background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:22px;padding:18px 20px;display:grid;gap:16px;
   border:1px solid color-mix(in srgb,var(--ink) 10%,transparent);box-shadow:0 20px 60px -20px var(--shadow);
-  transform-origin:100% 100%;transform:scale(.6) translateY(20px);opacity:0;pointer-events:none;transition:.4s var(--ease)}
+  transform-origin:100% 0;transform:scale(.6) translateY(-20px);opacity:0;pointer-events:none;transition:.4s var(--ease)}
 .menu.on{transform:none;opacity:1;pointer-events:auto}
 .menu h4{margin:0 0 4px;font-size:11px;font-weight:600;font-stretch:90%;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
 .opts{display:flex;flex-wrap:wrap;gap:2px 14px}
@@ -179,6 +190,48 @@ button{font:inherit;color:inherit}
   .sh{flex-direction:column;align-items:stretch;gap:40px}
   .b3{align-self:center}
 }
+/* ---------- Panneaux (ajout, reader) ---------- */
+.panel{position:fixed;inset:0;z-index:40;background:var(--paper);overflow-y:auto;opacity:0;pointer-events:none;transform:translateY(24px);transition:.5s var(--ease);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:calc(24px + env(safe-area-inset-top,0px)) 80px}
+.panel.on{opacity:1;pointer-events:auto;transform:none}
+.pin{max-width:1100px;margin:0 auto;display:grid;gap:28px}
+.phead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.phead h2{margin:0;font-size:clamp(54px,9vw,120px)}
+.phead p{margin:8px 0 0;color:var(--ink-soft);font-size:15px;max-width:52ch;line-height:1.5}
+.pclose{border:0;background:none;font-family:var(--f-goth);font-size:44px;line-height:1;color:var(--rub);cursor:pointer;padding:0 4px}
+.sec h3{margin:0 0 12px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--rub)}
+.frm{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;align-items:end}
+.fld{display:grid;gap:6px;font-size:12px;font-weight:600;color:var(--ink-soft)}
+.fld input,.fld select{font:inherit;font-size:17px;font-weight:500;color:var(--ink);background:none;border:0;border-bottom:2px solid var(--ink);padding:8px 0;border-radius:0;min-width:0}
+.fld input:focus,.fld select:focus{outline:none;border-color:var(--rub)}
+.res{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px}
+.rc{border:0;background:none;padding:0;text-align:left;cursor:pointer;display:grid;gap:6px;font-size:13px;line-height:1.35}
+.rc .im{aspect-ratio:2/3;background:var(--paper-2);background-size:cover;background-position:center;border-radius:2px 4px 4px 2px;box-shadow:0 6px 16px -8px var(--shadow);outline:3px solid transparent;outline-offset:3px;transition:outline-color .2s,transform .3s var(--ease)}
+.rc:hover .im{transform:translateY(-4px)}
+.rc[aria-pressed="true"] .im{outline-color:var(--rub)}
+.rc b{font-weight:700;font-size:14px}
+.rc span{color:var(--ink-soft)}
+.fmts{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.fm{border:0;background:none;cursor:pointer;display:grid;justify-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--ink-soft)}
+.fm i{display:block;width:calc(var(--fh)*.66);height:var(--fh);border:2px solid currentColor;border-radius:2px 4px 4px 2px}
+.fm[aria-pressed="true"]{color:var(--rub)}
+.fm[aria-pressed="true"] i{background:color-mix(in srgb,var(--rub) 12%,transparent)}
+.msg{font-size:14px;color:var(--ink-soft);margin:0}
+/* Reader */
+.cont{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.cc{border-top:2px solid var(--ink);padding-top:14px;display:grid;gap:10px}
+.cc h4{margin:0;font-family:var(--f-big);font-weight:800;font-size:34px;line-height:.95}
+.cc .meta{font-size:13px;color:var(--ink-soft)}
+.bar{height:4px;background:var(--paper-2);border-radius:2px;overflow:hidden}.bar i{display:block;height:100%;background:var(--rub);width:var(--p)}
+.coll{display:grid;gap:22px}
+.coll h5{margin:0;font-family:var(--f-big);font-weight:800;font-size:28px;color:var(--rub)}
+.ser{display:grid;grid-template-columns:minmax(140px,220px) 1fr;gap:6px 20px;align-items:end}
+.ser .nm{font-weight:700;font-size:15px}.ser .nm span{display:block;font-weight:400;font-size:12.5px;color:var(--ink-soft);margin-top:3px}
+.vols{display:flex;flex-wrap:wrap;gap:2px;align-items:flex-end}
+.vols i{width:7px;height:46px;border-radius:1px;background:var(--c)}
+.vols i.u{background:none;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ink) 30%,transparent)}
+.vols i.cur{height:56px;box-shadow:0 0 0 2px var(--rub)}
+@media (max-width:640px){.ser{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
 </style>
 </head>
@@ -203,7 +256,8 @@ button{font:inherit;color:inherit}
 <svg id="ink" aria-hidden="true"><path id="inkp" d=""/></svg>
 <div class="logo" aria-hidden="true">T</div>
 
-<button class="fab" id="fab" aria-expanded="false" aria-controls="menu" aria-label="Affichage"><svg viewBox="0 0 40 40" aria-hidden="true" fill="currentColor"><path d="M20 2l4 4-1.6 14 1.6 14-4 4-4-4 1.6-14L16 6z"/><path d="M2 20l4-4 14 1.6 14-1.6 4 4-4 4-14-1.6L6 24z"/><path d="M20 15l5 5-5 5-5-5z" fill="var(--paper)"/></svg></button>
+<nav class="tr"><button class="tlink" id="openMenu" aria-expanded="false" aria-controls="menu">Ranger</button><button class="tlink" id="openReader">Reader</button></nav>
+<button class="fab" id="fab" aria-label="Ajouter un livre" title="Ajouter un livre"><svg viewBox="0 0 40 40" aria-hidden="true" fill="currentColor"><path d="M20 2l4 4-1.6 14 1.6 14-4 4-4-4 1.6-14L16 6z"/><path d="M2 20l4-4 14 1.6 14-1.6 4 4-4 4-14-1.6L6 24z"/><path d="M20 15l5 5-5 5-5-5z" fill="var(--paper)"/></svg></button>
 <div class="menu" id="menu" role="dialog" aria-label="Affichage">
   <div><h4>Vue</h4><div class="opts big" id="layouts">
     <button data-l="etagere" aria-pressed="true">Étagère</button>
@@ -219,11 +273,38 @@ button{font:inherit;color:inherit}
   <p>Deux doigts pour naviguer, pincer pour zoomer. <b>Maj + glisser</b> (ou le stylet) dessine une étagère. Les livres pâles prennent la poussière : ouvre-les.</p>
   <div class="soon">
     <button data-soon="La wish list arrive bientôt : les livres que tu veux, pour les idées cadeaux.">Wish list</button>
-    <button data-soon="Le Reader (mangas .cbz, romans .epub) viendra beaucoup plus tard.">Reader</button>
   </div>
 </div>
 
 <div class="toast" id="toast" role="status"></div>
+
+<section class="panel" id="add" aria-label="Ajouter un livre"><div class="pin">
+  <div class="phead"><div><h2 class="big">Ajouter un livre</h2><p>Tape le titre et l'auteur : l'app cherche la couverture, l'année et le nombre de pages. Choisis ensuite le format, pour que la tranche ait la même taille que sur ton étagère.</p></div><button class="pclose" aria-label="Fermer">×</button></div>
+  <form id="a-form" class="frm" autocomplete="off">
+    <label class="fld" for="a-t">Titre<input id="a-t" placeholder="L'Étranger" required></label>
+    <label class="fld" for="a-a">Auteur<input id="a-a" placeholder="Albert Camus"></label>
+    <div><button class="btn" type="submit">Chercher</button></div>
+  </form>
+  <p class="msg" id="a-msg"></p>
+  <div class="res" id="a-res"></div>
+  <div class="sec"><h3>Format</h3><div class="fmts" id="fmts"></div></div>
+  <div class="frm">
+    <label class="fld" for="a-cm">Hauteur exacte (cm)<input id="a-cm" type="number" step="0.1" min="8" max="60"></label>
+    <label class="fld" for="a-p">Pages<input id="a-p" type="number" min="1" placeholder="250"></label>
+    <label class="fld" for="a-g">Catégorie<select id="a-g"></select></label>
+    <label class="fld" for="a-y">Lu en<input id="a-y" type="number" min="1950" max="2100"></label>
+  </div>
+  <div class="acts"><button class="btn" id="a-add" type="button">Ranger sur l'étagère</button></div>
+  <p class="msg">Ensuite, dans l'app : le résumé complet de l'intrigue est généré par l'IA, et tu peux prendre en photo la vraie tranche.</p>
+</div></section>
+
+<section class="panel" id="reader" aria-label="Reader"><div class="pin">
+  <div class="phead"><div><h2 class="big">Reader</h2><p>Aperçu de l'organisation : mangas en cours, collections et séries terminées. L'import et la lecture des fichiers .cbz et .epub viendront plus tard.</p></div><button class="pclose" aria-label="Fermer">×</button></div>
+  <div class="sec"><h3>En cours</h3><div class="cont" id="r-cur"></div></div>
+  <div class="sec"><h3>Collections</h3><div class="coll" id="r-coll"></div></div>
+  <div class="sec"><h3>Terminés</h3><div class="cont" id="r-done"></div></div>
+  <div class="acts"><button class="btn ghost" data-soon="Import .cbz / .epub : plus tard, depuis tes fichiers ou un dossier iCloud.">Importer des .cbz / .epub</button></div>
+</div></section>
 
 <div id="sheet" role="dialog" aria-modal="true" aria-label="Fiche du livre"><div class="sh" id="sh"></div></div>
 
@@ -304,14 +385,19 @@ const RAW=[
 ["Sleeping by the Mississippi","Alec Soth",2004,112,"Beaux livres","B","Portraits, chambres et paysages photographiés en descendant le Mississippi, du Minnesota jusqu'à la Louisiane."],
 ["Paris de nuit","Brassaï",1932,64,"Beaux livres","B","Les rues, les ponts et les pavés de Paris photographiés la nuit, au début des années 1930."],
 ["Images à la sauvette","Henri Cartier-Bresson",1952,150,"Beaux livres","B"],["La France","Raymond Depardon",2010,180,"Beaux livres","B"],["The Last Resort","Martin Parr",1986,96,"Beaux livres","B"],
-["Street Photographer","Vivian Maier",2011,140,"Beaux livres","B"],["Genesis","Sebastião Salgado",2013,520,"Beaux livres","B"],["Early Color","Saul Leiter",2006,112,"Beaux livres","B"]
+["Street Photographer","Vivian Maier",2011,140,"Beaux livres","B"],["Genesis","Sebastião Salgado",2013,520,"Beaux livres","B"],["Early Color","Saul Leiter",2006,112,"Beaux livres","B"],
+["One Piece Color Walk 1","Eiichirō Oda",2001,104,"Artbooks","A"],["Akira Club","Katsuhiro Ōtomo",2007,280,"Artbooks","A"],["Berserk Illustrations File","Kentarō Miura",1997,128,"Artbooks","A"],["The Art of Frieren","Tsukasa Abe",2023,160,"Artbooks","A"]
 ];
 const PAL=["#1B2A4A","#CDBDA2","#9B2B25","#2E4D3D","#E6DCCB","#E0A93A","#2F4858","#B9C5C9","#6A4D37","#F2EEE6","#B5452E","#242424","#3F6D80","#D2662F","#7B8957","#D8D2C2","#0F5257","#EAC6BC","#F1D04B","#4A3A2A","#8FB3A2","#C8201A"];
-const FMT={P:{h:178,n:"Poches"},S:{h:212,n:"Standards"},G:{h:240,n:"Grands formats"},B:{h:290,n:"Beaux livres"}};
-const GORDER=["Classiques","Contemporain","Science-fiction","Fantasy","Polars","Essais","Beaux livres"];
+const FMT={P:{h:178,n:"Poches",cm:17.8},S:{h:212,n:"Standards",cm:21},G:{h:240,n:"Grands formats",cm:24},B:{h:290,n:"Beaux livres",cm:29},A:{h:320,n:"Artbooks",cm:32}};
+const GORDER=["Classiques","Contemporain","Science-fiction","Fantasy","Polars","Essais","Beaux livres","Artbooks"];
 const lum=h=>{const n=parseInt(h.slice(1),16);return(.299*(n>>16&255)+.587*(n>>8&255)+.114*(n&255))/255};
-const BOOKS=RAW.map((r,i)=>{const [t,a,y,p,g,f,s]=r,h=FMT[f].h,w=Math.round(Math.max(14,Math.min(62,f==="B"?p/4.5+14:p/17+6))),c=PAL[(i*7+3)%PAL.length];
-  return{i,t,a,y,p,g,f,s,h,w,c,ink:lum(c)>.58?"#121212":"#F5F3EE",v:(i*5+1)%4,last:a.split(" ").pop(),d:(i*137)%520,ry:2008+(i*7)%17}});
+// hauteur = taille réelle (1 cm = 10 px), épaisseur = pages (papier plus épais pour les beaux livres et artbooks)
+function makeBook(r,i){const [t,a,y,p,g,f,s,x={}]=r,h=x.cm?Math.round(x.cm*10):FMT[f].h,thick=f==="B"||f==="A",w=Math.round(Math.max(14,Math.min(64,thick?p/4.5+14:p/17+6))),c=x.c||PAL[(i*7+3)%PAL.length];
+  return{i,t,a,y,p,g,f,s,h,w,c,ink:lum(c)>.58?"#121212":"#F5F3EE",v:(i*5+1)%4,last:a.split(" ").pop(),d:x.added?0:(i*137)%520,ry:x.ry||2008+(i*7)%17,cid:x.cid,cm:x.cm}}
+let SAVED=[];try{SAVED=JSON.parse(localStorage.getItem("tranche-ajouts")||"[]")}catch(e){}
+const BOOKS=[...RAW,...SAVED].map(makeBook);
+const covers={};
 
 // ---------- Outils ----------
 const $=s=>document.querySelector(s);
@@ -327,15 +413,17 @@ function wob(x0,x1,y,seed){const R=rnd(seed),pts=[];for(let x=x0;x<x1;x+=80)pts.
 
 // ---------- Landing ----------
 $("#lcount").textContent=BOOKS.length+" livres lus";
-(()=>{const sh=$("#lshelf"),R=rnd(4);[...BOOKS].sort(()=>R()-.5).slice(0,90).forEach((b,k)=>{const e=document.createElement("span");
-  e.style.cssText=`width:${b.w*.8}px;height:${b.h*.5}px;background:${b.c};animation-delay:${300+k*18}ms`;sh.appendChild(e)})})();
+(()=>{const tr=document.createElement("div");tr.className="l-track";$("#lshelf").appendChild(tr);const R=rnd(4),pick=[...BOOKS].sort(()=>R()-.5).slice(0,70);
+  [...pick,...pick].forEach((b,k)=>{const e=document.createElement("span");e.style.cssText=`width:${b.w*.8}px;height:${b.h*.5}px;background:${b.c};animation-delay:${200+(k%70)*22}ms`;tr.appendChild(e)});
+  const h=$(".l-title");h.innerHTML=[...h.textContent].map((c,k)=>`<span class="ch${k>3?" k":""}" style="animation-delay:${150+k*90}ms">${c}</span>`).join("")})();
 
 // ---------- Tranches ----------
 const world=$("#world"),marks=$("#marks"),stage=$("#stage");
-const spineHTML=b=>`<span class="spine"><span class="pg"></span><span class="sf"></span><span class="cov"></span><span class="txt"><span class="au">${b.last}</span><span class="ti">${b.t}</span><span class="mk"></span></span></span>`;
-BOOKS.forEach(b=>{const e=document.createElement("button");e.className=`book v${b.v}`+(b.w<22?" thin":"")+(b.d>390?" dusty":"");
+const spineHTML=b=>`<span class="spine"><span class="sf"></span><span class="cov"></span><span class="txt"><span class="au">${b.last}</span><span class="ti">${b.t}</span><span class="mk"></span></span></span>`;
+function makeEl(b){const e=document.createElement("button");e.className=`book v${b.v}`+(b.w<22?" thin":"")+(b.d>390?" dusty":"");
   e.style.cssText=`--w:${b.w}px;--h:${b.h}px;--c:${b.c};--t:${b.ink};--fs:${Math.min(15,Math.max(8.5,b.w*.42))}px`;
-  e.setAttribute("aria-label",`${b.t}, ${b.a}`);e.innerHTML=spineHTML(b);e.dataset.i=b.i;b.el=e;world.appendChild(e)});
+  e.setAttribute("aria-label",`${b.t}, ${b.a}`);e.innerHTML=spineHTML(b);e.dataset.i=b.i;b.el=e;world.appendChild(e)}
+BOOKS.forEach(makeEl);
 
 // ---------- Tris ----------
 const state={layout:"etagere",sort:"genre",seed:7,trace:null};
@@ -432,8 +520,8 @@ stage.addEventListener("keydown",e=>{const b=e.target.closest(".book");if(b&&(e.
 
 // ---------- Menu ----------
 const fab=$("#fab"),menu=$("#menu");
-function closeMenu(){menu.classList.remove("on");fab.setAttribute("aria-expanded","false")}
-fab.addEventListener("click",()=>{const on=!menu.classList.contains("on");menu.classList.toggle("on",on);fab.setAttribute("aria-expanded",on)});
+function closeMenu(){menu.classList.remove("on");$("#openMenu").setAttribute("aria-expanded","false")}
+const mb=$("#openMenu");mb.addEventListener("click",()=>{const on=!menu.classList.contains("on");menu.classList.toggle("on",on);mb.setAttribute("aria-expanded",on)});
 function press(sel,attr,val){document.querySelectorAll(sel+" button").forEach(b=>b.setAttribute("aria-pressed",b.dataset[attr]===val))}
 function setLayout(l){state.layout=l;press("#layouts","l",l);render()}
 $("#layouts").addEventListener("click",e=>{const b=e.target.closest("button");if(b&&!b.disabled)setLayout(b.dataset.l)});
@@ -443,7 +531,7 @@ document.querySelectorAll("[data-soon]").forEach(b=>b.addEventListener("click",(
 
 // ---------- Fiche : la tranche pivote et devient la couverture ----------
 const sheet=$("#sheet");let src=null,startT="",busy=false;
-const restT="rotateY(-24deg)",flipT="rotateY(156deg)",covers={};
+const restT="rotateY(-24deg)",flipT="rotateY(156deg)";
 function openBook(b,el){if(busy||cur)return;cur=b;src=el;const H=Math.round(Math.min(innerHeight*.62,innerWidth<820?360:500)*(b.f==="B"?1:Math.min(1,.86+b.h/1500))),
   W=Math.round(H*(b.f==="B"?.8:.66)),D=Math.max(10,Math.round(b.w*H/b.h)),R=rnd(b.i*7+1);
   const bars=Array.from({length:32},()=>`<span style="--bw:${1+Math.floor(R()*3)}px"></span>`).join("");
@@ -475,9 +563,7 @@ function openBook(b,el){if(busy||cur)return;cur=b;src=el;const H=Math.round(Math
   b3.addEventListener("click",flip);b3.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip()}});$("#flip").addEventListener("click",flip);$("#close").addEventListener("click",closeBook);
   setTimeout(()=>$("#close")?.focus({preventScroll:true}),600);realCover(b,$("#sh .real"))}
 // Vraie couverture via Open Library (marche en local ou en ligne ; bloqué dans l'aperçu Claude, on garde alors la couverture générée)
-async function realCover(b,img){try{let u=covers[b.i];if(u===undefined){const q=`https://openlibrary.org/search.json?title=${encodeURIComponent(b.t)}&author=${encodeURIComponent(b.last)}&limit=1&fields=cover_i`;
-  const r=await fetch(q);const j=await r.json();const id=j.docs?.[0]?.cover_i;u=covers[b.i]=id?`https://covers.openlibrary.org/b/id/${id}-L.jpg`:null}
-  if(u&&img){img.onload=()=>img.classList.add("on");img.src=u}}catch(e){covers[b.i]=null}}
+async function realCover(b,img){const u=await coverURL(b);if(u&&img){img.onload=()=>img.classList.add("on");img.src=u}}
 function closeBook(){if(!cur||busy)return;busy=true;const b=cur,el=src,bx=$("#sh .bx");sheet.classList.remove("ready");
   const r1=el.getBoundingClientRect(),r0=(bx.style.transform="none",bx.style.transition="none",bx.getBoundingClientRect());bx.style.transform=restT;bx.getBoundingClientRect();
   const k=r1.height/parseFloat(getComputedStyle(bx).getPropertyValue("--H"));
@@ -486,11 +572,60 @@ function closeBook(){if(!cur||busy)return;busy=true;const b=cur,el=src,bx=$("#sh
   setTimeout(()=>{el.classList.remove("gone");cur=null;busy=false;$("#sh").innerHTML="";
     if(b.d>365){b.d=0;document.querySelectorAll(`.book[data-i="${b.i}"]`).forEach(x=>x.classList.remove("dusty"));toast(`« ${b.t} » a repris ses couleurs.`)}},900)}
 sheet.addEventListener("click",e=>{if(e.target===sheet||e.target.id==="sh")closeBook()});
-addEventListener("keydown",e=>{if(e.key==="Escape"){if(cur)closeBook();else closeMenu()}});
+addEventListener("keydown",e=>{if(e.key==="Escape"){if(cur)closeBook();else{closeMenu();document.querySelectorAll(".panel.on").forEach(p=>p.classList.remove("on"))}}});
+
+// ---------- Vraies couvertures : cherchées sur Open Library, la tranche prend la couleur du bord de la couverture ----------
+let online=null;
+async function coverURL(b){if(b.i in covers)return covers[b.i];if(online===false)return null;
+  try{let id=b.cid;if(!id){const r=await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(b.t)}&author=${encodeURIComponent(b.last)}&limit=1&fields=cover_i`);id=(await r.json()).docs?.[0]?.cover_i}
+    online=true;return covers[b.i]=id?`https://covers.openlibrary.org/b/id/${id}-L.jpg`:null}catch(e){if(online===null)online=false;return covers[b.i]=null}}
+function applyCover(b,u){document.querySelectorAll(`.book[data-i="${b.i}"] .cov`).forEach(c=>{c.classList.add("img");c.style.backgroundImage=`url("${u}")`});
+  const im=new Image();im.crossOrigin="anonymous";im.onload=()=>{try{const cv=document.createElement("canvas");cv.width=4;cv.height=24;const x=cv.getContext("2d");
+    x.drawImage(im,0,0,Math.max(1,im.width*.08),im.height,0,0,4,24);const d=x.getImageData(0,0,4,24).data;let r=0,g=0,bl=0;for(let k=0;k<d.length;k+=4){r+=d[k];g+=d[k+1];bl+=d[k+2]}const n=d.length/4;
+    const hex="#"+[r,g,bl].map(v=>Math.round(v/n).toString(16).padStart(2,"0")).join("");b.c=hex;b.ink=lum(hex)>.58?"#121212":"#F5F3EE";
+    document.querySelectorAll(`.book[data-i="${b.i}"]`).forEach(e=>{e.style.setProperty("--c",hex);e.style.setProperty("--t",b.ink)})}catch(e){}};im.src=u}
+async function coverQueue(){const q=[...BOOKS];const worker=async()=>{while(q.length&&online!==false){const b=q.shift(),u=await coverURL(b);if(u)applyCover(b,u)}};await Promise.all([worker(),worker(),worker()])}
+
+// ---------- Ajouter un livre ----------
+const addP=$("#add");let pick=null,fmt="S";
+function openAdd(){closeMenu();addP.classList.add("on");setTimeout(()=>$("#a-t").focus(),300)}
+$("#fab").addEventListener("click",openAdd);$("#add .pclose").addEventListener("click",()=>addP.classList.remove("on"));
+$("#a-g").innerHTML=GORDER.map(g=>`<option>${g}</option>`).join("")+"<option>Mangas</option><option>Autres</option>";
+$("#fmts").innerHTML=Object.entries(FMT).map(([k,v])=>`<button type="button" class="fm" data-f="${k}" aria-pressed="${k===fmt}" style="--fh:${v.h/5}px"><i></i>${{P:"Poche",S:"Standard",G:"Grand format",B:"Beau livre",A:"Artbook"}[k]}<br>${String(v.cm).replace(".",",")} cm</button>`).join("");
+$("#fmts").addEventListener("click",e=>{const b=e.target.closest(".fm");if(!b)return;fmt=b.dataset.f;$("#a-cm").value=FMT[fmt].cm;document.querySelectorAll(".fm").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+$("#a-cm").value=FMT[fmt].cm;$("#a-y").value=new Date().getFullYear();
+$("#a-form").addEventListener("submit",async e=>{e.preventDefault();const t=$("#a-t").value.trim(),a=$("#a-a").value.trim();if(!t)return;const res=$("#a-res"),msg=$("#a-msg");pick=null;
+  msg.textContent="Recherche sur Open Library…";res.innerHTML="";
+  try{const r=await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(t)}&author=${encodeURIComponent(a)}&limit=8&fields=title,author_name,first_publish_year,number_of_pages_median,cover_i`);
+    const docs=(await r.json()).docs||[];if(!docs.length){msg.textContent="Aucun résultat. Tu peux quand même l'ajouter avec les infos tapées.";return}
+    msg.textContent="Choisis la bonne édition :";res.innerHTML=docs.map((d,k)=>`<button type="button" class="rc" data-k="${k}" aria-pressed="false"><span class="im" style="${d.cover_i?`background-image:url(https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg)`:""}"></span><b>${d.title}</b><span>${(d.author_name||[""])[0]} · ${d.first_publish_year||"?"}${d.number_of_pages_median?` · ${d.number_of_pages_median} p.`:""}</span></button>`).join("");
+    res.onclick=ev=>{const c=ev.target.closest(".rc");if(!c)return;pick=docs[+c.dataset.k];res.querySelectorAll(".rc").forEach(x=>x.setAttribute("aria-pressed",x===c));if(pick.number_of_pages_median)$("#a-p").value=pick.number_of_pages_median}}
+  catch(err){msg.textContent="Open Library n'est pas joignable depuis cet aperçu (il bloque les sites externes). Sur la version en ligne, la recherche marche. Tu peux quand même ajouter le livre à la main."}});
+$("#a-add").addEventListener("click",()=>{const t=(pick?.title||$("#a-t").value).trim(),a=(pick?.author_name?.[0]||$("#a-a").value||"Auteur inconnu").trim();if(!t){$("#a-t").focus();return}
+  const r=[t,a,pick?.first_publish_year||new Date().getFullYear(),+$("#a-p").value||pick?.number_of_pages_median||250,$("#a-g").value,fmt,null,{cm:+$("#a-cm").value||FMT[fmt].cm,cid:pick?.cover_i,ry:+$("#a-y").value,added:1}];
+  SAVED.push(r);try{localStorage.setItem("tranche-ajouts",JSON.stringify(SAVED))}catch(e){}
+  if(!GORDER.includes(r[4]))GORDER.push(r[4]);const b=makeBook(r,BOOKS.length);BOOKS.push(b);makeEl(b);$("#lcount").textContent=BOOKS.length+" livres lus";
+  addP.classList.remove("on");$("#a-form").reset();$("#a-res").innerHTML="";$("#a-msg").textContent="";pick=null;
+  state.sort="genre";press("#sorts","s","genre");render();coverURL(b).then(u=>u&&applyCover(b,u));
+  setTimeout(()=>{const p=b.el.getBoundingClientRect();tgt.x+=innerWidth/2-(p.left+p.width/2);tgt.y+=innerHeight/2-(p.top+p.height/2);K=.08;b.el.classList.add("fresh");toast(`« ${t} » est rangé sur l'étagère.`)},1100)});
+
+// ---------- Reader (aperçu) ----------
+const SERIES=[// [série, auteur, tomes parus, tomes lus, tome en cours, page, pages du tome, couleur, collection]
+["One Piece","Eiichirō Oda",110,104,105,84,200,"#D2662F","Shōnen"],["Chainsaw Man","Tatsuki Fujimoto",19,15,16,40,192,"#C8201A","Shōnen"],["Dandadan","Yukinobu Tatsu",18,16,17,12,200,"#3F6D80","Shōnen"],
+["Frieren","Kanehito Yamada, Tsukasa Abe",14,12,13,150,190,"#8FB3A2","Fantasy"],["Berserk","Kentarō Miura",42,20,21,7,224,"#242424","Seinen"],["Blue Period","Tsubasa Yamaguchi",16,9,10,96,200,"#2F4858","Seinen"],
+["Vagabond","Takehiko Inoue",37,37,0,0,0,"#6A4D37","Seinen"],["Monster","Naoki Urasawa",18,18,0,0,0,"#7B8957","Seinen"],["L'Atelier des sorciers","Kamome Shirahama",13,13,0,0,0,"#E0A93A","Fantasy"]];
+function buildReader(){const cur=SERIES.filter(s=>s[4]),done=SERIES.filter(s=>!s[4]&&s[3]===s[2]),cols=[...new Set(SERIES.map(s=>s[8]))];
+  $("#r-cur").innerHTML=cur.map(s=>`<div class="cc"><h4>${s[0]}</h4><div class="meta">Tome ${s[4]} · page ${s[5]} sur ${s[6]}</div><div class="bar" style="--p:${Math.round(s[5]/s[6]*100)}%"><i></i></div><div class="meta">${s[3]} tomes lus sur ${s[2]}</div><div><button class="btn" data-soon="La lecture des .cbz arrivera plus tard : ce bouton reprendra ici, page ${s[5]}.">Reprendre</button></div></div>`).join("");
+  $("#r-coll").innerHTML=cols.map(c=>`<div class="coll"><h5>${c}</h5>${SERIES.filter(s=>s[8]===c).map(s=>`<div class="ser"><div class="nm">${s[0]}<span>${s[1]} · ${s[3]}/${s[2]} lus${s[4]?"":" · terminé"}</span></div><div class="vols" style="--c:${s[7]}">${Array.from({length:s[2]},(_,k)=>`<i class="${k+1===s[4]?"cur":k<s[3]?"":"u"}" title="Tome ${k+1}"></i>`).join("")}</div></div>`).join("")}</div>`).join("");
+  $("#r-done").innerHTML=done.map(s=>`<div class="cc"><h4>${s[0]}</h4><div class="meta">${s[1]} · ${s[2]} tomes, tous lus</div></div>`).join("");
+  $("#reader").querySelectorAll("[data-soon]").forEach(b=>b.addEventListener("click",()=>toast(b.dataset.soon)))}
+buildReader();
+$("#openReader").addEventListener("click",()=>{closeMenu();$("#reader").classList.add("on")});$("#reader .pclose").addEventListener("click",()=>$("#reader").classList.remove("on"));
 
 // ---------- Entrée ----------
 render(true);cam.x=tgt.x;cam.y=tgt.y+300;cam.s=tgt.s*.92;apply();
 $("#enter").addEventListener("click",()=>{$("#landing").classList.add("out");K=.05});
+coverQueue();
 </script>
 </body>
 </html>
