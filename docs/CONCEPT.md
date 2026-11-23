@@ -46,3 +46,22 @@ Le nom joue sur deux sens : la tranche du livre, et une « tranche de vie », ce
 ## Autres objets
 
 Les livres photo, beaux livres et autres objets ont leur propre genre et un format « beau livre » (plus haut, plus épais). Ils vivent sur la même étagère.
+
+## Le Scriptorium : pousser le gothique plus loin
+
+Tranche se pense comme **un manuscrit enluminé de tes lectures**. Chaque livre lu y est recopié (le résumé), enluminé (sa couverture en gravure) et rubriqué (sa catégorie en rouge). La poussière qui gagne les livres oubliés devient celle d'un vieux codex.
+
+Déjà dans le prototype :
+- **Lettrines** : le résumé commence par une grande initiale gothique rouge, comme dans les manuscrits.
+- **Rubriques** : catégories et intertitres en rouge, la couleur des titres enluminés.
+- **Gravures** : une photo de couverture devient une estampe deux tons (couleurs prises sur la couverture, hachures de graveur).
+- **Sceau** : quand on range un nouveau livre, un sceau de cire rouge au « T » s'imprime à l'écran.
+- **Manicules** : la petite main ☞ des marges médiévales signale les messages.
+- **Chiffres romains** : le compteur de livres lus sur la page d'accueil.
+
+À faire ensuite :
+- **La Chronique de l'an** : chaque fin d'année, une page façon calendrier enluminé avec les livres lus mois par mois.
+- **Ex-libris** : ton monogramme gothique imprimé dans la 4e de chaque livre.
+- **Marginalia** : tes notes au stylet dans les marges de la fiche, gardées comme des annotations de moine copiste.
+- **Le chargement** : une lettrine qui se dessine trait par trait au lieu d'un spinner.
+- **Les tranches gravées** : une photo de la vraie tranche, passée au même filtre gravure, pour retrouver ton étagère réelle.
