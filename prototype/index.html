@@ -683,6 +683,7 @@ button{font:inherit;color:inherit}
 }
 #add.editing .ms-mode{display:none}
 #a-del{align-self:center}
+.rc{position:relative}.srcb{position:absolute;top:6px;left:6px;font-style:normal;font-size:10px;font-weight:600;letter-spacing:.04em;background:var(--paper);color:var(--ink-soft);padding:2px 6px;border-radius:999px}
 </style>
 </head><body>
 
@@ -745,7 +746,7 @@ button{font:inherit;color:inherit}
   <div class="ms-sec one"><h3><b>I</b>Le livre</h3>
     <form id="a-form" class="ms-form" autocomplete="off">
       <label class="ms-fld" for="a-t"><span>Titre</span><input id="a-t" placeholder="L'Étranger" required></label>
-      <label class="ms-fld" for="a-a"><span>Auteur</span><input id="a-a" placeholder="Albert Camus"></label>
+      <label class="ms-fld" for="a-a"><span>Auteur</span><input id="a-a" placeholder="Albert Camus" list="dl-auteurs" autocomplete="off"><datalist id="dl-auteurs"></datalist><datalist id="dl-ed"></datalist></label>
       <button class="plate" type="submit">Chercher <i>☞</i></button>
     </form>
     <p class="msg" id="a-msg"></p>
@@ -757,6 +758,8 @@ button{font:inherit;color:inherit}
   <div class="ms-sec one"><h3><b>III</b>Le format</h3><div class="fmts" id="fmts"></div></div>
   <div class="ms-sec one"><h3><b>IV</b>Les détails</h3><div class="frm">
     <label class="ms-fld sm" for="a-cm"><span>Hauteur (cm)</span><input id="a-cm" type="number" step="0.1" min="8" max="60"></label>
+    <label class="ms-fld sm" for="a-ed"><span>Éditeur / collection</span><input id="a-ed" list="dl-ed" placeholder="Folio Policier" autocomplete="off"></label>
+    <label class="ms-fld sm" for="a-py"><span>Paru en</span><input id="a-py" type="number" min="1000" max="2100" placeholder="2024"></label>
     <label class="ms-fld sm" for="a-p"><span>Pages</span><input id="a-p" type="number" min="1" placeholder="250"></label>
     <label class="ms-fld sm" for="a-g"><span>Catégorie</span><select id="a-g"></select></label>
     <label class="ms-fld sm" for="a-y"><span>Lu en</span><input id="a-y" type="number" min="1950" max="2100"></label>
@@ -912,7 +915,7 @@ const GORDER=["Classiques","Contemporain","Science-fiction","Fantasy","Polars","
 const lum=h=>{const n=parseInt(h.slice(1),16);return(.299*(n>>16&255)+.587*(n>>8&255)+.114*(n&255))/255};
 // hauteur = taille réelle (1 cm = 10 px), épaisseur = pages (papier plus épais pour les beaux livres et artbooks)
 function makeBook(r,i){const [t,a,y,p,g,f,s,x={}]=r,h=x.cm?Math.round(x.cm*10):FMT[f].h,thick=f==="B"||f==="A",w=Math.round(Math.max(14,Math.min(64,thick?p/4.5+14:p/17+6))),c=x.c||PAL[(i*7+3)%PAL.length],ry=x.ry||2008+(i*7)%17,rm=x.rm||(i*5)%12+1;
-  return{r,i,t,a,y,p,g,f,s,h,w,c,ink:x.t||(lum(c)>.58?"#121212":"#F5F3EE"),v:x.img?2:(i*5+1)%4,last:a.split(" ").pop(),d:x.added||x.img?0:(i*137)%520,ry,rm,cid:x.cid,cm:x.cm,img:x.img,spimg:x.spine}}
+  return{r,i,t,a,y,p,g,f,s,h,w,c,ink:x.t||(lum(c)>.58?"#121212":"#F5F3EE"),v:x.img?2:(i*5+1)%4,last:a.split(" ").pop(),d:x.added||x.img?0:(i*137)%520,ry,rm,cid:x.cid,cm:x.cm,img:x.img,spimg:x.spine,ed:x.ed}}
 const roman=n=>{let r="";[[1000,"M"],[900,"CM"],[500,"D"],[400,"CD"],[100,"C"],[90,"XC"],[50,"L"],[40,"XL"],[10,"X"],[9,"IX"],[5,"V"],[4,"IV"],[1,"I"]].forEach(([v,l])=>{while(n>=v){r+=l;n-=v}});return r};
 const MOIS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 let SAVED=[];try{SAVED=JSON.parse(localStorage.getItem("tranche-ajouts")||"[]")}catch(e){}
@@ -1088,7 +1091,7 @@ function openBook(b,el){if(busy||cur)return;cur=b;src=el;SND.paper();const H=Mat
   <div class="info">
     <span class="gk big"><svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path d="${blob(50,15,50,15,b.i+9,.06,8)}"/></svg>${b.g}</span>
     <h2 class="big">${capTitle(b)}</h2><p class="by">${b.a}</p>
-    <dl><div><dt>Paru</dt><dd>${b.y}</dd></div><div><dt>Pages</dt><dd>${b.p}</dd></div><div><dt>Lu en</dt><dd>${MOIS[b.rm-1]} ${b.ry}</dd></div></dl>
+    <dl><div><dt>Paru</dt><dd>${b.y}</dd></div><div><dt>Pages</dt><dd>${b.p}</dd></div>${b.ed?`<div><dt>Édition</dt><dd>${esc(b.ed)}</dd></div>`:""}<div><dt>Lu en</dt><dd>${MOIS[b.rm-1]} ${b.ry}</dd></div></dl>
     <h3>Résumé de l'intrigue</h3>${b.s?`<p class="sum">${b.s}</p>`:`<p class="sum" style="color:var(--ink-soft)">Livre d'exemple sans résumé. Dans l'app, le résumé complet de l'intrigue est généré par l'IA quand tu ajoutes le livre.</p>`}
     <div class="acts"><button class="btn" id="flip">Retourner</button><button class="btn ghost" id="illub">${b.lt?"Refaire la lettrine":"Enluminer la lettrine"}</button><button class="btn ghost" id="close">Ranger</button></div>
   </div>`;
@@ -1139,7 +1142,8 @@ $("#a-form").addEventListener("submit",async e=>{e.preventDefault();const t=$("#
     res.onclick=ev=>{const c=ev.target.closest(".rc");if(!c)return;pick=docs[+c.dataset.k];res.querySelectorAll(".rc").forEach(x=>x.setAttribute("aria-pressed",x===c));if(pick.number_of_pages_median)$("#a-p").value=pick.number_of_pages_median}}
   catch(err){msg.textContent="Open Library n'est pas joignable depuis cet aperçu (il bloque les sites externes). Sur la version en ligne, la recherche marche. Tu peux quand même ajouter le livre à la main."}});
 $("#a-add").addEventListener("click",()=>{const t=(pick?.title||$("#a-t").value).trim(),a=(pick?.author_name?.[0]||$("#a-a").value||"Auteur inconnu").trim();if(!t){$("#a-t").focus();return}
-  const r=[t,a,pick?.first_publish_year||new Date().getFullYear(),+$("#a-p").value||pick?.number_of_pages_median||250,$("#a-g").value,fmt,null,{cm:+$("#a-cm").value||FMT[fmt].cm,cid:pick?.cover_i,img:photo?.url,c:photo?.paper,t:photo?.ink,spine:spPhoto?.url,rm:new Date().getMonth()+1,ry:+$("#a-y").value,added:1}];
+  const r=[t,a,+$("#a-py").value||pick?.first_publish_year||new Date().getFullYear(),+$("#a-p").value||pick?.number_of_pages_median||250,$("#a-g").value,fmt,null,{cm:+$("#a-cm").value||FMT[fmt].cm,cid:pick?.cover_i,img:photo?.url,c:photo?.paper,t:photo?.ink,spine:spPhoto?.url,rm:new Date().getMonth()+1,ry:+$("#a-y").value,added:1,ed:$("#a-ed").value.trim()||pick?.publisher||undefined,curl:pick?.cover_i?undefined:pick?.cover_url,yman:+$("#a-py").value?1:undefined}];
+  if(pick?.desc){r[6]=pick.desc;r[7].auto=1}
   SAVED.push(r);try{localStorage.setItem("tranche-ajouts",JSON.stringify(SAVED))}catch(e){}
   if(!GORDER.includes(r[4]))GORDER.push(r[4]);const b=makeBook(r,BOOKS.length);BOOKS.push(b);makeEl(b);$("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.length} livres lus`;seal();
   photo=spPhoto=null;$("#a-prev").hidden=$("#a-sprev").hidden=true;addP.classList.remove("on");$("#a-form").reset();$("#a-res").innerHTML="";$("#a-msg").textContent="";pick=null;
@@ -1672,7 +1676,7 @@ async function lookup(t,a){const out={};
   try{const q=`intitle:${t}`+(a?` inauthor:${a.split(" ").pop()}`:"");const j=await (await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}&maxResults=10&printType=books&langRestrict=fr`)).json();online=true;
     const its=(j.items||[]).map(x=>x.volumeInfo).filter(v=>near(v.title,t)&&(!a||(v.authors||[]).some(x=>near(x,a)||near(x.split(" ").pop(),a.split(" ").pop()))));
     const best=its.find(v=>v.description&&v.description.length>200)||its.find(v=>v.description)||its[0];
-    if(best){out.a=(best.authors||[])[0];out.s=stripHTML(best.description||"");out.p=best.pageCount;out.gimg=best.imageLinks?.thumbnail?.replace("http:","https:").replace("&edge=curl","");}}catch(e){}
+    if(best){out.a=(best.authors||[])[0];out.ed=best.publisher;out.s=stripHTML(best.description||"");out.p=best.pageCount;out.gimg=best.imageLinks?.thumbnail?.replace("http:","https:").replace("&edge=curl","");}}catch(e){}
   try{const j=await (await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(t)}&author=${encodeURIComponent(a||"")}&limit=5&fields=key,title,author_name,first_publish_year,number_of_pages_median,cover_i`)).json();online=true;
     const d=(j.docs||[]).find(d=>!a||(d.author_name||[]).some(x=>near(x,a)))||(j.docs||[])[0];
     if(d&&(!a||(d.author_name||[]).some(x=>near(x,a)))){out.y=d.first_publish_year;out.cid=d.cover_i;out.p=out.p||d.number_of_pages_median;if(!out.a)out.a=(d.author_name||[]).find(x=>near(x,a))||d.author_name?.[0];
@@ -1688,7 +1692,7 @@ async function enrichBook(b,{redraw=true}={}){const r=b.r;if(!r)return false;con
   if(L.a&&L.a!==r[1]&&(r[1]==="Auteur inconnu"||near(L.a,r[1]))){r[1]=L.a;vis=true}
   if(L.s&&(!r[6]||x.auto)){r[6]=L.s;x.auto=1}
   if(L.p&&(!x.pman)&&(r[3]===250||!r[3])){r[3]=L.p;vis=true}
-  if(L.y&&!x.yman)r[2]=L.y;
+  if(L.y&&!x.yman)r[2]=L.y;if(L.ed&&!x.ed)x.ed=L.ed;
   if(!x.img&&!x.cid&&L.cid){x.cid=L.cid;vis=true}else if(!x.img&&!x.cid&&L.gimg){x.gimg=L.gimg}
   x.chk=1;moveLettrine(oldK,r[0]+"|"+r[1]);if(isSaved(b))saveSaved();
   if(vis&&redraw){rebuildBook(b.i);render()}else{b.s=r[6];b.a=r[1];b.y=r[2]}return true}
@@ -1715,6 +1719,7 @@ async function saveEdit(){const b=EDIT,r=b.r,x=r[7]=r[7]||{},oldK=r[0]+"|"+r[1],
   r[4]=$("#a-g").value;r[5]=fmt;x.cm=+$("#a-cm").value||FMT[fmt].cm;const ry=+$("#a-y").value;if(ry)x.ry=ry;
   if(pick?.cover_i){x.cid=pick.cover_i;delete x.img;delete x.gimg;delete x.c;delete x.t}
   if(photo){x.img=photo.url;x.c=photo.paper;x.t=photo.ink;delete x.cid}if(spPhoto)x.spine=spPhoto.url;
+  {const ed=$("#a-ed").value.trim(),py=+$("#a-py").value;x.ed=ed||pick?.publisher||x.ed;if(py){r[2]=py;x.yman=1}if(pick?.cover_url&&!pick.cover_i){x.curl=pick.cover_url;delete x.cid;delete x.img}if(pick?.desc&&(!r[6]||x.auto)){r[6]=pick.desc;x.auto=1}}
   if(!GORDER.includes(r[4]))GORDER.push(r[4]);moveLettrine(oldK,r[0]+"|"+r[1]);
   const changedId=norm(oldT)!==norm(r[0])||norm(oldA)!==norm(r[1]);if(changedId){x.chk=0;if(x.auto)r[6]=null}
   saveSaved();addP.classList.remove("on");const i=b.i;endEdit();const nb=rebuildBook(i);render();SND.seal();
@@ -1749,6 +1754,35 @@ let aiRun=false;$("#s-ai").addEventListener("click",async()=>{if(aiRun)return;co
 new MutationObserver(()=>{if(acP.classList.contains("on"))aiRowText()}).observe(acP,{attributes:true,attributeFilter:["class"]});
 // les livres ajoutés après connexion reçoivent leur résumé tout seuls
 const _enrich=enrichBook;enrichBook=async(b,o)=>{const ok=await _enrich(b,o);const bb=BOOKS[b.i];if(ok&&ACU&&isSaved(bb)&&!bb.r[7]?.ai&&!bb.r[7]?.aitry)aiSummary(bb);return ok};
+
+// ================= v15 : recherche sur trois bases, saisie libre (auteur, éditeur, année) =================
+const EDITEURS=["Gallimard","Folio","Folio Policier","Série Noire","Le Livre de Poche","Points","Pocket","J'ai lu","10/18","Actes Sud","Babel","Albin Michel","Flammarion","GF Flammarion","Grasset","Seuil","Robert Laffont","Bouquins","Calmann-Lévy","Fayard","Stock","Rivages","Rivages/Noir","Payot","Christian Bourgois","L'Atalante","Bragelonne","Mnémos","Folio SF","La Pléiade"];
+function fillLists(){const au=[...new Set(BOOKS.map(b=>b.a).filter(a=>a&&a!=="Auteur inconnu"))].sort((a,b)=>a.localeCompare(b,"fr")),ed=[...new Set([...BOOKS.map(b=>b.ed).filter(Boolean),...EDITEURS])].sort((a,b)=>a.localeCompare(b,"fr"));
+  $("#dl-auteurs").innerHTML=au.map(a=>`<option value="${esc(a)}">`).join("");$("#dl-ed").innerHTML=ed.map(a=>`<option value="${esc(a)}">`).join("")}
+$("#fab").addEventListener("click",fillLists);$("#a-a").addEventListener("focus",fillLists,{once:false});
+async function srcGoogle(t,a){const q=`intitle:${t}`+(a?` inauthor:${a.split(" ").pop()}`:"");const j=await (await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}&maxResults=12&printType=books&langRestrict=fr`)).json();
+  return (j.items||[]).map(x=>x.volumeInfo).map(v=>({src:"Google Books",title:v.title+(v.subtitle&&v.subtitle.length<40?` : ${v.subtitle}`:""),author_name:v.authors||[],first_publish_year:+(v.publishedDate||"").slice(0,4)||null,number_of_pages_median:v.pageCount||null,
+    publisher:v.publisher,cover_url:v.imageLinks?.thumbnail?.replace("http:","https:").replace("&edge=curl","").replace("zoom=1","zoom=2"),isbn:(v.industryIdentifiers||[]).find(i=>i.type==="ISBN_13")?.identifier,desc:stripHTML(v.description||"")}))}
+async function srcOL(t,a){const j=await (await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(t)}&author=${encodeURIComponent(a)}&limit=8&fields=title,author_name,first_publish_year,number_of_pages_median,cover_i,publisher`)).json();
+  return (j.docs||[]).map(d=>({src:"Open Library",...d,publisher:(d.publisher||[])[0]}))}
+async function srcBnF(t,a){if(!ACU||!SB)return[];const{data}=await SB.functions.invoke("resume",{body:{op:"bnf",t,a}});return (data?.records||[]).map(d=>({src:"BnF",...d,cover_url:d.isbn?`https://covers.openlibrary.org/b/isbn/${d.isbn}-M.jpg?default=false`:null}))}
+$("#a-form").addEventListener("submit",async e=>{e.preventDefault();e.stopImmediatePropagation();const t=$("#a-t").value.trim(),a=$("#a-a").value.trim();if(!t)return;const res=$("#a-res"),msg=$("#a-msg");pick=null;
+  msg.innerHTML=`<svg class="lettrine mini" viewBox="0 0 220 240" aria-hidden="true"><text x="110" y="185" text-anchor="middle">T</text></svg>Recherche sur Google Books, la BnF et Open Library…`;res.innerHTML="";
+  const all=await Promise.allSettled([srcGoogle(t,a),srcBnF(t,a),srcOL(t,a)]);const ok=all.filter(r=>r.status==="fulfilled");
+  if(!ok.length||ok.every(r=>!r.value)){msg.textContent="Les bases de livres ne sont pas joignables d'ici. Remplis l'auteur, l'éditeur et l'année plus bas : il sera rangé quand même.";return}
+  const seen=new Set(),docs=[];ok.flatMap(r=>r.value||[]).filter(d=>d.title&&(!a||!(d.author_name||[]).length||(d.author_name||[]).some(x=>near(x,a)||near(x.split(" ").pop(),a.split(" ").pop()))))
+    .forEach(d=>{const k=norm(d.title)+"|"+(d.first_publish_year||"")+"|"+norm(d.publisher||"");if(!seen.has(k)){seen.add(k);docs.push(d)}});
+  docs.sort((x,y)=>(near(y.title,t)-near(x.title,t))||((y.cover_url||y.cover_i?1:0)-(x.cover_url||x.cover_i?1:0)));docs.splice(16);
+  if(!docs.length){msg.textContent="Aucune édition trouvée. Remplis l'auteur, l'éditeur et l'année plus bas, ajoute une photo de la couverture si tu veux : il sera rangé quand même.";$("#a-ed").focus({preventScroll:true});return}
+  msg.textContent=`${docs.length} édition${docs.length>1?"s":""} trouvée${docs.length>1?"s":""}. Choisis la tienne :`;
+  res.innerHTML=docs.map((d,k)=>{const cv=d.cover_i?`https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg`:d.cover_url;return`<button type="button" class="rc" data-k="${k}" aria-pressed="false"><span class="im" style="${cv?`background-image:url(${cv})`:""}"></span><b>${esc(d.title)}</b><span>${esc((d.author_name||[""])[0])}${d.publisher?` · ${esc(d.publisher)}`:""} · ${d.first_publish_year||"?"}${d.number_of_pages_median?` · ${d.number_of_pages_median} p.`:""}</span><i class="srcb">${d.src}</i></button>`}).join("");
+  res.onclick=ev=>{const c=ev.target.closest(".rc");if(!c)return;pick=docs[+c.dataset.k];res.querySelectorAll(".rc").forEach(x=>x.setAttribute("aria-pressed",x===c));
+    if(pick.number_of_pages_median)$("#a-p").value=pick.number_of_pages_median;if(pick.publisher)$("#a-ed").value=pick.publisher;if(pick.first_publish_year)$("#a-py").value=pick.first_publish_year;if((pick.author_name||[])[0])$("#a-a").value=pick.author_name[0];SND.rustle()}},true);
+// couverture choisie (Google Books ou BnF) prioritaire
+const _cov2=coverURL;coverURL=async b=>{const c=b.r?.[7]?.curl;if(c)return covers[b.i]=c;return _cov2(b)};
+// édition et année saisies à la main, aussi en modification
+const _openEdit=openEdit;openEdit=b=>{_openEdit(b);setTimeout(()=>{fillLists();const x=b.r[7]||{};$("#a-ed").value=x.ed||"";$("#a-py").value=x.yman?b.r[2]:""},closeT()+20)};
+const clearEdFields=()=>{$("#a-ed").value="";$("#a-py").value=""};const _endEdit=endEdit;endEdit=()=>{_endEdit();clearEdFields()};$("#a-add").addEventListener("click",()=>setTimeout(()=>{if(!addP.classList.contains("on"))clearEdFields()},50));
 </script>
 
 </body></html>
