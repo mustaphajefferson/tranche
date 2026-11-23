@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tranche</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout : une scène plein écran (canvas infini) + barre flottante. La couleur vient des livres ; l'interface reste à l'encre. */
+:root{
+  --paper:#E7E8E4;      /* gris papier froid, pas crème */
+  --paper-2:#DCDDD8;
+  --ink:#191A1C;
+  --ink-soft:#5D6064;
+  --bic:#2B44D9;        /* bleu stylo bille : la seule couleur de l'interface */
+  --glass:rgba(240,241,237,.78);
+  --shadow:rgba(20,22,26,.18);
+  --f-display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --f-text:"Newsreader", Georgia, "Times New Roman", serif;
+  --f-data:"JetBrains Mono", ui-monospace, Menlo, monospace;
+  --ease:cubic-bezier(.2,.85,.2,1);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#141517;--paper-2:#1D1F22;--ink:#ECEAE5;--ink-soft:#9A9DA2;--bic:#8D9BFF;--glass:rgba(28,30,33,.78);--shadow:rgba(0,0,0,.5);color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#141517;--paper-2:#1D1F22;--ink:#ECEAE5;--ink-soft:#9A9DA2;--bic:#8D9BFF;--glass:rgba(28,30,33,.78);--shadow:rgba(0,0,0,.5);color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-display);overflow:hidden;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--bic);outline-offset:3px}
+
+/* ---------- Landing ---------- */
+#landing{position:fixed;inset:0;z-index:50;background:var(--paper);display:grid;place-items:center;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  transition:transform 1.1s var(--ease),opacity .9s var(--ease)}
+#landing.out{transform:translateY(-100%);opacity:.4;pointer-events:none}
+.l-wrap{display:grid;justify-items:center;gap:28px;text-align:center}
+.l-shelf{display:flex;align-items:flex-end;gap:3px;height:190px}
+.l-shelf .ls{border-radius:2px 2px 1px 1px;box-shadow:0 1px 2px var(--shadow);animation:rise 1.1s var(--ease) both;transform-origin:50% 100%}
+@keyframes rise{from{transform:translateY(60px) rotate(var(--tilt));opacity:0}to{transform:none;opacity:1}}
+.l-title{font-size:clamp(64px,13vw,168px);font-weight:760;letter-spacing:-.055em;line-height:.85;margin:0;font-variation-settings:"opsz" 96;position:relative}
+.l-title svg{position:absolute;left:-4%;bottom:-.16em;width:108%;height:.3em;overflow:visible}
+.l-title path{fill:none;stroke:var(--bic);stroke-width:5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.2s .9s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.l-tag{font-family:var(--f-text);font-style:italic;font-size:clamp(19px,2.4vw,26px);color:var(--ink-soft);margin:0;max-width:30ch;text-wrap:balance}
+.l-cta{border:0;background:var(--ink);color:var(--paper);padding:15px 26px;border-radius:999px;font-weight:600;font-size:15px;cursor:pointer;transition:transform .3s var(--ease)}
+.l-cta:hover{transform:scale(1.05)}
+.l-meta{font-family:var(--f-data);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+
+/* ---------- Scène ---------- */
+#stage{position:fixed;inset:0;touch-action:none;cursor:grab}
+#stage.grabbing{cursor:grabbing}
+#stage.drawing{cursor:crosshair}
+#world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+#marks{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none}
+#marks path{fill:none;stroke:var(--bic);stroke-linecap:round;stroke-linejoin:round}
+#marks .draw{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1s .25s var(--ease) forwards}
+#marks .shelf{stroke:var(--ink);opacity:.55;stroke-width:1.6}
+#marks .blob{stroke-width:1.5}
+#marks .blobfill{fill:var(--bic);opacity:.05;stroke:none}
+#ink{position:fixed;inset:0;pointer-events:none;width:100%;height:100%}
+#ink path{fill:none;stroke:var(--bic);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+
+.book{position:absolute;left:0;top:0;width:var(--w);height:var(--h);padding:0;border:0;background:none;cursor:pointer;
+  transition:transform 1s var(--ease);will-change:transform}
+.book:hover,.book:focus-visible{z-index:3}
+.spine{position:absolute;inset:0;border-radius:2px 2px 1px 1px;color:var(--t);
+  background:linear-gradient(90deg,rgba(0,0,0,.16),rgba(255,255,255,.10) 18%,rgba(255,255,255,0) 45%,rgba(0,0,0,.10) 92%),var(--c);
+  box-shadow:0 1px 1.5px var(--shadow),inset 0 0 0 .5px rgba(0,0,0,.12);
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease),filter 1.4s ease}
+.book:hover .spine,.book:focus-visible .spine{transform:translateY(-4px) scale(1.075);box-shadow:0 10px 22px var(--shadow)}
+.book.dusty .spine{filter:saturate(.18) contrast(.82) brightness(1.06)}
+.txt{position:absolute;inset:0;writing-mode:vertical-rl;transform:rotate(180deg);display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;overflow:hidden}
+.txt .ti{flex:1;min-height:0;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--fs);line-height:1}
+.txt .au{font-family:var(--f-data);font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;opacity:.75;white-space:nowrap}
+.txt .mk{width:7px;height:7px;flex:none;border-radius:50% 40% 55% 45%;background:currentColor;opacity:.55}
+.v0 .ti{font-family:var(--f-text);font-weight:500}
+.v1 .ti{font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:calc(var(--fs)*.86)}
+.v2 .ti{font-family:var(--f-text);font-style:italic}
+.v3 .ti{font-family:var(--f-display);font-weight:500;letter-spacing:-.01em}
+.v1 .spine::after{content:"";position:absolute;left:0;right:0;top:14%;height:3px;background:var(--t);opacity:.5}
+.thin .au,.thin .mk{display:none}
+
+.glabel{position:absolute;left:0;top:0;display:grid;place-items:center;pointer-events:none;animation:fade .6s .45s both}
+.glabel svg{position:absolute;inset:-6px -8px;width:calc(100% + 16px);height:calc(100% + 12px);overflow:visible}
+.glabel svg path{fill:none;stroke:var(--bic);stroke-width:1.4;stroke-linecap:round}
+.glabel span{position:relative;font-size:15px;font-weight:600;color:var(--bic);padding:8px 18px;white-space:nowrap}
+@keyframes fade{from{opacity:0;transform:var(--tr) translateY(6px)}to{opacity:1;transform:var(--tr)}}
+.glabel{transform:var(--tr)}
+
+/* ---------- Chrome ---------- */
+.top{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:12px;pointer-events:none;
+  padding-top:calc(14px + env(safe-area-inset-top,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top>*{pointer-events:auto}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand b{font-size:22px;font-weight:760;letter-spacing:-.04em}
+.brand small{font-family:var(--f-data);font-size:11px;color:var(--ink-soft)}
+.pills{display:flex;gap:8px}
+.pill{border:1px solid color-mix(in srgb,var(--ink) 18%,transparent);background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px}
+.pill i{font-style:normal;font-family:var(--f-data);font-size:9.5px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+.pill:hover{border-color:var(--bic)}
+
+.dock{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:10;
+  display:flex;gap:6px;align-items:center;padding:6px;border-radius:20px;background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid color-mix(in srgb,var(--ink) 12%,transparent);box-shadow:0 8px 30px var(--shadow);max-width:calc(100vw - 32px);overflow-x:auto;scrollbar-width:none}
+.seg{display:flex;gap:2px;align-items:center}
+.seg+.seg{border-left:1px solid color-mix(in srgb,var(--ink) 14%,transparent);padding-left:6px}
+.seg em{font-style:normal;font-family:var(--f-data);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);padding:0 6px 0 8px}
+.seg button{border:0;background:none;padding:8px 11px;border-radius:13px;font-size:13px;font-weight:550;cursor:pointer;white-space:nowrap;transition:background .25s}
+.seg button:hover{background:color-mix(in srgb,var(--ink) 7%,transparent)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg button:disabled{opacity:.35;cursor:default}
+.hint{position:fixed;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:9;font-family:var(--f-data);font-size:10.5px;line-height:1.7;color:var(--ink-soft);max-width:250px}
+.hint b{color:var(--bic);font-weight:500}
+@media (max-width:1100px){.hint{display:none}}
+
+.toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top,0px));transform:translate(-50%,-10px);opacity:0;z-index:60;background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:12px;font-size:13px;transition:.35s var(--ease);pointer-events:none;max-width:calc(100vw - 32px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- Fiche livre ---------- */
+#sheet{position:fixed;inset:0;z-index:30;display:grid;place-items:center;background:color-mix(in srgb,var(--paper) 62%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  opacity:0;pointer-events:none;transition:opacity .45s var(--ease);overflow-y:auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:72px}
+#sheet.on{opacity:1;pointer-events:auto}
+.sh{display:flex;gap:clamp(28px,6vw,80px);align-items:center;max-width:960px;width:100%}
+.b3{perspective:1600px;flex:none;width:var(--cw);aspect-ratio:var(--ar);max-width:100%;cursor:pointer;transform:scale(.86) translateY(20px);transition:transform .7s var(--ease)}
+#sheet.on .b3{transform:none}
+.b3in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 1s var(--ease)}
+.b3.flip .b3in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:3px 6px 6px 3px;overflow:hidden;box-shadow:0 30px 60px -20px var(--shadow),0 2px 6px var(--shadow)}
+.face::before{content:"";position:absolute;left:0;top:0;bottom:0;width:14px;background:linear-gradient(90deg,rgba(0,0,0,.22),rgba(255,255,255,.12) 40%,rgba(0,0,0,0))}
+.front{background:var(--c);color:var(--t);padding:28px 26px 24px 34px;display:flex;flex-direction:column}
+.front .ca{font-family:var(--f-data);font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.8}
+.front .ct{font-size:clamp(28px,3.6vw,40px);font-weight:720;letter-spacing:-.035em;line-height:.98;margin-top:14px;text-wrap:balance}
+.front.v0 .ct,.front.v2 .ct{font-family:var(--f-text);font-weight:500;letter-spacing:-.02em}
+.front.v2 .ct{font-style:italic}
+.front svg{flex:1;width:100%;min-height:0;margin-top:10px}
+.front svg path{fill:var(--t);opacity:.9}
+.front .cy{font-family:var(--f-data);font-size:11px;opacity:.7}
+.back{transform:rotateY(180deg);background:var(--paper-2);color:var(--ink);padding:30px 26px 22px 34px;display:flex;flex-direction:column;gap:16px;border:1px solid color-mix(in srgb,var(--ink) 8%,transparent)}
+.back .bk{font-family:var(--f-data);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.back p{font-family:var(--f-text);font-size:17px;line-height:1.5;margin:0;text-wrap:pretty}
+.bars{margin-top:auto;align-self:flex-end;display:flex;gap:1.5px;height:38px;background:#fff;padding:5px 7px;border-radius:2px}
+.bars span{background:#111;width:var(--bw)}
+.info{flex:1;min-width:0;display:grid;gap:18px}
+.gpill{justify-self:start;position:relative;color:var(--bic);font-weight:600;font-size:14px;padding:6px 16px}
+.gpill svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.gpill path{fill:none;stroke:var(--bic);stroke-width:1.4}
+.info h2{font-size:clamp(32px,4.4vw,54px);line-height:.95;letter-spacing:-.045em;margin:0;font-weight:740;text-wrap:balance}
+.info .by{font-family:var(--f-text);font-style:italic;font-size:21px;color:var(--ink-soft);margin:-6px 0 0}
+.info dl{display:grid;grid-template-columns:repeat(4,auto);justify-content:start;gap:4px 28px;margin:0}
+.info dt{font-family:var(--f-data);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+.info dd{margin:0;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;grid-row:2}
+.info h3{margin:6px 0 0;font-family:var(--f-data);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:400}
+.info .sum{font-family:var(--f-text);font-size:18.5px;line-height:1.55;margin:0;max-width:52ch;text-wrap:pretty}
+.info .note{font-family:var(--f-data);font-size:10.5px;color:var(--ink-soft);margin:0;line-height:1.6}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:1px solid color-mix(in srgb,var(--ink) 20%,transparent);background:none;border-radius:999px;padding:10px 18px;font-weight:600;font-size:14px;cursor:pointer}
+.btn.pri{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.x{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px));width:42px;height:42px;border-radius:50%;border:1px solid color-mix(in srgb,var(--ink) 20%,transparent);background:var(--glass);cursor:pointer;font-size:20px;line-height:1}
+@media (max-width:760px){
+  .sh{flex-direction:column;align-items:stretch;gap:28px}
+  .b3{align-self:center;--cw:210px!important}
+  .info dl{grid-template-columns:repeat(2,auto)} .info dd{grid-row:auto}
+  .info dl div{display:contents}
+  .brand small{display:none}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<!-- Landing -->
+<section id="landing" aria-label="Accueil">
+  <div class="l-wrap">
+    <div class="l-shelf" id="lshelf" aria-hidden="true"></div>
+    <h1 class="l-title">Tranche<svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2,6 C20,2 38,9 55,5 S88,3 98,6"/></svg></h1>
+    <p class="l-tag">Tout ce que tu as lu, vu de dos. Et de quoi t'en souvenir.</p>
+    <button class="l-cta" id="enter">Entrer dans la bibliothèque</button>
+    <span class="l-meta">Prototype · 34 livres d'exemple</span>
+  </div>
+</section>
+
+<!-- Bibliothèque -->
+<div id="stage" aria-label="Bibliothèque"><div id="world"><svg id="marks" aria-hidden="true"></svg></div></div>
+<svg id="ink" aria-hidden="true"><path id="inkp" d=""/></svg>
+
+<header class="top">
+  <div class="brand"><b>Tranche</b><small id="count"></small></div>
+  <nav class="pills">
+    <button class="pill" data-soon="La wish list arrive bientôt : les livres que tu veux, pour les idées cadeaux.">Wish list</button>
+    <button class="pill" data-soon="Le Reader (mangas .cbz, romans .epub) viendra beaucoup plus tard.">Reader <i>bientôt</i></button>
+  </nav>
+</header>
+
+<div class="dock" role="toolbar" aria-label="Disposition et tri">
+  <div class="seg" id="layouts"><em>Vue</em>
+    <button data-l="etagere" aria-pressed="true">Étagère</button>
+    <button data-l="pile" aria-pressed="false">Pile</button>
+    <button data-l="epars" aria-pressed="false">Éparpillé</button>
+    <button data-l="cosmos" aria-pressed="false">Cosmos</button>
+    <button data-l="trace" aria-pressed="false" disabled title="Dessine une ligne (Maj + glisser, ou au stylet)">Tracé</button>
+  </div>
+  <div class="seg" id="sorts"><em>Tri</em>
+    <button data-s="hasard" aria-pressed="false">Hasard</button>
+    <button data-s="taille" aria-pressed="false">Taille</button>
+    <button data-s="genre" aria-pressed="true">Genre</button>
+    <button data-s="auteur" aria-pressed="false">Auteur</button>
+  </div>
+</div>
+
+<p class="hint">Glisser à deux doigts : naviguer<br>Pincer : zoomer<br><b>Maj + tracer</b> (ou stylet) : dessine ta propre étagère<br>Les livres pâles prennent la poussière : ouvre-les pour les raviver.</p>
+
+<div class="toast" id="toast" role="status"></div>
+
+<div id="sheet" role="dialog" aria-modal="true" aria-label="Fiche du livre">
+  <button class="x" id="close" aria-label="Fermer">×</button>
+  <div class="sh" id="sh"></div>
+</div>
+
+<script>
+// ---------- Données d'exemple (dans l'app : Open Library / Google Books + résumé IA) ----------
+// [titre, auteur, parution, pages, genre, format, jours depuis la dernière visite, lu en, résumé]
+const RAW=[
+["L'Étranger","Albert Camus",1942,186,"Classiques","P",420,2017,"Meursault, employé à Alger, enterre sa mère sans émotion puis tue un homme sur une plage écrasée de soleil. À son procès, on le juge autant pour son indifférence que pour son crime."],
+["Le Petit Prince","Antoine de Saint-Exupéry",1943,96,"Classiques","S",30,2021,"Un aviateur en panne dans le Sahara rencontre un petit garçon venu d'un astéroïde, qui lui raconte ses voyages de planète en planète et sa rose."],
+["Madame Bovary","Gustave Flaubert",1857,480,"Classiques","P",900,2015,"Emma, mariée à un médecin de campagne, s'ennuie. Elle rêve de passion, prend des amants, s'endette, puis s'empoisonne quand tout s'effondre."],
+["Germinal","Émile Zola",1885,590,"Classiques","P",610,2016,"Étienne Lantier arrive dans un bassin minier du Nord, découvre la misère des mineurs et mène une grève qui tourne au drame."],
+["Le Comte de Monte-Cristo","Alexandre Dumas",1844,1250,"Classiques","S",210,2020,"Edmond Dantès, emprisonné à tort au château d'If, s'évade, découvre un trésor et revient, sous un autre nom, se venger de ceux qui l'ont trahi."],
+["Les Choses","Georges Perec",1965,160,"Classiques","P",380,2019,"Jérôme et Sylvie, jeune couple parisien, rêvent d'objets et de richesse. Leurs désirs les enlisent plus qu'ils ne les rendent heureux."],
+["Dune","Frank Herbert",1965,830,"Science-fiction","S",45,2022,"Paul Atréides survit à la trahison de sa famille sur Arrakis, planète désert de l'Épice, et prend la tête des Fremen."],
+["Fondation","Isaac Asimov",1951,280,"Science-fiction","P",700,2018,"Le mathématicien Hari Seldon prévoit la chute de l'Empire galactique et crée une Fondation pour abréger l'âge sombre qui suivra."],
+["1984","George Orwell",1949,400,"Science-fiction","P",320,2018,"Winston Smith, employé du Parti, tente d'aimer et de penser librement sous l'œil de Big Brother, jusqu'à ce que le régime le brise."],
+["Le Problème à trois corps","Liu Cixin",2008,440,"Science-fiction","S",90,2023,"Une astrophysicienne meurtrie par la Révolution culturelle répond à un signal venu d'une autre étoile, et l'humanité entière en subit les conséquences."],
+["Projet Dernière Chance","Andy Weir",2021,500,"Science-fiction","S",12,2024,"Un professeur se réveille seul et amnésique dans un vaisseau, chargé de sauver le Soleil, et se lie d'amitié avec un ingénieur extraterrestre."],
+["Fahrenheit 451","Ray Bradbury",1953,220,"Science-fiction","P",530,2017,"Montag, pompier chargé de brûler les livres, se met à les lire. Traqué, il rejoint des marginaux qui apprennent les livres par cœur."],
+["Klara et le Soleil","Kazuo Ishiguro",2021,340,"Science-fiction","S",160,2023,"Klara, une « amie artificielle », observe avec dévotion la famille de Josie, l'adolescente malade qu'elle accompagne."],
+["Le Seigneur des anneaux","J.R.R. Tolkien",1954,1200,"Fantasy","G",260,2019,"Frodon traverse la Terre du Milieu avec la Communauté pour détruire l'Anneau unique dans les flammes de la Montagne du Destin."],
+["Le Hobbit","J.R.R. Tolkien",1937,390,"Fantasy","S",820,2014,"Bilbon Sacquet accompagne treize nains pour reprendre leur trésor au dragon Smaug, et trouve en chemin un anneau d'invisibilité."],
+["Le Nom du vent","Patrick Rothfuss",2007,830,"Fantasy","G",140,2022,"Kvothe, devenu un aubergiste anonyme, raconte sa jeunesse : sa troupe massacrée, ses années à la rue, puis son entrée à l'Université."],
+["La Passe-miroir","Christelle Dabos",2013,520,"Fantasy","S",60,2023,"Ophélie, qui lit le passé des objets et traverse les miroirs, est fiancée de force à Thorn et part vivre au Pôle, une arche glaciale pleine d'intrigues."],
+["Harry Potter à l'école des sorciers","J.K. Rowling",1997,310,"Fantasy","S",1100,2005,"Harry apprend à onze ans qu'il est sorcier, entre à Poudlard et empêche Voldemort de s'emparer de la pierre philosophale."],
+["Millénium","Stieg Larsson",2005,710,"Polars","S",480,2016,"Le journaliste Mikael Blomkvist et la hackeuse Lisbeth Salander enquêtent sur la disparition d'Harriet Vanger, quarante ans plus tôt."],
+["Ils étaient dix","Agatha Christie",1939,250,"Polars","P",360,2018,"Dix inconnus invités sur une île coupée du monde meurent un à un, selon les couplets d'une comptine."],
+["Le Crime de l'Orient-Express","Agatha Christie",1934,250,"Polars","P",400,2018,"Dans un train bloqué par la neige, Hercule Poirot découvre que tous les passagers ont un lien avec la victime."],
+["La Vérité sur l'affaire Harry Quebert","Joël Dicker",2012,670,"Polars","S",230,2020,"Marcus Goldman enquête pour innocenter son mentor, accusé du meurtre de Nola Kellergan, disparue en 1975."],
+["Shining","Stephen King",1977,570,"Polars","P",290,2021,"Jack Torrance devient gardien d'un hôtel isolé pour l'hiver. L'hôtel, hanté, le pousse vers la folie et contre sa famille."],
+["L'Élégance du hérisson","Muriel Barbery",2006,360,"Contemporain","S",510,2017,"Renée, concierge cultivée, et Paloma, adolescente surdouée, cachent leur intelligence. L'arrivée de M. Ozu les fait se rencontrer."],
+["La Tresse","Laetitia Colombani",2017,220,"Contemporain","S",75,2022,"Smita en Inde, Giulia en Sicile, Sarah au Canada : trois femmes qui se battent, liées sans le savoir par un même fil."],
+["Kafka sur le rivage","Haruki Murakami",2002,640,"Contemporain","S",190,2021,"Un adolescent fugue vers Shikoku tandis que Nakata, vieil homme qui parle aux chats, suit sans le savoir le même chemin."],
+["L'Alchimiste","Paulo Coelho",1988,190,"Contemporain","P",950,2013,"Santiago, jeune berger andalou, traverse le désert jusqu'aux pyramides pour trouver un trésor vu en rêve."],
+["L'Anomalie","Hervé Le Tellier",2020,330,"Contemporain","S",110,2022,"Les passagers d'un vol Paris–New York atterrissent deux fois, à trois mois d'écart, et se retrouvent face à leurs doubles."],
+["Le Liseur","Bernhard Schlink",1995,240,"Contemporain","P",640,2016,"Michael, quinze ans, a une liaison avec Hanna. Des années plus tard, étudiant en droit, il la retrouve sur le banc des accusés d'un procès nazi."],
+["Americanah","Chimamanda Ngozi Adichie",2013,600,"Contemporain","S",170,2023,"Ifemelu quitte le Nigeria pour les États-Unis, y découvre ce que veut dire être noire, puis revient à Lagos retrouver Obinze."],
+["Sapiens","Yuval Noah Harari",2011,500,"Essais","G",300,2019,"Une histoire de l'humanité, de la révolution cognitive à la révolution scientifique, en passant par l'agriculture et l'argent."],
+["The Americans","Robert Frank",1958,180,"Photo","B",240,2020,"Un voyage photographique à travers les États-Unis du milieu des années 1950 : routes, bars, juke-box et visages."],
+["Sleeping by the Mississippi","Alec Soth",2004,112,"Photo","B",410,2019,"Portraits, chambres et paysages photographiés en descendant le Mississippi, du Minnesota jusqu'à la Louisiane."],
+["Paris de nuit","Brassaï",1932,64,"Photo","B",870,2018,"Les rues, les ponts et les pavés de Paris photographiés la nuit, au début des années 1930."]
+];
+const PAL=["#22365A","#CDBDA2","#8E2F2A","#2E4D3D","#E6DCCB","#D6A33F","#3A386A","#B9C5C9","#6A4D37","#F0ECE4","#97395A","#262626","#466B7B","#C3653A","#7B8957","#D9CFEE","#0F5257","#E9C9C0"];
+const FMT={P:{h:178,n:"Poche"},S:{h:212,n:"Standard"},G:{h:238,n:"Grand format"},B:{h:288,n:"Beaux livres"}};
+const GORDER=["Classiques","Contemporain","Science-fiction","Fantasy","Polars","Essais","Photo"];
+const lum=h=>{const n=parseInt(h.slice(1),16),r=n>>16&255,g=n>>8&255,b=n&255;return(.299*r+.587*g+.114*b)/255};
+const BOOKS=RAW.map((r,i)=>{const [t,a,y,p,g,f,d,ry,s]=r;const h=FMT[f].h;const w=Math.round(Math.max(15,Math.min(64,f==="B"?p/4.5+12:p/17+6)));
+  const c=PAL[(i*7+3)%PAL.length];return{i,t,a,y,p,g,f,d,ry,s,h,w,c,ink:lum(c)>.58?"#18191B":"#F3F1EC",v:(i*5)%4,last:a.split(" ").pop()}});
+
+// ---------- Outils ----------
+const $=s=>document.querySelector(s);
+const rnd=seed=>()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const f1=n=>n.toFixed(1);
+function curve(p,closed){const n=p.length;if(n<2)return"";let d=`M${f1(p[0][0])},${f1(p[0][1])}`;const g=i=>closed?p[(i+n)%n]:p[Math.max(0,Math.min(n-1,i))];
+  for(let i=0;i<(closed?n:n-1);i++){const p0=g(i-1),p1=g(i),p2=g(i+1),p3=g(i+2);
+    d+=`C${f1(p1[0]+(p2[0]-p0[0])/6)},${f1(p1[1]+(p2[1]-p0[1])/6)} ${f1(p2[0]-(p3[0]-p1[0])/6)},${f1(p2[1]-(p3[1]-p1[1])/6)} ${f1(p2[0])},${f1(p2[1])}`}
+  return closed?d+"Z":d}
+// forme organique "dessinée à la main" : un contour irrégulier qui ne se referme pas parfaitement
+function blob(cx,cy,rx,ry,seed,amp=.13,n=9){const R=rnd(seed),pts=[],o=R()*6;for(let i=0;i<=n;i++){const a=o+i/n*Math.PI*2*1.035,k=1+(R()-.5)*2*amp;pts.push([cx+Math.cos(a)*rx*k,cy+Math.sin(a)*ry*k])}return curve(pts,false)}
+function wobbleLine(x0,x1,y,seed){const R=rnd(seed),pts=[];for(let x=x0;x<x1;x+=70)pts.push([x,y+(R()-.5)*3]);pts.push([x1,y+(R()-.5)*3]);return curve(pts,false)}
+
+// ---------- Landing ----------
+(()=>{const sh=$("#lshelf");BOOKS.slice(0,16).forEach((b,k)=>{const e=document.createElement("span");e.className="ls";
+  e.style.cssText=`width:${Math.max(10,b.w*.55)}px;height:${b.h*.62}px;background:${b.c};animation-delay:${k*55}ms;--tilt:${(k%3-1)*4}deg`;sh.appendChild(e)})})();
+
+// ---------- Construction des tranches ----------
+const world=$("#world"),marks=$("#marks"),stage=$("#stage");
+$("#count").textContent=BOOKS.length+" livres lus";
+BOOKS.forEach(b=>{const e=document.createElement("button");e.className=`book v${b.v}`+(b.w<22?" thin":"")+(b.d>365?" dusty":"");
+  e.style.cssText=`--w:${b.w}px;--h:${b.h}px;--c:${b.c};--t:${b.ink};--fs:${Math.min(15,Math.max(9,b.w*.42))}px`;
+  e.setAttribute("aria-label",`${b.t}, ${b.a}`);
+  e.innerHTML=`<span class="spine"><span class="txt"><span class="au">${b.last}</span><span class="ti">${b.t}</span><span class="mk"></span></span></span>`;
+  e.dataset.i=b.i;b.el=e;world.appendChild(e)});
+
+// ---------- Tris ----------
+const SORTS={
+  hasard:{key:null,sort:a=>{const R=rnd(state.seed);return a.map(b=>[R(),b]).sort((x,y)=>x[0]-y[0]).map(x=>x[1])}},
+  taille:{key:b=>FMT[b.f].n,sort:a=>a.sort((x,y)=>x.h-y.h||x.w-y.w)},
+  genre:{key:b=>b.g,sort:a=>a.sort((x,y)=>GORDER.indexOf(x.g)-GORDER.indexOf(y.g)||x.ry-y.ry)},
+  auteur:{key:b=>b.last.normalize("NFD")[0].toUpperCase(),sort:a=>a.sort((x,y)=>x.last.localeCompare(y.last,"fr")||x.y-y.y)}
+};
+function groups(){const s=SORTS[state.sort],arr=s.sort([...BOOKS]);if(!s.key)return[{key:null,items:arr}];
+  const out=[];arr.forEach(b=>{const k=s.key(b);if(!out.length||out.at(-1).key!==k)out.push({key:k,items:[]});out.at(-1).items.push(b)});return out}
+
+// ---------- Dispositions (chaque livre : centre x,y + rotation) ----------
+const LAY={
+  etagere(G){const pos={},labels=[],paths=[],ROW=Math.max(760,Math.min(1250,innerWidth*1.05)),RH=360,BASE=300;let x=0,row=0,maxX=0;
+    const wrap=()=>{paths.push({d:wobbleLine(-30,maxX+30,row*RH+BASE+3,row+7),c:"shelf"});row++;x=0;maxX=0};
+    G.forEach((g,gi)=>{if(gi&&g.key)x+=56;const lw=g.key?g.key.length*9+52:0;let gx=null;g.items.forEach((b,k)=>{if(x+b.w>ROW&&x>0)wrap();if(k===0){gx=x;if(g.key)labels.push({t:g.key,x,y:row*RH+BASE-312})}
+      pos[b.i]={x:x+b.w/2,y:row*RH+BASE-b.h/2,r:0};x+=b.w+3;maxX=Math.max(maxX,x)});if(gx!==null&&x-gx<lw)x=gx+lw});
+    paths.push({d:wobbleLine(-30,maxX+30,row*RH+BASE+3,row+7),c:"shelf"});return{pos,labels,paths}},
+  pile(G){const pos={},labels=[],paths=[],COLS=Math.max(3,Math.min(6,Math.round(innerWidth/330)));let si=0;
+    G.forEach((g,gi)=>{let cur=null;g.items.forEach((b,k)=>{if(!cur||cur.n>=8){cur={x:(si%COLS)*340,y:Math.floor(si/COLS)*440,n:0};si++;
+        paths.push({d:wobbleLine(cur.x-160,cur.x+160,cur.y+3,si*5),c:"shelf"});if(k===0&&g.key)labels.push({t:g.key,x:cur.x-50,y:cur.y+22})}
+      const R=rnd(b.i*31+gi);pos[b.i]={x:cur.x+(R()-.5)*26,y:cur.y-b.w/2,r:90+(R()-.5)*5};cur.y-=b.w+1;cur.n++})});
+    return{pos,labels,paths}},
+  epars(G){const pos={},labels=[],paths=[],cols=Math.ceil(Math.sqrt(G.length*1.6));
+    G.forEach((g,gi)=>{const cx=(gi%cols)*760,cy=Math.floor(gi/cols)*640,rad=G.length>1?150+22*Math.sqrt(g.items.length)*6:560;
+      g.items.forEach(b=>{const R=rnd(b.i*97+7),a=R()*Math.PI*2,d=Math.sqrt(R())*rad,lying=R()<.2;
+        pos[b.i]={x:cx+Math.cos(a)*d*1.25,y:cy+Math.sin(a)*d*.8,r:lying?90+(R()-.5)*40:(R()-.5)*70}});
+      if(g.key)labels.push({t:g.key,x:cx-40,y:cy-rad*.8-170})});return{pos,labels,paths}},
+  cosmos(G){const pos={},labels=[],paths=[],one=G.length===1,sp=one?150:118;
+    G.forEach((g,gi)=>{const a=gi*2.39996+.6,dist=one?0:820*Math.sqrt(gi+.35),cx=Math.cos(a)*dist,cy=Math.sin(a)*dist*.75;
+      g.items.forEach((b,k)=>{const R=rnd(b.i*53+3),rr=sp*Math.sqrt(k+.6),aa=k*2.39996;pos[b.i]={x:cx+Math.cos(aa)*rr*1.15,y:cy+Math.sin(aa)*rr,r:(R()-.5)*34}});
+      if(g.key){const rad=sp*Math.sqrt(g.items.length+.6)+150;const bd=blob(cx,cy,rad*1.18,rad,gi*11+5,.1,10)+"Z";paths.push({d:bd,c:"blobfill"},{d:bd,c:"blob draw"},{d:blob(cx+7,cy-5,rad*1.15,rad*.97,gi*11+5,.1,10)+"Z",c:"blob draw"});
+        labels.push({t:g.key,x:cx-90,y:cy-rad-70,z:2.2})}});return{pos,labels,paths}},
+  trace(G){const pos={},paths=[],P=state.trace;if(!P)return LAY.etagere(G);
+    const seg=[],L=[0];for(let i=1;i<P.length;i++){L.push(L[i-1]+Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]))}const tot=L.at(-1);
+    const at=s=>{let i=1;while(i<L.length-1&&L[i]<s)i++;const t=(s-L[i-1])/((L[i]-L[i-1])||1),x=P[i-1][0]+(P[i][0]-P[i-1][0])*t,y=P[i-1][1]+(P[i][1]-P[i-1][1])*t;return{x,y,a:Math.atan2(P[i][1]-P[i-1][1],P[i][0]-P[i-1][0])}};
+    let s=0,row=0;G.flatMap(g=>g.items).forEach(b=>{if(s+b.w>tot){row++;s=0}const p=at(s+b.w/2),off=b.h/2+3+row*320;
+      pos[b.i]={x:p.x+Math.sin(p.a)*off,y:p.y-Math.cos(p.a)*off,r:p.a*180/Math.PI};s+=b.w+3});
+    paths.push({d:curve(P.filter((_,k)=>k%3===0||k===P.length-1),false),c:"shelf"});return{pos,labels:[],paths}}
+};
+
+// ---------- État & rendu ----------
+const state={layout:"etagere",sort:"genre",seed:7,trace:null};
+let bbox=null;
+function render(first){const G=groups(),R=LAY[state.layout](G),order=G.flatMap(g=>g.items);
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  order.forEach((b,k)=>{const p=R.pos[b.i],rad=Math.max(b.w,b.h)/2;x0=Math.min(x0,p.x-rad);x1=Math.max(x1,p.x+rad);y0=Math.min(y0,p.y-rad);y1=Math.max(y1,p.y+rad);
+    b.el.style.transitionDelay=first?"0ms":Math.min(k*9,320)+"ms";b.el.style.transform=`translate(${p.x-b.w/2}px,${p.y-b.h/2}px) rotate(${p.r}deg)`});
+  R.labels.forEach(l=>{y0=Math.min(y0,l.y);y1=Math.max(y1,l.y+40)});bbox={x0,y0,x1,y1};
+  marks.innerHTML=R.paths.map(p=>`<path class="${p.c}" pathLength="1" d="${p.d}"/>`).join("");
+  world.querySelectorAll(".glabel").forEach(e=>e.remove());
+  R.labels.forEach((l,k)=>{const e=document.createElement("div");e.className="glabel";e.style.setProperty("--tr",`translate(${l.x}px,${l.y}px) scale(${l.z||1})`);e.style.transformOrigin="0 0";
+    const w=l.t.length*9+40;e.innerHTML=`<svg viewBox="0 0 ${w} 44" preserveAspectRatio="none"><path d="${blob(w/2,22,w/2,20,k*17+state.sort.length,.08,8)}"/></svg><span>${l.t}</span>`;world.appendChild(e)});
+  fit(state.layout==="cosmos"?.42:.22)}
+
+// ---------- Caméra : pan trackpad, pinch, drag, inertie ----------
+const cam={x:0,y:0,s:.6},tgt={x:0,y:0,s:.6};let K=.3,vx=0,vy=0,inert=false;
+function fit(minS){if(!bbox)return;const W=innerWidth,H=innerHeight,bw=bbox.x1-bbox.x0+160,bh=bbox.y1-bbox.y0+260;
+  const s=Math.max(minS,Math.min(1.05,W/bw,H/bh));tgt.s=s;tgt.x=W/2-(bbox.x0+bbox.x1)/2*s;tgt.y=H/2-(bbox.y0+bbox.y1)/2*s+10;K=.07;inert=false}
+function zoomAt(mx,my,f){const ns=Math.max(.15,Math.min(3,tgt.s*f));f=ns/tgt.s;tgt.x=mx-(mx-tgt.x)*f;tgt.y=my-(my-tgt.y)*f;tgt.s=ns}
+(function loop(){if(inert){tgt.x+=vx;tgt.y+=vy;vx*=.93;vy*=.93;if(Math.abs(vx)+Math.abs(vy)<.05)inert=false}
+  const dx=tgt.x-cam.x,dy=tgt.y-cam.y,ds=tgt.s-cam.s;if(Math.abs(dx)+Math.abs(dy)+Math.abs(ds)*500>.02){cam.x+=dx*K;cam.y+=dy*K;cam.s+=ds*K;
+    world.style.transform=`translate3d(${cam.x}px,${cam.y}px,0) scale(${cam.s})`}else if(K<.3)K=.3;requestAnimationFrame(loop)})();
+stage.addEventListener("wheel",e=>{e.preventDefault();K=.35;inert=false;
+  if(e.ctrlKey)zoomAt(e.clientX,e.clientY,Math.exp(-e.deltaY*.012));else{const m=e.deltaMode===1?24:1;tgt.x-=e.deltaX*m;tgt.y-=e.deltaY*m}},{passive:false});
+let gs=1;stage.addEventListener("gesturestart",e=>{e.preventDefault();gs=1});
+stage.addEventListener("gesturechange",e=>{e.preventDefault();zoomAt(e.clientX,e.clientY,e.scale/gs);gs=e.scale});
+
+const ptrs=new Map();let drag=null,pinch=null,ink=null;const inkp=$("#inkp");
+const toWorld=(x,y)=>[(x-cam.x)/cam.s,(y-cam.y)/cam.s];
+stage.addEventListener("pointerdown",e=>{stage.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});inert=false;K=1;tgt.x=cam.x;tgt.y=cam.y;tgt.s=cam.s;
+  if(e.pointerType==="pen"||e.shiftKey){ink={pts:[[e.clientX,e.clientY]]};stage.classList.add("drawing");return}
+  if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch={d:Math.hypot(a.x-b.x,a.y-b.y)};drag=null;return}
+  drag={x:e.clientX,y:e.clientY,moved:0,t:performance.now(),target:e.target.closest(".book")}});
+stage.addEventListener("pointermove",e=>{if(!ptrs.has(e.pointerId))return;const prev=ptrs.get(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(ink){ink.pts.push([e.clientX,e.clientY]);inkp.setAttribute("d",curve(ink.pts.filter((_,k)=>k%2===0),false));return}
+  if(pinch&&ptrs.size===2){const [a,b]=[...ptrs.values()],d=Math.hypot(a.x-b.x,a.y-b.y);zoomAt((a.x+b.x)/2,(a.y+b.y)/2,d/pinch.d);pinch.d=d;cam.s=tgt.s;cam.x=tgt.x;cam.y=tgt.y;world.style.transform=`translate3d(${cam.x}px,${cam.y}px,0) scale(${cam.s})`;return}
+  if(drag){const dx=e.clientX-prev.x,dy=e.clientY-prev.y;drag.moved+=Math.abs(dx)+Math.abs(dy);if(drag.moved>6)stage.classList.add("grabbing");
+    tgt.x+=dx;tgt.y+=dy;vx=dx;vy=dy}});
+function up(e){ptrs.delete(e.pointerId);stage.classList.remove("grabbing","drawing");
+  if(ink){const pts=ink.pts;ink=null;inkp.setAttribute("d","");let len=0;for(let i=1;i<pts.length;i++)len+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);
+    if(len>120){state.trace=pts.map(p=>toWorld(p[0],p[1]));$('[data-l="trace"]').disabled=false;setLayout("trace",true)}return}
+  if(pinch){if(ptrs.size<2)pinch=null;return}
+  if(drag){if(drag.moved<6&&drag.target)openBook(BOOKS[+drag.target.dataset.i]);else if(Math.abs(vx)+Math.abs(vy)>1){inert=true;K=.3}else K=.3;drag=null}}
+stage.addEventListener("pointerup",up);stage.addEventListener("pointercancel",up);
+addEventListener("resize",()=>render(true));
+
+// ---------- Barre ----------
+function press(sel,attr,val){document.querySelectorAll(sel+" button").forEach(b=>b.setAttribute("aria-pressed",b.dataset[attr]===val))}
+function setLayout(l,keepTrace){state.layout=l;press("#layouts","l",l);render()}
+$("#layouts").addEventListener("click",e=>{const b=e.target.closest("button");if(b&&!b.disabled)setLayout(b.dataset.l)});
+$("#sorts").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;if(b.dataset.s==="hasard")state.seed++;state.sort=b.dataset.s;press("#sorts","s",state.sort);render()});
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),3200)}
+document.querySelectorAll("[data-soon]").forEach(b=>b.addEventListener("click",()=>toast(b.dataset.soon)));
+stage.addEventListener("keydown",e=>{const b=e.target.closest(".book");if(b&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openBook(BOOKS[+b.dataset.i])}});
+
+// ---------- Fiche : couverture, infos, retournement ----------
+const sheet=$("#sheet");let cur=null;
+function openBook(b){cur=b;const cw=Math.round(300*(b.h/238)**.5),ar=b.f==="B"?"0.82":"0.66",R=rnd(b.i*7+1);
+  const bars=Array.from({length:34},()=>`<span style="--bw:${1+Math.floor(R()*3)}px"></span>`).join("");
+  const seen=b.d>365?`il y a ${Math.round(b.d/30)} mois`:`il y a ${b.d} jours`;
+  $("#sh").innerHTML=`
+  <div class="b3" style="--cw:${cw}px;--ar:${ar};--c:${b.c};--t:${b.ink}" tabindex="0" role="button" aria-label="Retourner le livre">
+    <div class="b3in">
+      <div class="face front v${b.v}"><div class="ca">${b.a}</div><div class="ct">${b.t}</div>
+        <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="${blob(100+(R()-.5)*30,100+(R()-.5)*30,60+R()*25,55+R()*25,b.i*3+2,.22,7)}Z"/></svg>
+        <div class="cy">${b.y}</div></div>
+      <div class="face back"><div class="bk">${b.t}</div><p>${b.s}</p><div class="bars" aria-hidden="true">${bars}</div></div>
+    </div></div>
+  <div class="info">
+    <span class="gpill"><svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path d="${blob(50,15,50,14,b.i+9,.07,8)}"/></svg>${b.g}</span>
+    <h2>${b.t}</h2><p class="by">${b.a}</p>
+    <dl><div><dt>Paru</dt><dd>${b.y}</dd></div><div><dt>Pages</dt><dd>${b.p}</dd></div><div><dt>Lu en</dt><dd>${b.ry}</dd></div><div><dt>Revu</dt><dd>${seen}</dd></div></dl>
+    <h3>L'intrigue</h3><p class="sum">${b.s}</p>
+    <p class="note">Dans l'app : résumé complet généré par IA à l'ajout, fin comprise.<br>Infos et couverture récupérées via Open Library / Google Books.</p>
+    <div class="acts"><button class="btn pri" id="flip">Retourner le livre</button></div>
+  </div>`;
+  const b3=$("#sh .b3"),flip=()=>b3.classList.toggle("flip");b3.addEventListener("click",flip);b3.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip()}});$("#flip").addEventListener("click",flip);
+  sheet.classList.add("on");sheet.scrollTop=0;$("#close").focus()}
+function closeBook(){if(!cur)return;sheet.classList.remove("on");const b=cur;cur=null;
+  if(b.d>365){b.d=0;setTimeout(()=>{b.el.classList.remove("dusty");toast(`« ${b.t} » a repris ses couleurs.`)},350)}b.el.focus({preventScroll:true})}
+$("#close").addEventListener("click",closeBook);sheet.addEventListener("click",e=>{if(e.target===sheet||e.target.id==="sh")closeBook()});
+addEventListener("keydown",e=>{if(e.key==="Escape")closeBook()});
+
+// ---------- Entrée ----------
+render(true);cam.x=tgt.x;cam.y=tgt.y+260;cam.s=tgt.s*.9;world.style.transform=`translate3d(${cam.x}px,${cam.y}px,0) scale(${cam.s})`;
+$("#enter").addEventListener("click",()=>{$("#landing").classList.add("out");K=.06;stage.focus?.()});
+</script>
+</body>
+</html>
