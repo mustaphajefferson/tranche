@@ -513,6 +513,82 @@ button{font:inherit;color:inherit}
 @keyframes crawl{to{transform:translateX(calc(100vw + 20px))}}
 @keyframes inch{50%{transform:scaleX(1.06)}}
 @media (prefers-reduced-motion:reduce){.sum .w,.glabel path,.ribbon,#snail{animation:none!important;stroke-dashoffset:0!important}}
+/* ---- v11 : loupe du scanner ---- */
+.sc-loupe{position:fixed;z-index:75;width:132px;height:132px;border-radius:50%;overflow:hidden;pointer-events:none;border:3px solid var(--paper);box-shadow:0 0 0 1.5px var(--rub),0 14px 30px -8px rgba(0,0,0,.55);opacity:0;transform:scale(.6);transition:opacity .2s,transform .25s var(--ease);background:var(--paper)}
+.sc-loupe.on{opacity:1;transform:none}
+.sc-loupe canvas{width:100%;height:100%;display:block}
+/* ---- v11 : ajout de plusieurs livres ---- */
+.ms-mode{display:flex;gap:4px;flex-wrap:wrap}
+.ms-mode button{border:0;background:none;cursor:pointer;font-family:var(--f-big);font-weight:700;font-size:clamp(24px,3vw,32px);color:var(--ink);opacity:.3;padding:2px 10px 4px 0;transition:opacity .25s,color .25s}
+.ms-mode button[aria-pressed="true"]{opacity:1;color:var(--rub)}
+#add:not([data-mode="many"]) .many,#add[data-mode="many"] .one{display:none!important}
+.many{display:grid;gap:28px}
+.ms-area{font-family:var(--f-big);font-weight:600;font-size:clamp(20px,2.2vw,26px);line-height:1.45;color:var(--ink);background:repeating-linear-gradient(transparent 0 calc(1.45em - 1px),color-mix(in srgb,var(--ink) 18%,transparent) calc(1.45em - 1px) 1.45em);background-attachment:local;border:0;border-left:3px solid var(--rub);padding:0 0 0 14px;resize:vertical;width:100%;min-height:8.7em;outline:none}
+.ms-area::placeholder{color:color-mix(in srgb,var(--ink) 25%,transparent)}
+.blist{list-style:none;margin:0;padding:0;display:grid;gap:0;counter-reset:bl;max-height:420px;overflow:auto}
+.blist li{display:grid;grid-template-columns:22px 2.2em 1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed color-mix(in srgb,var(--ink) 20%,transparent);counter-increment:bl;animation:mrise .4s var(--ease) both}
+.blist li::before{content:counter(bl,upper-roman);grid-column:2;grid-row:1;font-family:var(--f-big);color:var(--rub);font-size:14px;text-align:right}
+.blist li input{grid-column:1;grid-row:1;accent-color:var(--rub);width:18px;height:18px}
+.blist li .tx{grid-column:3;min-width:0}.blist li b{font-family:var(--f-big);font-size:20px;font-weight:700}.blist li span{color:var(--ink-soft);font-size:13px;margin-left:8px}
+.blist li select{grid-column:4;font:inherit;font-size:13px;border:0;border-bottom:1px solid color-mix(in srgb,var(--ink) 30%,transparent);background:none;color:var(--ink)}
+.blist li.off{opacity:.35}
+#empty{position:fixed;inset:0;z-index:5;display:grid;place-items:center;pointer-events:none;text-align:center}
+#empty>div{pointer-events:auto;display:grid;gap:18px;justify-items:center;max-width:440px;padding:20px}
+#empty h3{margin:0;font-family:var(--f-big);font-size:clamp(34px,5vw,52px);line-height:1}
+#empty p{margin:0;color:var(--ink-soft);line-height:1.5}
+/* ---- v11 : compte et réglages ---- */
+.tlink.ic .av{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;border:1.6px solid currentColor;font-family:var(--f-goth);font-size:17px;line-height:1}
+.tlink.ic .av.in{background:var(--rub);border-color:var(--rub);color:#fff}
+.set{display:grid}
+.set .row{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:16px 0;border-bottom:1px dashed color-mix(in srgb,var(--ink) 20%,transparent)}
+.set .row b{display:block;font-family:var(--f-big);font-size:24px;font-weight:700}.set .row span{color:var(--ink-soft);font-size:14px}
+.set .row.danger b{color:var(--rub)}
+.btn.armed{animation:armed .5s ease-in-out infinite alternate}
+@keyframes armed{to{box-shadow:0 0 0 6px color-mix(in srgb,var(--rub) 25%,transparent)}}
+.ac-who{display:flex;align-items:center;gap:14px;font-size:18px;margin:0}
+.ac-who .av{width:54px;height:54px;border-radius:50%;background:var(--rub);color:#fff;display:grid;place-items:center;font-family:var(--f-goth);font-size:34px}
+.ac-acts{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.lnk{border:0;background:none;padding:0;color:var(--rub);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font:inherit;font-size:14px}
+/* ---- v11 : Reader ---- */
+.rd-drop{border:1.5px dashed color-mix(in srgb,var(--ink) 35%,transparent);border-radius:4px;padding:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;transition:border-color .2s,background .2s}
+.rd-drop.over{border-color:var(--rub);background:color-mix(in srgb,var(--rub) 6%,transparent)}
+.rd-drop p{margin:0;color:var(--ink-soft);font-size:14px;flex:1;min-width:200px}
+.plate input{display:none}
+.tms{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}
+.tm{border:0;background:none;padding:0;text-align:left;cursor:pointer;display:grid;grid-template-columns:88px 1fr;gap:16px;align-items:end;color:var(--ink);font:inherit}
+.tm .cv{aspect-ratio:2/3;background:var(--paper-2) center/cover;border-radius:1px 3px 3px 1px;box-shadow:0 10px 22px -10px var(--shadow),inset 3px 0 0 rgba(0,0,0,.15);transition:transform .4s var(--ease)}
+.tm:hover .cv{transform:translateY(-5px) rotate(-1.5deg)}
+.tm h4{margin:0;font-family:var(--f-big);font-weight:800;font-size:28px;line-height:.95}
+.tm .meta{font-size:13px;color:var(--ink-soft);margin:6px 0 8px}
+.tm .gone{font-size:12px;color:var(--rub)}
+.vols2{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-end}
+.vols2 button{border:0;padding:0;cursor:pointer;width:38px;aspect-ratio:2/3;background:var(--paper-2) center/cover;border-radius:1px 2px 2px 1px;box-shadow:0 4px 10px -5px var(--shadow);position:relative;transition:transform .3s var(--ease)}
+.vols2 button:hover{transform:translateY(-4px)}
+.vols2 button i{position:absolute;left:0;bottom:-5px;height:2px;background:var(--rub);width:var(--p)}
+.vols2 button.done{outline:2px solid var(--rub);outline-offset:2px}
+.ser select{font:inherit;font-size:12px;border:0;border-bottom:1px solid color-mix(in srgb,var(--ink) 30%,transparent);background:none;color:var(--ink-soft);margin-top:4px}
+#rd{position:fixed;inset:0;z-index:65;background:#0b0a09;color:#efe8dc;opacity:0;pointer-events:none;transition:opacity .45s var(--ease)}
+#rd.on{opacity:1;pointer-events:auto}
+.rd-stage{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:default}
+.rd-pages{position:absolute;inset:0;transform-origin:0 0;transition:transform .35s var(--ease)}
+.rd-pages.nt{transition:none}
+.spread{position:absolute;inset:0;display:flex;justify-content:center;align-items:center;gap:0;padding:clamp(10px,3vh,34px) 10px}
+.spread img{max-height:100%;max-width:100%;object-fit:contain;box-shadow:0 20px 60px -20px #000;background:#fff;user-select:none;-webkit-user-drag:none}
+.spread.two img{max-width:50%}
+.rd-top,.rd-bot{position:absolute;left:0;right:0;display:flex;align-items:center;gap:14px;padding:12px max(16px,env(safe-area-inset-left,0px));transition:opacity .35s,transform .45s var(--ease);background:linear-gradient(#0b0a09e6,#0b0a0900)}
+.rd-top{top:0;padding-top:calc(12px + env(safe-area-inset-top,0px))}
+.rd-bot{bottom:0;background:linear-gradient(#0b0a0900,#0b0a09e6);padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+#rd.calm .rd-top{opacity:0;transform:translateY(-100%);pointer-events:none}#rd.calm .rd-bot{opacity:0;transform:translateY(100%);pointer-events:none}
+.rd-x{border:0;background:none;color:var(--rub);font-family:var(--f-goth);font-size:42px;line-height:1;cursor:pointer;padding:0 6px}
+.rd-t{flex:1;min-width:0}.rd-t b{font-family:var(--f-big);font-size:24px;font-weight:700;display:block;line-height:1}.rd-t span{font-size:12px;opacity:.6}
+.rd-opts{display:flex;gap:6px}
+.rd-opts button{border:1px solid #efe8dc40;background:none;color:inherit;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer}
+.rd-opts button[aria-pressed="true"]{background:#efe8dc;color:#0b0a09}
+.rd-bot span{font-family:var(--f-big);font-size:20px;min-width:3ch;text-align:center}
+#rd-sc{flex:1;accent-color:var(--rub);height:24px}
+#rd.rtl #rd-sc{direction:rtl}
+.rd-hint{position:absolute;top:50%;width:64px;height:64px;margin-top:-32px;border-radius:50%;display:grid;place-items:center;font-size:30px;color:#efe8dc;background:#ffffff14;opacity:0;pointer-events:none;transition:opacity .3s}
+.rd-hint.l{left:18px}.rd-hint.r{right:18px}.rd-hint.on{opacity:1}
 </style>
 </head><body>
 
@@ -537,7 +613,7 @@ button{font:inherit;color:inherit}
 <svg id="ink" aria-hidden="true"><path id="inkp" d=""/></svg>
 <button class="logo" id="logo" aria-label="Revenir à l'accueil" title="Accueil"><svg viewBox="0 0 48 48" aria-hidden="true"><rect class="lg-bg" x="0" y="0" width="48" height="48" rx="3"/><rect class="lg-ln" x="4.5" y="4.5" width="39" height="39" pathLength="1"/><circle cx="4.5" cy="4.5" r="2.2"/><circle cx="43.5" cy="4.5" r="2.2"/><circle cx="4.5" cy="43.5" r="2.2"/><circle cx="43.5" cy="43.5" r="2.2"/><text x="24" y="36" text-anchor="middle">T</text></svg></button>
 
-<nav class="tr"><button class="tlink ic" id="t-candle" aria-pressed="false" aria-label="Chandelle : nuit d'orage" title="Chandelle"><svg viewBox="0 0 24 28" aria-hidden="true"><path class="fl" d="M12 1.5c2.2 3.2 3.4 5 3.4 7.2A3.4 3.4 0 0 1 12 12.1a3.4 3.4 0 0 1-3.4-3.4c0-2.2 1.2-4 3.4-7.2z"/><rect x="11.3" y="11.6" width="1.4" height="2.4"/><path d="M8.6 14h6.8v9.6H8.6z"/><path d="M4 24.2h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"/></svg></button><button class="tlink" id="openMenu" aria-expanded="false" aria-controls="menu">Ranger</button><button class="tlink" id="openReader">Reader</button></nav>
+<nav class="tr"><button class="tlink ic" id="t-candle" aria-pressed="false" aria-label="Chandelle : nuit à la cave" title="Chandelle"><svg viewBox="0 0 24 28" aria-hidden="true"><path class="fl" d="M12 1.5c2.2 3.2 3.4 5 3.4 7.2A3.4 3.4 0 0 1 12 12.1a3.4 3.4 0 0 1-3.4-3.4c0-2.2 1.2-4 3.4-7.2z"/><rect x="11.3" y="11.6" width="1.4" height="2.4"/><path d="M8.6 14h6.8v9.6H8.6z"/><path d="M4 24.2h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"/></svg></button><button class="tlink" id="openMenu" aria-expanded="false" aria-controls="menu">Ranger</button><button class="tlink" id="openReader">Reader</button><button class="tlink ic" id="t-acct" aria-label="Compte et réglages" title="Compte et réglages"><span class="av">?</span></button></nav>
 <button class="fab" id="fab" aria-label="Ajouter un livre" title="Ajouter un livre"><svg viewBox="0 0 40 40" aria-hidden="true" fill="currentColor"><path d="M20 2l4 4-1.6 14 1.6 14-4 4-4-4 1.6-14L16 6z"/><path d="M2 20l4-4 14 1.6 14-1.6 4 4-4 4-14-1.6L6 24z"/><path d="M20 15l5 5-5 5-5-5z" fill="var(--paper)"/></svg></button>
 <div class="menu" id="menu" role="dialog" aria-label="Affichage">
   <div><h4>Vue</h4><div class="opts big" id="layouts">
@@ -570,8 +646,9 @@ button{font:inherit;color:inherit}
 
 <section class="panel ms" id="add" aria-label="Ajouter un livre"><div class="pin">
   <div class="phead"><div class="ms-h"><svg class="ms-cap" viewBox="0 0 100 100" aria-hidden="true"><rect class="o" x="3" y="3" width="94" height="94"/><rect class="r" x="11" y="11" width="78" height="78"/><circle cx="3" cy="3" r="4"/><circle cx="97" cy="3" r="4"/><circle cx="3" cy="97" r="4"/><circle cx="97" cy="97" r="4"/><text x="50" y="79" text-anchor="middle">A</text></svg><h2 class="big">jouter un livre</h2></div><button class="pclose" aria-label="Fermer">×</button></div>
-  <p class="ms-intro">Écris son titre et son auteur. Tranches cherche la couverture, l'année et le nombre de pages, puis le range à sa vraie taille.</p>
-  <div class="ms-sec"><h3><b>I</b>Le livre</h3>
+  <div class="ms-mode" id="a-mode"><button type="button" data-m="one" aria-pressed="true">Un livre</button><button type="button" data-m="many" aria-pressed="false">Plusieurs d'un coup</button></div>
+  <p class="ms-intro one">Écris son titre et son auteur. Tranches cherche la couverture, l'année et le nombre de pages, puis le range à sa vraie taille.</p>
+  <div class="ms-sec one"><h3><b>I</b>Le livre</h3>
     <form id="a-form" class="ms-form" autocomplete="off">
       <label class="ms-fld" for="a-t"><span>Titre</span><input id="a-t" placeholder="L'Étranger" required></label>
       <label class="ms-fld" for="a-a"><span>Auteur</span><input id="a-a" placeholder="Albert Camus"></label>
@@ -579,28 +656,53 @@ button{font:inherit;color:inherit}
     </form>
     <p class="msg" id="a-msg"></p>
     <div class="res" id="a-res"></div></div>
-  <div class="ms-sec"><h3><b>II</b>Ou une photographie</h3><div class="ph">
+  <div class="ms-sec one"><h3><b>II</b>Ou une photographie</h3><div class="ph">
     <label class="ms-file" for="a-photo"><span>La couverture</span><em>Contours détectés, redressée</em><input id="a-photo" type="file" accept="image/*"></label>
     <label class="ms-file" for="a-sp"><span>La tranche</span><em>Facultatif, scannée aussi</em><input id="a-sp" type="file" accept="image/*"></label>
     <img id="a-prev" alt="Aperçu de la gravure" hidden><img id="a-sprev" alt="Aperçu de la tranche" hidden></div></div>
-  <div class="ms-sec"><h3><b>III</b>Le format</h3><div class="fmts" id="fmts"></div></div>
-  <div class="ms-sec"><h3><b>IV</b>Les détails</h3><div class="frm">
+  <div class="ms-sec one"><h3><b>III</b>Le format</h3><div class="fmts" id="fmts"></div></div>
+  <div class="ms-sec one"><h3><b>IV</b>Les détails</h3><div class="frm">
     <label class="ms-fld sm" for="a-cm"><span>Hauteur (cm)</span><input id="a-cm" type="number" step="0.1" min="8" max="60"></label>
     <label class="ms-fld sm" for="a-p"><span>Pages</span><input id="a-p" type="number" min="1" placeholder="250"></label>
     <label class="ms-fld sm" for="a-g"><span>Catégorie</span><select id="a-g"></select></label>
     <label class="ms-fld sm" for="a-y"><span>Lu en</span><input id="a-y" type="number" min="1950" max="2100"></label>
   </div></div>
-  <div class="acts ms-end"><button class="plate big-plate" id="a-add" type="button">Ranger sur l'étagère <i>☞</i></button></div>
-  <p class="msg">Ensuite, le résumé complet de l'intrigue est écrit par l'IA, et tu peux enluminer sa première lettre.</p>
+  <div class="acts ms-end one"><button class="plate big-plate" id="a-add" type="button">Ranger sur l'étagère <i>☞</i></button></div>
+  <p class="msg one">Ensuite, le résumé complet de l'intrigue est écrit par l'IA, et tu peux enluminer sa première lettre.</p>
+  <div class="many">
+    <p class="ms-intro">Pour le premier jour : colle ta liste, un livre par ligne, ou importe ton export Goodreads ou Babelio. Ensuite, tu les ajouteras un par un, à chaque livre fini.</p>
+    <div class="ms-sec"><h3><b>I</b>La liste</h3>
+      <textarea id="b-list" class="ms-area" rows="6" spellcheck="false" placeholder="L'Étranger — Albert Camus&#10;Dune, Frank Herbert&#10;Le Petit Prince ; Saint-Exupéry (2019)"></textarea>
+      <div class="ph"><label class="ms-file" for="b-csv"><span>Ou un fichier .csv</span><em>Goodreads, Babelio, tableur</em><input id="b-csv" type="file" accept=".csv,text/csv,.txt"></label></div></div>
+    <div class="ms-sec"><h3><b>II</b>Vérifier</h3>
+      <div class="frm"><label class="ms-fld sm" for="b-g"><span>Catégorie par défaut</span><select id="b-g"></select></label><label class="ms-fld sm" for="b-y"><span>Lus en</span><input id="b-y" type="number" min="1950" max="2100"></label></div>
+      <p class="msg" id="b-msg">Aucun livre pour l'instant.</p><ol class="blist" id="b-prev"></ol></div>
+    <div class="acts ms-end"><button class="plate big-plate" id="b-add" type="button" disabled>Tout ranger <i>☞</i></button></div>
+  </div>
 </div></section>
 
 
 <section class="panel" id="reader" aria-label="Reader"><div class="pin">
-  <div class="phead"><div><h2 class="big">Reader</h2><p>Aperçu de l'organisation : mangas en cours, collections et séries terminées. L'import et la lecture des fichiers .cbz et .epub viendront plus tard.</p></div><button class="pclose" aria-label="Fermer">×</button></div>
-  <div class="sec"><h3>En cours</h3><div class="cont" id="r-cur"></div></div>
+  <div class="phead"><div><h2 class="big">Reader</h2><p>Tes mangas et tes BD en .cbz. Les fichiers restent sur cet appareil ; ta progression suit ton compte.</p></div><button class="pclose" aria-label="Fermer">×</button></div>
+  <div class="rd-drop" id="r-drop"><label class="plate">Importer des .cbz ☞<input id="r-file" type="file" accept=".cbz,.zip,application/zip,application/x-cbz,application/vnd.comicbook+zip" multiple></label><p>Ou glisse-les ici. Le nom du fichier donne la série et le tome (« One Piece T105.cbz »).</p></div>
+  <div class="sec"><h3>En cours</h3><div class="tms" id="r-cur"></div></div>
   <div class="sec"><h3>Collections</h3><div class="coll" id="r-coll"></div></div>
-  <div class="sec"><h3>Terminés</h3><div class="cont" id="r-done"></div></div>
-  <div class="acts"><button class="btn ghost" data-soon="Import .cbz / .epub : plus tard, depuis tes fichiers ou un dossier iCloud.">Importer des .cbz / .epub</button></div>
+  <div class="sec"><h3>Terminés</h3><div class="tms" id="r-done"></div></div>
+</div></section>
+<div id="rd" role="dialog" aria-label="Lecture">
+  <div class="rd-stage" id="rd-stage"><div class="rd-pages" id="rd-pages"></div></div><span class="rd-hint l" aria-hidden="true">‹</span><span class="rd-hint r" aria-hidden="true">›</span>
+  <div class="rd-top"><button class="rd-x" id="rd-x" aria-label="Fermer">×</button><div class="rd-t"><b id="rd-serie"></b><span id="rd-tome"></span></div><div class="rd-opts"><button id="rd-dir" type="button"></button><button id="rd-dbl" type="button">Double page</button></div></div>
+  <div class="rd-bot"><span id="rd-n">1</span><input type="range" id="rd-sc" min="1" value="1" aria-label="Page"><span id="rd-of"></span></div>
+</div>
+<section class="panel ms" id="acct" aria-label="Compte et réglages"><div class="pin">
+  <div class="phead"><div><h2 class="big">Compte</h2><p>Ta bibliothèque, tes lettrines et ta lecture, sur l'ordinateur, l'iPad et le téléphone.</p></div><button class="pclose" aria-label="Fermer">×</button></div>
+  <div class="ms-sec"><h3><b>I</b>Ton compte</h3><div id="ac-box" style="display:grid;gap:18px"></div></div>
+  <div class="ms-sec"><h3><b>II</b>Réglages</h3><div class="set">
+    <div class="row"><div><b>Sauvegarder</b><span>Télécharge toute ta collection dans un fichier.</span></div><button class="btn ghost" id="s-exp" type="button">Exporter</button></div>
+    <div class="row"><div><b>Restaurer</b><span>Recharge un fichier de sauvegarde.</span></div><label class="btn ghost">Importer<input type="file" id="s-imp" accept=".json,application/json" hidden></label></div>
+    <div class="row"><div><b>Livres d'exemple</b><span>Les 150 livres de démonstration.</span></div><button class="btn ghost" id="s-demo" type="button"></button></div>
+    <div class="row danger"><div><b>Réinitialiser la collection</b><span>Efface tous tes livres, tes lettrines et ta lecture. Ton compte reste.</span></div><button class="btn" id="s-reset" type="button">Réinitialiser</button></div>
+  </div></div>
 </div></section>
 
 <section class="panel" id="illu" aria-label="Enluminure"><div class="pin">
@@ -719,7 +821,7 @@ function makeBook(r,i){const [t,a,y,p,g,f,s,x={}]=r,h=x.cm?Math.round(x.cm*10):F
 const roman=n=>{let r="";[[1000,"M"],[900,"CM"],[500,"D"],[400,"CD"],[100,"C"],[90,"XC"],[50,"L"],[40,"XL"],[10,"X"],[9,"IX"],[5,"V"],[4,"IV"],[1,"I"]].forEach(([v,l])=>{while(n>=v){r+=l;n-=v}});return r};
 const MOIS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 let SAVED=[];try{SAVED=JSON.parse(localStorage.getItem("tranche-ajouts")||"[]")}catch(e){}
-const BOOKS=[...RAW,...SAVED].map(makeBook);
+const BOOKS=[...((()=>{try{return localStorage.getItem("tranches-vide")==="1"}catch(e){return false}})()?[]:RAW),...SAVED].map(makeBook);
 const covers={};
 let LTS={};try{LTS=JSON.parse(localStorage.getItem("tranches-lettrines")||"{}")}catch(e){}
 BOOKS.forEach(b=>{const s=LTS[b.t+"|"+b.a];if(s)b.lt=s.img});
@@ -1037,11 +1139,11 @@ function blot(x,y){const d=document.createElement("div");d.className="blot";d.st
   d.innerHTML=`<svg viewBox="0 0 80 80"><path d="${blob(40,40,10+Math.random()*5,9+Math.random()*5,Math.random()*999|0,.3,9)}"/>${drops}</svg>`;document.body.appendChild(d);setTimeout(()=>d.remove(),1900)}
 function puff(el){const r=el.getBoundingClientRect(),y=r.bottom-4;for(let k=0;k<18;k++){const d=document.createElement("i"),sd=k%2?1:-1;d.className="dust";
   d.style.left=(r.left+r.width/2+sd*(r.width/2)*Math.random())+"px";d.style.top=y+"px";d.style.setProperty("--dx",sd*(20+Math.random()*55)+"px");d.style.setProperty("--dy",-(4+Math.random()*28)+"px");d.style.animationDelay=(Math.random()*.08)+"s";document.body.appendChild(d);setTimeout(()=>d.remove(),1300)}}
-function dropIn(b){const el=b.el;if(!el)return;el.classList.remove("pre");el.classList.add("drop");setTimeout(()=>{SND.thump(1.2);puff(el)},720);setTimeout(()=>el.classList.remove("drop"),1100)}
+function dropIn(b,quiet){const el=b.el;if(!el)return;el.classList.remove("pre");el.classList.add("drop");setTimeout(()=>{quiet||SND.thump(1.2);puff(el)},720);setTimeout(()=>el.classList.remove("drop"),1100)}
 (function(){const sn=$("#snail"),cx=36,cy=24,R=20,sp=[];for(let a=0;a<5.2*Math.PI;a+=.18){const r=1+a*R/(5.2*Math.PI);sp.push(`${(cx+Math.cos(a)*r).toFixed(1)} ${(cy+Math.sin(a)*r).toFixed(1)}`)}
   $("#snail-sh").setAttribute("d",`M${cx+R} ${cy}A${R} ${R} 0 1 0 ${cx-R} ${cy}A${R} ${R} 0 1 0 ${cx+R} ${cy}M${sp.join(" L")}`);
   let t;const idle=()=>{clearTimeout(t);if(sn.classList.contains("crawl"))return;t=setTimeout(go,25000)};
-  function go(){if(!land.classList.contains("out")||cur||document.querySelector(".panel.on,#scan.on")){idle();return}sn.classList.remove("hide");void sn.offsetWidth;sn.classList.add("crawl")}
+  function go(){if(!land.classList.contains("out")||cur||document.querySelector(".panel.on,#scan.on,#rd.on")){idle();return}sn.classList.remove("hide");void sn.offsetWidth;sn.classList.add("crawl")}
   sn.addEventListener("animationend",e=>{if(e.animationName==="crawl"){sn.classList.remove("crawl");idle()}});
   sn.addEventListener("click",()=>{toast("Une drôlerie de marge : les moines en cachaient partout.");sn.classList.add("hide");SND.rustle();setTimeout(()=>{sn.classList.remove("crawl","hide");idle()},1500)});
   ["pointerdown","wheel","keydown"].forEach(ev=>addEventListener(ev,idle,{passive:true}));idle()})();
@@ -1062,17 +1164,19 @@ SND.thunder=(v=1)=>{const a=ac();if(!a||!soundOn)return;const t=a.currentTime,n=
   f.type="lowpass";f.frequency.setValueAtTime(900,t);f.frequency.exponentialRampToValueAtTime(70,t+3.5);n.connect(f);f.connect(g);g.connect(a.destination);
   g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.55*v,t+.06);g.gain.exponentialRampToValueAtTime(.16*v,t+.7);g.gain.linearRampToValueAtTime(.32*v,t+1.3);g.gain.exponentialRampToValueAtTime(.0001,t+4.8);n.start(t);
   const c=noise(a,.3),h=a.createBiquadFilter();h.type="highpass";h.frequency.value=1200;c.connect(h);env(a,h,t,.12*v,.004,.25);c.start(t)};
-// pluie et vent en boucle, tant que la chandelle est allumée
+// ambiance de cave, tant que la chandelle est allumée : bourdon grave, grondement sourd, gouttes qui résonnent sous la voûte
 let AMB=null;
 function ambient(on){const a=on&&soundOn?ac():AC;if(!a)return;
-  if(on&&soundOn&&!AMB){const t=a.currentTime,m=a.createGain();m.gain.setValueAtTime(0,t);m.gain.linearRampToValueAtTime(1,t+2);m.connect(a.destination);
-    const loop=d=>{const s=noise(a,d);s.loop=true;return s};
-    const r=loop(3),hp=a.createBiquadFilter(),lp=a.createBiquadFilter(),rg=a.createGain();hp.type="highpass";hp.frequency.value=700;lp.type="lowpass";lp.frequency.value=5200;rg.gain.value=.05;r.connect(hp);hp.connect(lp);lp.connect(rg);rg.connect(m);
-    const w=loop(4),bp=a.createBiquadFilter(),wg=a.createGain();bp.type="bandpass";bp.frequency.value=320;bp.Q.value=.8;wg.gain.value=.02;w.connect(bp);bp.connect(wg);wg.connect(m);
-    const lfo=a.createOscillator(),lg=a.createGain();lfo.frequency.value=.09;lg.gain.value=140;lfo.connect(lg);lg.connect(bp.frequency);
-    r.start(t);w.start(t);lfo.start(t);AMB={m,wg,bp,stop(){const t=a.currentTime;m.gain.cancelScheduledValues(t);m.gain.setValueAtTime(m.gain.value,t);m.gain.linearRampToValueAtTime(0,t+1.2);[r,w,lfo].forEach(s=>s.stop(t+1.3))}}}
+  if(on&&soundOn&&!AMB){const t=a.currentTime,m=a.createGain();m.gain.setValueAtTime(0,t);m.gain.linearRampToValueAtTime(1,t+3);m.connect(a.destination);
+    const dl=a.createDelay(1.5),fb=a.createGain(),dlp=a.createBiquadFilter(),wet=a.createGain();dl.delayTime.value=.41;fb.gain.value=.45;dlp.type="lowpass";dlp.frequency.value=1600;wet.gain.value=.55;dl.connect(dlp);dlp.connect(fb);fb.connect(dl);dlp.connect(wet);wet.connect(m);
+    const r=noise(a,4);r.loop=true;const lp=a.createBiquadFilter(),rg=a.createGain();lp.type="lowpass";lp.frequency.value=150;lp.Q.value=.8;rg.gain.value=.11;r.connect(lp);lp.connect(rg);rg.connect(m);
+    const o1=a.createOscillator(),o2=a.createOscillator(),of=a.createBiquadFilter(),og=a.createGain();o1.type=o2.type="sawtooth";o1.frequency.value=49;o2.frequency.value=49.7;of.type="lowpass";of.frequency.value=120;og.gain.value=.03;[o1,o2].forEach(o=>o.connect(of));of.connect(og);og.connect(m);
+    const lfo=a.createOscillator(),lg=a.createGain();lfo.frequency.value=.04;lg.gain.value=50;lfo.connect(lg);lg.connect(of.frequency);[r,o1,o2,lfo].forEach(s=>s.start(t));
+    let alive=true;const drip=()=>{if(!alive)return;const t=a.currentTime,o=a.createOscillator(),g=a.createGain(),f0=700+Math.random()*1300,v=.04+Math.random()*.06;o.type="sine";o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f0*2.4,t+.06);
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.004);g.gain.exponentialRampToValueAtTime(.0001,t+.14);o.connect(g);g.connect(m);g.connect(dl);o.start(t);o.stop(t+.16);setTimeout(drip,Math.random()<.3?260+Math.random()*300:1800+Math.random()*6000)};setTimeout(drip,1800);
+    AMB={rg,stop(){alive=false;const t=a.currentTime;m.gain.cancelScheduledValues(t);m.gain.setValueAtTime(m.gain.value,t);m.gain.linearRampToValueAtTime(0,t+1.2);[r,o1,o2,lfo].forEach(s=>s.stop(t+1.3))}}}
   else if(!on&&AMB){AMB.stop();AMB=null}}
-ambient.wind=g=>{if(!AMB||!AC)return;const t=AC.currentTime;AMB.wg.gain.setTargetAtTime(.015+g*.11,t,.4);AMB.bp.frequency.setTargetAtTime(260+g*380,t,.6)};
+ambient.wind=g=>{if(!AMB||!AC)return;AMB.rg.gain.setTargetAtTime(.09+g*.05,AC.currentTime,.8)};
 let lastRustle=0;world.addEventListener("pointerover",e=>{if(e.pointerType==="mouse"&&e.target.closest(".book")&&performance.now()-lastRustle>70){lastRustle=performance.now();SND.rustle()}});
 $("#t-sound").setAttribute("aria-pressed",soundOn);$("#t-sound").addEventListener("click",e=>{soundOn=!soundOn;e.currentTarget.setAttribute("aria-pressed",soundOn);try{localStorage.setItem("tranches-sons",soundOn?"1":"0")}catch(_){};if(soundOn)SND.paper();ambient(soundOn&&isCandle())});
 // ---------- Chandelle et nuit d'orage : la lumière suit le curseur (ou le doigt), le vent la fait vaciller, pluie, éclairs, tonnerre ----------
@@ -1116,12 +1220,11 @@ function stormFrame(t,dt){const d=Math.min(2,devicePixelRatio||1),X=cx+(flameEl.
     candle.style.setProperty("--mx",(cx+sway)+"px");candle.style.setProperty("--my",cy+"px");candle.style.setProperty("--cr",r+"px");
     flameEl._sw=sway;flameEl.style.transform=`translate(${cx+sway}px,${cy}px) rotate(${sway*2}deg) scale(${1-gust*.15+Math.sin(t/45)*.05},${1+Math.sin(t/61)*.08})`;
     stormFrame(t,dt);
-    if(t>nextBolt){strike();nextBolt=t+9000+Math.random()*16000}
     if(t-lastWind>200){lastWind=t;ambient.wind(gust)}}
   requestAnimationFrame(flame)})(0);
 $("#t-candle").addEventListener("click",e=>{const on=!isCandle();if(on)document.documentElement.dataset.candle="";else{delete document.documentElement.dataset.candle;sx.clearRect(0,0,SW,SH)}
   e.currentTarget.setAttribute("aria-pressed",on);SND.paper(.6);render(true);ambient(on);
-  if(on){cx=tx;cy=ty;nextBolt=performance.now()+3500;toast("Nuit d'orage. Approche la chandelle des livres.")}});
+  if(on){cx=tx;cy=ty;nextBolt=performance.now()+3500;toast("Nuit à la cave. Approche la chandelle des livres.")}});
 function seal(){SND.seal()}
 
 // ---------- Enluminure : 1) on choisit le cadre et le dessin de la lettre, 2) on colorie chaque zone, l'encre ne sort jamais de la zone commencée ----------
@@ -1227,17 +1330,6 @@ $("#il-go").addEventListener("click",()=>{const b=IL.b;if(ilScore()<5){toast("Co
   if(cur===b){const h=$("#sh .info h2");if(h)h.innerHTML=capTitle(b);const f=$("#sh .front");if(f){f.querySelector(".lcap")?.remove();f.insertAdjacentHTML("beforeend",`<img class="lcap" src="${b.lt}" alt="">`)}}
   setTimeout(()=>toast(`La lettrine de « ${b.t} » est scellée.`),500)});
 
-// ---------- Reader (aperçu) ----------
-const SERIES=[// [série, auteur, tomes parus, tomes lus, tome en cours, page, pages du tome, couleur, collection]
-["One Piece","Eiichirō Oda",110,104,105,84,200,"#D2662F","Shōnen"],["Chainsaw Man","Tatsuki Fujimoto",19,15,16,40,192,"#C8201A","Shōnen"],["Dandadan","Yukinobu Tatsu",18,16,17,12,200,"#3F6D80","Shōnen"],
-["Frieren","Kanehito Yamada, Tsukasa Abe",14,12,13,150,190,"#8FB3A2","Fantasy"],["Berserk","Kentarō Miura",42,20,21,7,224,"#242424","Seinen"],["Blue Period","Tsubasa Yamaguchi",16,9,10,96,200,"#2F4858","Seinen"],
-["Vagabond","Takehiko Inoue",37,37,0,0,0,"#6A4D37","Seinen"],["Monster","Naoki Urasawa",18,18,0,0,0,"#7B8957","Seinen"],["L'Atelier des sorciers","Kamome Shirahama",13,13,0,0,0,"#E0A93A","Fantasy"]];
-function buildReader(){const cur=SERIES.filter(s=>s[4]),done=SERIES.filter(s=>!s[4]&&s[3]===s[2]),cols=[...new Set(SERIES.map(s=>s[8]))];
-  $("#r-cur").innerHTML=cur.map(s=>`<div class="cc"><h4>${s[0]}</h4><div class="meta">Tome ${s[4]} · page ${s[5]} sur ${s[6]}</div><div class="bar" style="--p:${Math.round(s[5]/s[6]*100)}%"><i></i></div><div class="meta">${s[3]} tomes lus sur ${s[2]}</div><div><button class="btn" data-soon="La lecture des .cbz arrivera plus tard : ce bouton reprendra ici, page ${s[5]}.">Reprendre</button></div></div>`).join("");
-  $("#r-coll").innerHTML=cols.map(c=>`<div class="coll"><h5>${c}</h5>${SERIES.filter(s=>s[8]===c).map(s=>`<div class="ser"><div class="nm">${s[0]}<span>${s[1]} · ${s[3]}/${s[2]} lus${s[4]?"":" · terminé"}</span></div><div class="vols" style="--c:${s[7]}">${Array.from({length:s[2]},(_,k)=>`<i class="${k+1===s[4]?"cur":k<s[3]?"":"u"}" title="Tome ${k+1}"></i>`).join("")}</div></div>`).join("")}</div>`).join("");
-  $("#r-done").innerHTML=done.map(s=>`<div class="cc"><h4>${s[0]}</h4><div class="meta">${s[1]} · ${s[2]} tomes, tous lus</div></div>`).join("");
-  $("#reader").querySelectorAll("[data-soon]").forEach(b=>b.addEventListener("click",()=>toast(b.dataset.soon)))}
-buildReader();
 $("#openReader").addEventListener("click",()=>{closeMenu();SND.paper(.7);$("#reader").classList.add("on")});$("#reader .pclose").addEventListener("click",()=>$("#reader").classList.remove("on"));
 
 
@@ -1275,6 +1367,204 @@ const land=$("#landing");
 $("#logo").addEventListener("click",()=>{SND.paper(.8);stage.classList.remove("arrive");land.classList.remove("out");$("#lframe").classList.remove("hide");setTimeout(()=>land.classList.remove("leaving"),900)});
 $("#enter").addEventListener("click",()=>{SND.paper();land.classList.add("leaving");$("#lframe").classList.add("done");setTimeout(()=>{land.classList.add("out");$("#lframe").classList.add("hide");stage.classList.remove("arrive");void stage.offsetWidth;stage.classList.add("arrive");K=.05;setTimeout(()=>SND.thump(.5),1200)},420);setTimeout(()=>toast("Clique sur une tranche pour l'ouvrir. Le + range un nouveau livre."),2300)});
 coverQueue();
+
+// ================= v11 =================
+// ---- Loupe du scanner : on voit exactement où se pose le coin, comme dans Notes ----
+(function(){const lp=document.createElement("div");lp.className="sc-loupe";lp.innerHTML="<canvas width=264 height=264></canvas>";$("#scan").appendChild(lp);
+  const lx=lp.firstChild.getContext("2d"),sv=$("#sc-svg"),cv=$("#sc-cv");let on=false;
+  function draw(i,cx,cy){const r=sv.getBoundingClientRect(),f=cv.width/r.width,Z=3.2,S=264,P=SCN.q.map(([a,b])=>[a*cv.width,b*cv.height]),[px,py]=P[i],half=S/2/Z*f/2;
+    lx.setTransform(1,0,0,1,0,0);lx.fillStyle="#fff";lx.fillRect(0,0,S,S);lx.imageSmoothingQuality="high";
+    const k=S/(half*2);lx.setTransform(k,0,0,k,-(px-half)*k,-(py-half)*k);lx.drawImage(SCN.img,0,0,cv.width,cv.height);
+    lx.strokeStyle="#C8201A";lx.lineWidth=1.6/k;lx.beginPath();P.forEach((p,j)=>j?lx.lineTo(p[0],p[1]):lx.moveTo(p[0],p[1]));lx.closePath();lx.stroke();
+    lx.setTransform(1,0,0,1,0,0);lx.strokeStyle="rgba(0,0,0,.65)";lx.lineWidth=1.2;lx.beginPath();lx.moveTo(S/2,S/2-22);lx.lineTo(S/2,S/2-6);lx.moveTo(S/2,S/2+6);lx.lineTo(S/2,S/2+22);lx.moveTo(S/2-22,S/2);lx.lineTo(S/2-6,S/2);lx.moveTo(S/2+6,S/2);lx.lineTo(S/2+22,S/2);lx.stroke();
+    lx.fillStyle="#C8201A";lx.beginPath();lx.arc(S/2,S/2,3,0,7);lx.fill();
+    const up=cy-170<8;lp.style.left=Math.max(6,Math.min(innerWidth-138,cx-66))+"px";lp.style.top=(up?cy+48:cy-170)+"px"}
+  let hi=-1;sv.addEventListener("pointerdown",e=>{const c=e.target.closest(".h");if(!c)return;hi=[...sv.querySelectorAll(".h")].indexOf(c);draw(hi,e.clientX,e.clientY);lp.classList.add("on")});
+  sv.addEventListener("pointermove",e=>{if(hi<0)return;requestAnimationFrame(()=>hi>=0&&draw(hi,e.clientX,e.clientY))});
+  const end=()=>{hi=-1;lp.classList.remove("on")};sv.addEventListener("pointerup",end);sv.addEventListener("pointercancel",end)})();
+
+// ---- Plusieurs livres d'un coup (premier remplissage) ----
+let BULK=[];
+const addMode=m=>{addP.dataset.mode=m;$("#a-mode").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.m===m));if(m==="many")setTimeout(()=>$("#b-list").focus(),250)};
+$("#a-mode").addEventListener("click",e=>{const b=e.target.closest("button");if(b){addMode(b.dataset.m);SND.rustle()}});
+$("#b-g").innerHTML=$("#a-g").innerHTML;$("#b-y").value=new Date().getFullYear();
+function parseLine(l){l=l.replace(/^\s*(?:[-*•·]|\d+[.)])\s*/,"").trim();if(!l)return null;let y=null;const m=l.match(/\((\d{4})\)\s*$/);if(m){y=+m[1];l=l.slice(0,m.index).trim()}
+  const sp=l.split(/\s+[—–-]\s+|\s+par\s+|\t|\s*;\s*|\s*,\s+/);return{t:sp[0].trim(),a:(sp[1]||"").trim(),ry:y}}
+function parseCSV(txt){txt=txt.replace(/^﻿/,"");const head=txt.slice(0,txt.indexOf("\n")),dl=(head.match(/;/g)||[]).length>(head.match(/,/g)||[]).length?";":(head.includes("\t")?"\t":",");
+  const rows=[];let row=[],f="",q=false;for(let i=0;i<txt.length;i++){const c=txt[i];if(q){if(c==='"'){if(txt[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c==='"')q=true;else if(c===dl){row.push(f);f=""}else if(c==="\n"||c==="\r"){if(c==="\r"&&txt[i+1]==="\n")i++;row.push(f);rows.push(row);row=[];f=""}else f+=c}
+  if(f||row.length){row.push(f);rows.push(row)}if(rows.length<2)return[];
+  const H=rows[0].map(h=>h.trim().toLowerCase()),col=(...n)=>H.findIndex(h=>n.some(x=>h===x||h.includes(x)));
+  const ct=col("title","titre"),ca=col("author","auteur"),cp=col("number of pages","pages"),cy=col("original publication year","year published","année","annee"),cd=col("date read","date de lecture","lu le"),cs=col("exclusive shelf","étagère","statut");
+  if(ct<0)return[];return rows.slice(1).filter(r=>r[ct]&&(cs<0||!r[cs]||/read|^lu/i.test(r[cs])&&!/to-read|currently/i.test(r[cs]))).map(r=>{const d=cd>=0?(r[cd]||"").match(/(\d{4})/):null;
+    return{t:r[ct].replace(/\s*\(.*?#\d+\)\s*$/,"").trim(),a:ca>=0?r[ca].trim():"",p:cp>=0?+r[cp]||0:0,y:cy>=0?+r[cy]||0:0,ry:d?+d[1]:null}})}
+function bulkFrom(items,append){const g=$("#b-g").value,seen=new Set((append?BULK:[]).map(r=>(r.t+r.a).toLowerCase()));if(!append)BULK=[];
+  items.forEach(it=>{if(!it||!it.t)return;const k=(it.t+it.a).toLowerCase();if(seen.has(k))return;seen.add(k);BULK.push({...it,g,on:true})});bulkDraw()}
+function bulkDraw(){const n=BULK.filter(r=>r.on).length,opts=$("#a-g").innerHTML;
+  $("#b-prev").innerHTML=BULK.map((r,k)=>`<li class="${r.on?"":"off"}" data-k="${k}"><input type="checkbox" ${r.on?"checked":""} aria-label="Garder"><div class="tx"><b>${esc(r.t)}</b><span>${esc(r.a||"auteur inconnu")}${r.ry?` · lu en ${r.ry}`:""}</span></div><select aria-label="Catégorie">${opts}</select></li>`).join("");
+  $("#b-prev").querySelectorAll("li").forEach(li=>{li.querySelector("select").value=BULK[+li.dataset.k].g});
+  $("#b-msg").textContent=BULK.length?`${n} livre${n>1?"s":""} prêt${n>1?"s":""} à ranger. Décoche ceux qui n'y vont pas.`:"Aucun livre pour l'instant.";
+  $("#b-add").disabled=!n;$("#b-add").innerHTML=n?`Ranger ces ${n} livres <i>☞</i>`:"Tout ranger <i>☞</i>"}
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+let blT;$("#b-list").addEventListener("input",e=>{clearTimeout(blT);blT=setTimeout(()=>{const csvd=BULK.filter(r=>r.csv);bulkFrom(e.target.value.split(/\n/).map(parseLine));if(csvd.length)bulkFrom(csvd,true)},250)});
+$("#b-csv").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(!f)return;f.text().then(t=>{const it=parseCSV(t).map(r=>({...r,csv:1}));if(!it.length){toast("Je n'ai pas trouvé de colonne « Title » ou « Titre » dans ce fichier.");return}bulkFrom(it,true);SND.paper();toast(`${it.length} livres lus trouvés dans le fichier.`)})});
+$("#b-prev").addEventListener("change",e=>{const li=e.target.closest("li");if(!li)return;const r=BULK[+li.dataset.k];if(e.target.type==="checkbox"){r.on=e.target.checked;li.classList.toggle("off",!r.on);const n=BULK.filter(x=>x.on).length;$("#b-add").disabled=!n;$("#b-add").innerHTML=`Ranger ces ${n} livres <i>☞</i>`}else r.g=e.target.value});
+$("#b-g").addEventListener("change",e=>{BULK.forEach(r=>r.g=e.target.value);bulkDraw()});
+$("#b-add").addEventListener("click",()=>{const rows=BULK.filter(r=>r.on);if(!rows.length)return;const ry=+$("#b-y").value||new Date().getFullYear(),nb=[];
+  rows.forEach(r=>{const rr=[r.t,r.a||"Auteur inconnu",r.y||ry,r.p||250,r.g,"S",null,{cm:FMT.S.cm,rm:new Date().getMonth()+1,ry:r.ry||ry,added:1}];SAVED.push(rr);if(!GORDER.includes(rr[4]))GORDER.push(rr[4]);const b=makeBook(rr,BOOKS.length);BOOKS.push(b);makeEl(b);nb.push(b)});
+  try{localStorage.setItem("tranche-ajouts",JSON.stringify(SAVED))}catch(e){}
+  $("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.length} livres lus`;BULK=[];$("#b-list").value="";bulkDraw();addP.classList.remove("on");checkEmpty();
+  render();nb.forEach(b=>b.el.classList.add("pre"));const st=Math.min(110,2600/nb.length);nb.forEach((b,k)=>setTimeout(()=>dropIn(b,k%3!==0),700+k*st));
+  setTimeout(()=>toast(`${nb.length} livres rangés d'un coup. Les suivants, un par un, à chaque livre fini.`),900);
+  const q=nb.slice();(function nx(){const b=q.shift();if(!b)return;coverURL(b).then(u=>u&&applyCover(b,u)).catch(()=>{}).finally(()=>setTimeout(nx,300))})()});
+function checkEmpty(){let e=$("#empty");if(BOOKS.length){e&&e.remove();return}if(e)return;e=document.createElement("div");e.id="empty";
+  e.innerHTML=`<div><h3>L'étagère est vide.</h3><p>Commence par ranger d'un coup tous les livres que tu as déjà lus : une liste à coller, ou ton export Goodreads ou Babelio.</p><button class="plate" type="button">Tout ranger d'un coup ☞</button></div>`;
+  e.querySelector("button").onclick=()=>{openAdd();addMode("many")};document.body.appendChild(e)}
+checkEmpty();
+
+// ---- Compte (Supabase) et réglages ----
+const SUPA={url:"",key:""};// à remplir une fois le projet Supabase créé (clé publique « anon », sans danger côté navigateur)
+const SYNCK=["tranche-ajouts","tranches-lettrines","tranches-vide","tranches-lecture","tranches-collections"];
+let SB=null,ACU=null,acMsg="",pushT=null,lastSync=null;
+function sbCfg(){let c=SUPA;try{const l=JSON.parse(localStorage.getItem("tranches-supabase")||"null");if(l&&l.url&&l.key)c=l}catch(e){}return c.url&&c.key?c:null}
+function loadSB(){if(SB)return Promise.resolve(SB);const c=sbCfg();if(!c)return Promise.resolve(null);
+  return new Promise(res=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js";
+    s.onload=()=>{try{SB=supabase.createClient(c.url,c.key);SB.auth.onAuthStateChange((ev,ses)=>{ACU=ses?.user||null;acRender();if(ev==="SIGNED_IN")pull()});
+      SB.auth.getSession().then(({data})=>{ACU=data.session?.user||null;acRender();if(ACU)pull();res(SB)})}catch(e){acMsg="Adresse ou clé Supabase invalide.";acRender();res(null)}};
+    s.onerror=()=>{acMsg="Impossible de joindre Supabase depuis cet aperçu (il bloque les sites externes). Sur la version en ligne, ça marche.";acRender();res(null)};document.head.appendChild(s)})}
+function snapshot(){const d={};SYNCK.forEach(k=>{const v=localStorage.getItem(k);if(v!==null)d[k]=v});return d}
+async function push(){if(!SB||!ACU)return;const at=new Date().toISOString(),{error}=await SB.from("tranches").upsert({user_id:ACU.id,data:snapshot(),updated_at:at});
+  if(error){acMsg="Synchronisation impossible : "+error.message;acRender();return}try{localStorage.setItem("tranches-stamp",at)}catch(e){}lastSync=new Date();acRender()}
+async function pull(){if(!SB||!ACU)return;const{data,error}=await SB.from("tranches").select("data,updated_at").eq("user_id",ACU.id).maybeSingle();if(error){acMsg=error.message;acRender();return}
+  if(!data){push();return}const loc=localStorage.getItem("tranches-stamp");if(loc&&loc>=data.updated_at){lastSync=new Date();acRender();return}
+  SYNCK.forEach(k=>localStorage.removeItem(k));Object.entries(data.data||{}).forEach(([k,v])=>SYNCK.includes(k)&&_si.call(localStorage,k,v));_si.call(localStorage,"tranches-stamp",data.updated_at);
+  sessionStorage.setItem("tranches-msg","Ta bibliothèque est revenue de ton compte.");location.reload()}
+const _si=Storage.prototype.setItem,_ri=Storage.prototype.removeItem;
+try{Storage.prototype.setItem=function(k,v){_si.call(this,k,v);if(this===window.localStorage&&SYNCK.includes(k))schedPush()};Storage.prototype.removeItem=function(k){_ri.call(this,k);if(this===window.localStorage&&SYNCK.includes(k))schedPush()}}catch(e){}
+function schedPush(){if(!ACU)return;clearTimeout(pushT);pushT=setTimeout(push,1500)}
+function acRender(){const box=$("#ac-box"),av=$("#t-acct .av");if(av){av.classList.toggle("in",!!ACU);av.textContent=ACU?(ACU.email||"?")[0].toUpperCase():"?"}if(!box)return;const c=sbCfg(),m=acMsg?`<p class="msg" style="color:var(--rub)">${esc(acMsg)}</p>`:"";
+  if(!c){box.innerHTML=`<p class="msg">Pour que les comptes marchent pour de vrai, Tranches s'appuie sur Supabase (gratuit). Une fois la base branchée, tu crées ton compte ici : livres, lettrines et progression de lecture te suivent sur tous tes appareils.</p>
+    <div class="frm"><label class="ms-fld sm"><span>Adresse du projet</span><input id="ac-url" placeholder="https://xxxx.supabase.co" style="font-size:20px"></label><label class="ms-fld sm"><span>Clé publique (anon)</span><input id="ac-key" placeholder="eyJ…" style="font-size:20px"></label></div>
+    <div class="ac-acts"><button class="plate" id="ac-cfg" type="button">Brancher ☞</button></div>${m}`;
+    $("#ac-cfg").onclick=()=>{const url=$("#ac-url").value.trim(),key=$("#ac-key").value.trim();if(!/^https:\/\/.+/.test(url)||key.length<20){acMsg="Il faut l'adresse https du projet et sa clé publique.";acRender();return}try{localStorage.setItem("tranches-supabase",JSON.stringify({url,key}))}catch(e){}acMsg="";SB=null;loadSB().then(acRender);acRender()};return}
+  if(!ACU){box.innerHTML=`<form class="frm" id="ac-form" autocomplete="on"><label class="ms-fld sm"><span>Adresse e-mail</span><input id="ac-mail" type="email" autocomplete="email" required style="font-size:22px"></label><label class="ms-fld sm"><span>Mot de passe</span><input id="ac-pw" type="password" autocomplete="current-password" minlength="6" style="font-size:22px"></label></form>
+    <div class="ac-acts"><button class="plate" id="ac-in" type="button">Se connecter ☞</button><button class="btn ghost" id="ac-new" type="button">Créer mon compte</button><button class="lnk" id="ac-magic" type="button">Recevoir un lien de connexion par e-mail</button></div>${m}`;
+    const go=async f=>{if(!(await loadSB())){acRender();return}const mail=$("#ac-mail").value.trim(),pw=$("#ac-pw").value;if(!mail){$("#ac-mail").focus();return}acMsg="";try{const r=await f(mail,pw);if(r.error)acMsg=r.error.message;else if(r.ok)acMsg=r.ok}catch(e){acMsg=e.message}acRender()};
+    $("#ac-in").onclick=()=>go((e,p)=>SB.auth.signInWithPassword({email:e,password:p}));
+    $("#ac-new").onclick=()=>go(async(e,p)=>{const r=await SB.auth.signUp({email:e,password:p});return r.error?r:{ok:r.data.session?"":"Compte créé. Clique le lien reçu par e-mail pour le confirmer."}});
+    $("#ac-magic").onclick=()=>go(async e=>{const r=await SB.auth.signInWithOtp({email:e,options:{emailRedirectTo:location.href.split("#")[0]}});return r.error?r:{ok:"Lien envoyé. Ouvre l'e-mail sur cet appareil."}});return}
+  box.innerHTML=`<p class="ac-who"><span class="av">${esc((ACU.email||"?")[0].toUpperCase())}</span><span>${esc(ACU.email||"")}<br><small class="msg">${lastSync?"Synchronisé à "+lastSync.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}):"Synchronisation…"}</small></span></p>
+    <div class="ac-acts"><button class="btn ghost" id="ac-now" type="button">Synchroniser maintenant</button><button class="btn ghost" id="ac-out" type="button">Se déconnecter</button></div>${m}`;
+  $("#ac-now").onclick=()=>push();$("#ac-out").onclick=async()=>{await SB.auth.signOut();ACU=null;acRender()}}
+const acP=$("#acct");$("#t-acct").addEventListener("click",()=>{closeMenu();SND.paper(.7);acMsg="";acRender();acP.classList.add("on");loadSB()});$("#acct .pclose").addEventListener("click",()=>acP.classList.remove("on"));
+const EMPTY0=(()=>{try{return localStorage.getItem("tranches-vide")==="1"}catch(e){return false}})();
+$("#s-demo").textContent=EMPTY0?"Remettre":"Retirer";
+$("#s-demo").addEventListener("click",()=>{try{EMPTY0?localStorage.removeItem("tranches-vide"):localStorage.setItem("tranches-vide","1")}catch(e){}sessionStorage.setItem("tranches-msg",EMPTY0?"Les livres d'exemple sont revenus.":"Livres d'exemple retirés.");setTimeout(()=>location.reload(),ACU?1700:0)});
+let armT;$("#s-reset").addEventListener("click",e=>{const b=e.currentTarget;if(!b.classList.contains("armed")){b.classList.add("armed");b.textContent="Sûr ? Tout effacer";clearTimeout(armT);armT=setTimeout(()=>{b.classList.remove("armed");b.textContent="Réinitialiser"},4000);return}
+  ["tranche-ajouts","tranches-lettrines","tranches-lecture","tranches-collections"].forEach(k=>{try{localStorage.removeItem(k)}catch(_){}});try{localStorage.setItem("tranches-vide","1")}catch(_){}
+  indexedDB.deleteDatabase("tranches");sessionStorage.setItem("tranches-msg","Collection réinitialisée. L'étagère t'attend.");SND.thump(1.3);setTimeout(()=>location.reload(),ACU?1700:200)});
+$("#s-exp").addEventListener("click",()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({app:"tranches",v:1,at:new Date().toISOString(),data:snapshot()})],{type:"application/json"}));a.download="tranches-sauvegarde.json";a.click();toast("Sauvegarde téléchargée.")});
+$("#s-imp").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const j=JSON.parse(t);if(j.app!=="tranches")throw 0;SYNCK.forEach(k=>localStorage.removeItem(k));Object.entries(j.data).forEach(([k,v])=>SYNCK.includes(k)&&localStorage.setItem(k,v));sessionStorage.setItem("tranches-msg","Sauvegarde restaurée.");setTimeout(()=>location.reload(),ACU?1700:0)}catch(_){toast("Ce fichier n'est pas une sauvegarde de Tranches.")}})});
+acRender();if(sbCfg())loadSB();
+try{const m=sessionStorage.getItem("tranches-msg");if(m){sessionStorage.removeItem("tranches-msg");setTimeout(()=>toast(m),2600)}}catch(e){}
+
+// ---- Reader : lecture des .cbz (zip d'images), collections, en cours, terminés ----
+const IDB=(()=>{let p;const db=()=>p||(p=new Promise((res,rej)=>{const r=indexedDB.open("tranches",1);r.onupgradeneeded=()=>r.result.createObjectStore("tomes");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}));
+  const tx=(m,f)=>db().then(d=>new Promise((res,rej)=>{const t=d.transaction("tomes",m),q=f(t.objectStore("tomes"));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error)}));
+  return{get:k=>tx("readonly",s=>s.get(k)),put:(k,v)=>tx("readwrite",s=>s.put(v,k)),del:k=>tx("readwrite",s=>s.delete(k))}})();
+async function unzip(blob){const buf=new Uint8Array(await blob.arrayBuffer()),dv=new DataView(buf.buffer,buf.byteOffset,buf.byteLength);let e=buf.length-22;
+  while(e>=0&&dv.getUint32(e,true)!==0x06054b50)e--;if(e<0)throw new Error("zip");let n=dv.getUint16(e+10,true),off=dv.getUint32(e+16,true);const out=[],td=new TextDecoder();
+  for(let i=0;i<n&&off+46<=buf.length;i++){if(dv.getUint32(off,true)!==0x02014b50)break;const meth=dv.getUint16(off+10,true),csz=dv.getUint32(off+20,true),nl=dv.getUint16(off+28,true),xl=dv.getUint16(off+30,true),cl=dv.getUint16(off+32,true),lo=dv.getUint32(off+42,true),name=td.decode(buf.subarray(off+46,off+46+nl));off+=46+nl+xl+cl;
+    if(/\.(jpe?g|png|webp|gif|avif)$/i.test(name)&&!/(^|\/)(__MACOSX|\.)/.test(name)){const ds=lo+30+dv.getUint16(lo+26,true)+dv.getUint16(lo+28,true);out.push({name,meth,data:buf.subarray(ds,ds+csz)})}}
+  return out.sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true,sensitivity:"base"}))}
+async function entryURL(en){const ext=en.name.split(".").pop().toLowerCase(),type="image/"+(ext==="jpg"?"jpeg":ext);let data=en.data;
+  if(en.meth===8)data=new Uint8Array(await new Response(new Blob([en.data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer());else if(en.meth!==0)throw new Error("méthode");
+  return URL.createObjectURL(new Blob([data],{type}))}
+let LEC={},COLLS={};try{LEC=JSON.parse(localStorage.getItem("tranches-lecture")||"{}");COLLS=JSON.parse(localStorage.getItem("tranches-collections")||"{}")}catch(e){}
+const saveLEC=()=>{try{localStorage.setItem("tranches-lecture",JSON.stringify(LEC))}catch(e){}},saveCOLLS=()=>{try{localStorage.setItem("tranches-collections",JSON.stringify(COLLS))}catch(e){}};
+const COLL_LIST=["Shōnen","Seinen","Shōjo","Josei","Comics","BD","Autres"];
+function parseName(fn){let s=fn.replace(/\.(cbz|zip)$/i,"").replace(/[_]+/g," ").replace(/\s*[\[(].*?[\])]\s*/g," ").trim(),m=s.match(/^(.*?)[\s.-]*(?:tome|vol(?:ume)?\.?|t|v|#)\s*0*(\d+)\b/i)||s.match(/^(.*?)[\s.-]+0*(\d+)\s*$/);
+  return m&&m[1].trim()?{serie:m[1].replace(/[\s.-]+$/,"").trim(),tome:+m[2]}:{serie:s,tome:1}}
+// Tome d'exemple, dessiné à la volée
+const DEMO_N=14,DEMO_TXT=[null,["Il est tard, frère Anselme.","La chandelle tiendra encore une page."],["Qui va là ?","...le vent, sans doute."],["KRRRR"],["Ce livre... il n'est pas au catalogue.","Sa tranche porte mon nom."],["Ne l'ouvre pas, Anselme !"],["La première lettre... elle bouge."],["FLAAASH"],["Où suis-je ?","Dans la marge, mon frère."],["Un escargot qui parle ?!","Les moines m'ont dessiné. Je garde les livres."],["Pour sortir, il faut enluminer ta propre lettre."],["A... comme Anselme."],["Le scriptorium !","Et le livre s'est refermé."],null];
+function demoPage(i){const W=900,H=1350,c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d"),R=rnd(i*31+7);x.fillStyle="#f7f3ea";x.fillRect(0,0,W,H);x.lineCap="round";
+  if(i===0){x.fillStyle="#C8201A";x.fillRect(0,0,W,H);x.fillStyle="#0e0e0e";x.beginPath();x.ellipse(W/2,H*.62,230,330,0,0,7);x.fill();x.fillStyle="#f7f3ea";x.beginPath();x.arc(W/2,H*.38,80,0,7);x.fill();
+    x.fillStyle="#0e0e0e";x.beginPath();x.arc(W/2,H*.4,70,Math.PI*.05,Math.PI*.95);x.fill();x.fillStyle="#f7f3ea";x.font="150px UnifrakturMaguntia, serif";x.textAlign="center";x.fillText("Le Copiste",W/2,220);
+    x.font="700 52px 'Grenze Gotisch', serif";x.fillText("Tome I · La lettre vivante",W/2,300);x.font="600 30px Inter, sans-serif";x.fillText("TRANCHES · TOME D'EXEMPLE",W/2,H-70);return c}
+  if(i===DEMO_N-1){x.fillStyle="#0e0e0e";x.font="160px UnifrakturMaguntia, serif";x.textAlign="center";x.fillText("Fin",W/2,H/2);x.fillStyle="#C8201A";x.font="700 44px 'Grenze Gotisch', serif";x.fillText("du premier tome",W/2,H/2+80);return c}
+  const m=40,g=18,rows=2+(R()*2|0),rh=(H-2*m-g*(rows-1))/rows,txt=DEMO_TXT[i]||[];let pi=0;
+  for(let r=0;r<rows;r++){const cols=R()<.55?2:1,sk=(R()-.5)*120;for(let k=0;k<cols;k++){const y0=m+r*(rh+g);let x0=m,x1=W-m;if(cols===2){const mid=W/2+sk;if(k===0)x1=mid-g/2;else x0=mid+g/2}
+    x.save();x.beginPath();x.rect(x0,y0,x1-x0,rh);x.clip();const cx=(x0+x1)/2,cy=y0+rh/2,kind=(i*3+pi)%5;x.strokeStyle="#111";
+    if(kind===0){x.lineWidth=1.4;for(let a=0;a<90;a++){const t=a/90*Math.PI*2,r0=60+R()*40;x.beginPath();x.moveTo(cx+Math.cos(t)*r0,cy+Math.sin(t)*r0);x.lineTo(cx+Math.cos(t)*900,cy+Math.sin(t)*900);x.stroke()}}
+    else if(kind===1){x.lineWidth=1;for(let d=-rh;d<x1-x0;d+=7){x.beginPath();x.moveTo(x0+d,y0+rh);x.lineTo(x0+d+rh,y0);x.stroke()}x.fillStyle="#f7f3ea";x.beginPath();x.moveTo(cx-90,y0+rh);x.lineTo(cx-90,cy-20);x.quadraticCurveTo(cx-90,cy-150,cx,cy-190);x.quadraticCurveTo(cx+90,cy-150,cx+90,cy-20);x.lineTo(cx+90,y0+rh);x.fill();x.lineWidth=4;x.stroke()}
+    else if(kind===2){x.fillStyle="#111";x.beginPath();x.moveTo(cx-120,y0+rh);x.quadraticCurveTo(cx-100,cy-30,cx,cy-40);x.quadraticCurveTo(cx+100,cy-30,cx+120,y0+rh);x.fill();x.beginPath();x.arc(cx,cy-90,58,0,7);x.fill();
+      x.fillStyle="#f7f3ea";x.beginPath();x.arc(cx+10,cy-82,40,Math.PI*.1,Math.PI*.9);x.fill()}
+    else if(kind===3){x.fillStyle="#efe2c4";x.fillRect(x0,y0,x1-x0,rh);x.fillStyle="#111";x.fillRect(cx-14,cy-10,28,110);x.fillStyle="#C8201A";x.beginPath();x.moveTo(cx,cy-80);x.quadraticCurveTo(cx+22,cy-30,cx,cy-14);x.quadraticCurveTo(cx-22,cy-30,cx,cy-80);x.fill();
+      x.lineWidth=1;for(let a=0;a<26;a++){const t=a/26*Math.PI*2;x.beginPath();x.moveTo(cx+Math.cos(t)*70,cy-40+Math.sin(t)*70);x.lineTo(cx+Math.cos(t)*(110+R()*40),cy-40+Math.sin(t)*(110+R()*40));x.stroke()}}
+    else{x.lineWidth=3;x.beginPath();x.moveTo(x0,cy+60);x.lineTo(x1,cy+60+(R()-.5)*40);x.stroke();for(let a=0;a<5;a++){const ax=x0+(a+.5)*(x1-x0)/5;x.beginPath();x.moveTo(ax-24,cy+60);x.lineTo(ax-24,cy-30);x.arc(ax,cy-30,24,Math.PI,0);x.lineTo(ax+24,cy+60);x.stroke()}}
+    const t=txt[pi];if(t){const big=t===t.toUpperCase()&&t.length<10;if(big){x.fillStyle="#C8201A";x.font="900 110px 'Grenze Gotisch', serif";x.textAlign="center";x.save();x.translate(cx,cy);x.rotate(-.12);x.lineWidth=10;x.strokeStyle="#f7f3ea";x.strokeText(t,0,30);x.fillText(t,0,30);x.restore()}
+      else{x.font="600 30px 'Grenze Gotisch', serif";x.textAlign="center";const words=t.split(" "),lines=[];let l="";words.forEach(w=>{if(x.measureText(l+" "+w).width>250&&l){lines.push(l);l=w}else l=l?l+" "+w:w});lines.push(l);
+        const bw=290,bh=lines.length*36+36,bx=Math.min(x1-bw-14,Math.max(x0+14,x0+20+R()*((x1-x0)-bw-40))),by=y0+18;x.fillStyle="#fff";x.strokeStyle="#111";x.lineWidth=3;x.beginPath();x.ellipse(bx+bw/2,by+bh/2,bw/2,bh/2,0,0,7);x.fill();x.stroke();
+        x.beginPath();x.moveTo(bx+bw/2-12,by+bh-4);x.lineTo(bx+bw/2+6,by+bh+40);x.lineTo(bx+bw/2+14,by+bh-6);x.fill();x.stroke();x.fillStyle="#111";lines.forEach((s,j)=>x.fillText(s,bx+bw/2,by+bh/2-(lines.length-1)*18+j*36+10))}}
+    x.restore();x.lineWidth=5;x.strokeStyle="#111";x.strokeRect(x0,y0,x1-x0,rh);pi++}}
+  x.fillStyle="#999";x.font="500 22px Inter, sans-serif";x.textAlign="center";x.fillText(String(i),W/2,H-12);return c}
+const demoURL=i=>new Promise(r=>demoPage(i).toBlob(b=>r(URL.createObjectURL(b)),"image/jpeg",.88));
+if(!LEC.demo&&localStorage.getItem("tranches-demo-retire")!=="1"){LEC.demo={id:"demo",serie:"Le Copiste",tome:1,n:DEMO_N,page:0,done:false,added:Date.now(),demo:1};COLLS["Le Copiste"]=COLLS["Le Copiste"]||"Seinen"}
+const thumbOf=async url=>{const im=new Image();im.src=url;await im.decode();const c=document.createElement("canvas"),w=180;c.width=w;c.height=Math.round(w*im.naturalHeight/im.naturalWidth);c.getContext("2d").drawImage(im,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.7)};
+async function ensureDemoCover(){if(LEC.demo&&!LEC.demo.cover){try{await document.fonts.load("150px UnifrakturMaguntia");await document.fonts.load("700 52px 'Grenze Gotisch'")}catch(e){}LEC.demo.cover=demoPage(0).toDataURL("image/jpeg",.5).replace(/^/,"");const c=document.createElement("canvas");c.width=180;c.height=270;const im=new Image();im.src=LEC.demo.cover;await im.decode();c.getContext("2d").drawImage(im,0,0,180,270);LEC.demo.cover=c.toDataURL("image/jpeg",.75);buildReader()}}
+function buildReader(){const T=Object.values(LEC),cards=list=>list.map(t=>`<button class="tm" data-id="${t.id}"><span class="cv" style="${t.cover?`background-image:url(${t.cover})`:""}"></span><span><h4>${esc(t.serie)}</h4><span class="meta">Tome ${t.tome} · page ${Math.min(t.n,t.page+1)} sur ${t.n}</span><span class="bar" style="--p:${Math.round((t.page+1)/t.n*100)}%;display:block"><i></i></span>${t.missing?`<span class="gone">Fichier sur un autre appareil</span>`:""}</span></button>`).join("");
+  const cur=T.filter(t=>!t.done).sort((a,b)=>(b.read||b.added)-(a.read||a.added)),done=T.filter(t=>t.done),series={};T.forEach(t=>(series[t.serie]=series[t.serie]||[]).push(t));
+  $("#r-cur").innerHTML=cur.length?cards(cur):`<p class="msg">Rien en cours. Importe un .cbz pour commencer.</p>`;$("#r-done").innerHTML=done.length?cards(done):`<p class="msg">Aucun tome terminé pour l'instant.</p>`;
+  const byC={};Object.keys(series).forEach(s=>{const c=COLLS[s]||"Autres";(byC[c]=byC[c]||[]).push(s)});
+  $("#r-coll").innerHTML=Object.keys(byC).sort((a,b)=>COLL_LIST.indexOf(a)-COLL_LIST.indexOf(b)).map(c=>`<div class="coll"><h5>${c}</h5>${byC[c].sort().map(s=>{const ts=series[s].sort((a,b)=>a.tome-b.tome),nd=ts.filter(t=>t.done).length;
+    return`<div class="ser"><div class="nm">${esc(s)}<span>${nd}/${ts.length} tome${ts.length>1?"s":""} lu${nd>1?"s":""}</span><select data-s="${esc(s)}" aria-label="Collection">${COLL_LIST.map(x=>`<option ${x===c?"selected":""}>${x}</option>`).join("")}</select></div><div class="vols2">${ts.map(t=>`<button data-id="${t.id}" class="${t.done?"done":""}" title="Tome ${t.tome}" style="--p:${Math.round((t.page+1)/t.n*100)}%;${t.cover?`background-image:url(${t.cover})`:""}"><i></i></button>`).join("")}</div></div>`}).join("")}</div>`).join("")}
+$("#reader").addEventListener("click",e=>{const b=e.target.closest("[data-id]");if(b)openTome(b.dataset.id)});
+$("#reader").addEventListener("change",e=>{if(e.target.dataset.s){COLLS[e.target.dataset.s]=e.target.value;saveCOLLS();buildReader();SND.rustle()}});
+async function importFiles(files){let ok=0;for(const f of files){if(/\.cbr$/i.test(f.name)){toast("Les .cbr (RAR) ne sont pas encore lus : convertis-les en .cbz.");continue}
+    try{const en=await unzip(f);if(!en.length)throw 0;const {serie,tome}=parseName(f.name),old=Object.values(LEC).find(t=>t.serie===serie&&t.tome===tome),id=old?.id||"t"+Date.now().toString(36)+ok;
+      const u=await entryURL(en[0]),cover=await thumbOf(u);URL.revokeObjectURL(u);await IDB.put(id,f);LEC[id]={id,serie,tome,n:en.length,page:old?.page||0,done:old?.done||false,added:Date.now(),cover};if(!COLLS[serie]){COLLS[serie]="Autres";saveCOLLS()}ok++}
+    catch(err){toast(`« ${f.name} » n'est pas un .cbz lisible.`)}}
+  if(ok){saveLEC();buildReader();SND.seal();toast(ok>1?`${ok} tomes rangés dans le Reader.`:"Tome rangé dans le Reader.")}}
+$("#r-file").addEventListener("change",e=>{importFiles([...e.target.files]);e.target.value=""});
+const rdrop=$("#r-drop");["dragenter","dragover"].forEach(ev=>$("#reader").addEventListener(ev,e=>{e.preventDefault();rdrop.classList.add("over")}));
+["dragleave","drop"].forEach(ev=>$("#reader").addEventListener(ev,e=>{e.preventDefault();rdrop.classList.remove("over")}));$("#reader").addEventListener("drop",e=>importFiles([...e.dataTransfer.files]));
+// Liseuse
+const RD={t:null,en:null,i:0,urls:new Map(),dbl:false,rtl:true,z:1,px:0,py:0,busy:false};let rdEl=$("#rd"),rdP=$("#rd-pages");
+try{const o=JSON.parse(localStorage.getItem("tranches-liseuse")||"{}");RD.rtl=o.rtl!==false;RD.dblPref=o.dbl}catch(e){}
+const wide=()=>innerWidth>innerHeight*1.15&&innerWidth>760;
+function spreadAt(i){const n=RD.t.n;if(!RD.dbl||i===0)return[i];const s=i%2?i:i-1;return[s,s+1].filter(k=>k<n)}
+async function pageURL(k){if(RD.urls.has(k))return RD.urls.get(k);const p=RD.t.demo?demoURL(k):entryURL(RD.en[k]);RD.urls.set(k,p);return p}
+function prefetch(i){for(let k=i-2;k<=i+4;k++)if(k>=0&&k<RD.t.n)pageURL(k);for(const [k,p] of RD.urls)if(k<i-6||k>i+10){p.then(u=>URL.revokeObjectURL(u));RD.urls.delete(k)}}
+async function show(i,dir=0){const n=RD.t.n;i=Math.max(0,Math.min(n-1,i));const sp=spreadAt(i);i=sp[0];RD.i=i;const urls=await Promise.all(sp.map(pageURL));
+  const el=document.createElement("div");el.className="spread"+(sp.length>1?" two":"");const ord=RD.rtl?urls.slice().reverse():urls;el.innerHTML=ord.map(u=>`<img src="${u}" alt="" draggable="false">`).join("");
+  const old=[...rdP.children];rdP.appendChild(el);await Promise.all([...el.querySelectorAll("img")].map(im=>im.decode().catch(()=>{})));
+  const sx=dir*(RD.rtl?-1:1);if(dir&&!RM){el.animate([{transform:`translateX(${sx*36}%) rotateY(${sx*-8}deg)`,opacity:0},{transform:"none",opacity:1}],{duration:420,easing:"cubic-bezier(.2,.7,.2,1)"});
+    old.forEach(o=>o.animate([{transform:"none",opacity:1},{transform:`translateX(${-sx*18}%) scale(.96)`,opacity:0}],{duration:380,easing:"ease-in",fill:"forwards"}).finished.then(()=>o.remove()))}else old.forEach(o=>o.remove());
+  if(dir)SND.paper(.5);$("#rd-n").textContent=sp.map(k=>k+1).join("–");$("#rd-sc").max=n;$("#rd-sc").value=i+1;$("#rd-of").textContent=n;
+  const last=sp[sp.length-1]>=n-1,t=LEC[RD.t.id];t.page=i;t.read=Date.now();if(last&&!t.done){t.done=true;setTimeout(()=>{SND.seal();toast(`Tome ${t.tome} terminé. Il rejoint les terminés.`)},500)}saveLEC();prefetch(i)}
+const next=()=>{const sp=spreadAt(RD.i);if(sp[sp.length-1]<RD.t.n-1)show(sp[sp.length-1]+1,1)},prev=()=>{if(RD.i>0)show(spreadAt(RD.i-1)[0],-1)};
+function setZoom(z,cx,cy){const r=rdEl.getBoundingClientRect();z=Math.max(1,Math.min(4,z));if(z===1){RD.px=RD.py=0}else{RD.px=cx-(cx-RD.px)*z/RD.z;RD.py=cy-(cy-RD.py)*z/RD.z;RD.px=Math.min(0,Math.max(r.width*(1-z),RD.px));RD.py=Math.min(0,Math.max(r.height*(1-z),RD.py))}RD.z=z;rdP.style.transform=`translate(${RD.px}px,${RD.py}px) scale(${z})`}
+async function openTome(id){const t=LEC[id];if(!t)return;let en=null;if(!t.demo){const f=await IDB.get(id).catch(()=>null);if(!f){t.missing=true;buildReader();toast("Ce tome est sur un autre appareil : importe le fichier ici pour le lire.");return}en=await unzip(f)}
+  RD.urls.forEach(p=>p.then(u=>URL.revokeObjectURL(u)));RD.urls.clear();Object.assign(RD,{t,en,z:1,px:0,py:0});RD.dbl=RD.dblPref??wide();rdP.innerHTML="";rdP.style.transform="";
+  $("#rd-serie").textContent=t.serie;$("#rd-tome").textContent=`Tome ${t.tome} · ${t.n} pages`;rdOpts();rdEl.classList.add("on");rdEl.classList.remove("calm");SND.paper();await show(t.done?0:t.page,0);setTimeout(()=>rdEl.classList.add("calm"),2200)}
+function closeTome(){rdEl.classList.remove("on");buildReader();setTimeout(()=>{if(!rdEl.classList.contains("on")){rdP.innerHTML="";RD.urls.forEach(p=>p.then(u=>URL.revokeObjectURL(u)));RD.urls.clear()}},500)}
+function rdOpts(){rdEl.classList.toggle("rtl",RD.rtl);$("#rd-dir").setAttribute("aria-pressed",RD.rtl);$("#rd-dir").textContent=RD.rtl?"Sens manga ⇠":"Sens BD ⇢";$("#rd-dbl").setAttribute("aria-pressed",RD.dbl);try{localStorage.setItem("tranches-liseuse",JSON.stringify({rtl:RD.rtl,dbl:RD.dblPref}))}catch(e){}}
+$("#rd-dir").onclick=()=>{RD.rtl=!RD.rtl;rdOpts();show(RD.i)};$("#rd-dbl").onclick=()=>{RD.dbl=RD.dblPref=!RD.dbl;rdOpts();show(RD.i)};$("#rd-x").onclick=closeTome;
+$("#rd-sc").addEventListener("input",e=>show(+e.target.value-1));
+const hint=(s)=>{const h=$(".rd-hint."+s);h.classList.add("on");setTimeout(()=>h.classList.remove("on"),260)};
+const goSide=s=>{const fwd=(s==="l")===RD.rtl;fwd?next():prev();hint(s)};
+(function(){const st=$("#rd-stage");let p0=null,lastTap=0,pan=null,wheelT=0,acc=0;
+  st.addEventListener("pointerdown",e=>{p0={x:e.clientX,y:e.clientY,t:performance.now()};if(RD.z>1){pan={x:e.clientX-RD.px,y:e.clientY-RD.py};rdP.classList.add("nt")}st.setPointerCapture(e.pointerId)});
+  st.addEventListener("pointermove",e=>{if(pan){const r=rdEl.getBoundingClientRect();RD.px=Math.min(0,Math.max(r.width*(1-RD.z),e.clientX-pan.x));RD.py=Math.min(0,Math.max(r.height*(1-RD.z),e.clientY-pan.y));rdP.style.transform=`translate(${RD.px}px,${RD.py}px) scale(${RD.z})`}});
+  st.addEventListener("pointerup",e=>{if(!p0)return;const dx=e.clientX-p0.x,dy=e.clientY-p0.y,now=performance.now();rdP.classList.remove("nt");const wasPan=pan;pan=null;
+    if(Math.hypot(dx,dy)<10){if(now-lastTap<300){lastTap=0;clearTimeout(st._t);setZoom(RD.z>1?1:2.4,e.clientX,e.clientY);return}lastTap=now;const x=e.clientX/innerWidth;
+      st._t=setTimeout(()=>{if(RD.z>1)return;if(x<.3)goSide("l");else if(x>.7)goSide("r");else rdEl.classList.toggle("calm")},RD.z>1?0:260)}
+    else if(!wasPan&&RD.z===1&&Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy))goSide(dx>0?"l":"r");p0=null});
+  st.addEventListener("wheel",e=>{e.preventDefault();if(e.ctrlKey){setZoom(RD.z*Math.exp(-e.deltaY*.01),e.clientX,e.clientY);return}if(RD.z>1){RD.px-=e.deltaX;RD.py-=e.deltaY;setZoom(RD.z,0,0);return}
+    const now=performance.now();if(now-wheelT<450)return;const d=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX*(RD.rtl?-1:1):e.deltaY;acc+=d;if(Math.abs(acc)>60){wheelT=now;(acc>0?next:prev)();acc=0}},{passive:false});
+  addEventListener("keydown",e=>{if(!rdEl.classList.contains("on"))return;if(e.key==="Escape"){e.stopImmediatePropagation();closeTome();return}
+    if(e.key==="ArrowLeft")goSide("l");else if(e.key==="ArrowRight")goSide("r");else if(e.key===" "){e.preventDefault();next()}else return;e.preventDefault()},true)})();
+buildReader();ensureDemoCover();
 </script>
 
 </body></html>

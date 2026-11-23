@@ -79,3 +79,12 @@ Déjà dans le prototype :
 - **Rubriques tracées** : les ellipses des catégories se dessinent à la main à chaque rangement.
 - **Livre ajouté** : il tombe sur l'étagère avec un bruit sourd et un nuage de poussière.
 - **Drôlerie** : après 25 s sans rien toucher, un escargot de marge traverse le bas de l'écran.
+
+## v11 : premier remplissage, Reader, compte
+
+- **Ambiance de cave** au lieu de la pluie : bourdon grave, grondement sourd, gouttes qui résonnent.
+- **Loupe** au scanner : en déplaçant un coin, une loupe au-dessus du doigt montre exactement où il tombe.
+- **Plusieurs livres d'un coup** : le premier jour on colle sa liste ou on importe Goodreads/Babelio ; les livres tombent en cascade sur l'étagère. Ensuite, l'ajout un par un reste le petit rituel de fin de livre.
+- **Reader .cbz** : lecture locale (zip lu dans le navigateur, fichiers gardés dans IndexedDB), progression synchronisée par le compte.
+- **Compte** : Supabase (e-mail + mot de passe ou lien magique). La collection est une ligne JSON par compte (`docs/supabase.sql`).
+- **Réglages** : exporter / restaurer une sauvegarde, retirer les livres d'exemple, réinitialiser la collection (double confirmation).
