@@ -128,6 +128,10 @@ button{font:inherit;color:inherit}
 .opts button:hover{opacity:.7}
 .opts button[aria-pressed="true"]{opacity:1;color:var(--rub)}
 .opts button:disabled{opacity:.12;cursor:default}
+.seg{display:flex;gap:16px;flex-wrap:nowrap;align-items:baseline;padding:2px 0 6px;white-space:nowrap}.seg button{font-size:clamp(22px,2.3vw,30px)}
+.book.unr .spine::after{content:"";position:absolute;top:-13px;right:24%;width:6px;height:34px;background:var(--rub);clip-path:polygon(0 0,50% 22%,100% 0,100% 100%,0 100%);transform:translateZ(1px);pointer-events:none}
+#sh .unr-tag{color:var(--rub)}
+@media (max-width:640px){.seg{flex-wrap:wrap;white-space:normal;gap:0 14px}.seg button{font-size:22px;min-height:40px;white-space:nowrap;text-align:left}}
 .menu .soon{display:flex;gap:8px}
 .menu .soon button{border:1px solid color-mix(in srgb,var(--ink) 18%,transparent);background:none;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600;font-stretch:90%;cursor:pointer}
 .menu p{margin:0;font-family:var(--f-text);font-size:12.5px;line-height:1.5;color:var(--ink-soft)}
@@ -721,6 +725,7 @@ button{font:inherit;color:inherit}
     <button data-s="auteur" aria-pressed="false">Auteur</button>
     <button data-s="taille" aria-pressed="false">Taille</button>
     <button data-s="recent" aria-pressed="false">Dernier lu</button>
+    <button data-s="lu" aria-pressed="false">À lire</button>
     <button data-s="hasard" aria-pressed="false">Hasard</button>
   </div></div>
   <p>Deux doigts (ou le stylet) pour naviguer, pincer pour zoomer. <b>Tracé</b> : dessine une étagère au stylet, au doigt ou à la souris.</p>
@@ -762,7 +767,8 @@ button{font:inherit;color:inherit}
     <label class="ms-fld sm" for="a-py"><span>Paru en</span><input id="a-py" type="number" min="1000" max="2100" placeholder="2024"></label>
     <label class="ms-fld sm" for="a-p"><span>Pages</span><input id="a-p" type="number" min="1" placeholder="250"></label>
     <label class="ms-fld sm" for="a-g"><span>Catégorie</span><select id="a-g"></select></label>
-    <label class="ms-fld sm" for="a-y"><span>Lu en</span><input id="a-y" type="number" min="1950" max="2100"></label>
+    <div class="ms-fld sm"><span>Statut</span><div class="opts seg" id="a-st"><button type="button" data-u="0" aria-pressed="true">Lu</button><button type="button" data-u="1" aria-pressed="false">Pas encore lu</button></div></div>
+    <label class="ms-fld sm" for="a-y" id="a-yl"><span>Lu en</span><input id="a-y" type="number" min="1950" max="2100"></label>
   </div></div>
   <div class="acts ms-end one"><button class="plate big-plate" id="a-add" type="button">Ranger sur l'étagère <i>☞</i></button><button class="btn ghost" id="a-del" type="button" hidden>Retirer de l'étagère</button></div>
   <p class="msg one">Ensuite, le résumé complet de l'intrigue est écrit par l'IA, et tu peux enluminer sa première lettre.</p>
@@ -772,7 +778,7 @@ button{font:inherit;color:inherit}
       <textarea id="b-list" class="ms-area" rows="6" spellcheck="false" placeholder="L'Étranger — Albert Camus&#10;Dune, Frank Herbert&#10;Le Petit Prince ; Saint-Exupéry (2019)"></textarea>
       <div class="ph"><label class="ms-file" for="b-csv"><span>Ou un fichier .csv</span><em>Goodreads, Babelio, tableur</em><input id="b-csv" type="file" accept=".csv,text/csv,.txt"></label></div></div>
     <div class="ms-sec"><h3><b>II</b>Vérifier</h3>
-      <div class="frm"><label class="ms-fld sm" for="b-g"><span>Catégorie par défaut</span><select id="b-g"></select></label><label class="ms-fld sm" for="b-y"><span>Lus en</span><input id="b-y" type="number" min="1950" max="2100"></label></div>
+      <div class="frm"><label class="ms-fld sm" for="b-g"><span>Catégorie par défaut</span><select id="b-g"></select></label><div class="ms-fld sm"><span>Statut</span><div class="opts seg" id="b-st"><button type="button" data-u="0" aria-pressed="true">Lus</button><button type="button" data-u="1" aria-pressed="false">Pas encore lus</button></div></div><label class="ms-fld sm" for="b-y" id="b-yl"><span>Lus en</span><input id="b-y" type="number" min="1950" max="2100"></label></div>
       <p class="msg" id="b-msg">Aucun livre pour l'instant.</p><ol class="blist" id="b-prev"></ol></div>
     <div class="acts ms-end"><button class="plate big-plate" id="b-add" type="button" disabled>Tout ranger <i>☞</i></button></div>
   </div>
@@ -915,7 +921,7 @@ const GORDER=["Classiques","Contemporain","Science-fiction","Fantasy","Polars","
 const lum=h=>{const n=parseInt(h.slice(1),16);return(.299*(n>>16&255)+.587*(n>>8&255)+.114*(n&255))/255};
 // hauteur = taille réelle (1 cm = 10 px), épaisseur = pages (papier plus épais pour les beaux livres et artbooks)
 function makeBook(r,i){const [t,a,y,p,g,f,s,x={}]=r,h=x.cm?Math.round(x.cm*10):FMT[f].h,thick=f==="B"||f==="A",w=Math.round(Math.max(14,Math.min(64,thick?p/4.5+14:p/17+6))),c=x.c||PAL[(i*7+3)%PAL.length],ry=x.ry||2008+(i*7)%17,rm=x.rm||(i*5)%12+1;
-  return{r,i,t,a,y,p,g,f,s,h,w,c,ink:x.t||(lum(c)>.58?"#121212":"#F5F3EE"),v:x.img?2:(i*5+1)%4,last:a.split(" ").pop(),d:x.added||x.img?0:(i*137)%520,ry,rm,cid:x.cid,cm:x.cm,img:x.img,spimg:x.spine,ed:x.ed}}
+  return{r,i,t,a,y,p,g,f,s,h,w,c,ink:x.t||(lum(c)>.58?"#121212":"#F5F3EE"),v:x.img?2:(i*5+1)%4,last:a.split(" ").pop(),d:x.added||x.img?0:(i*137)%520,ry,rm,cid:x.cid,cm:x.cm,img:x.img,spimg:x.spine,ed:x.ed,unread:!!x.unread}}
 const roman=n=>{let r="";[[1000,"M"],[900,"CM"],[500,"D"],[400,"CD"],[100,"C"],[90,"XC"],[50,"L"],[40,"XL"],[10,"X"],[9,"IX"],[5,"V"],[4,"IV"],[1,"I"]].forEach(([v,l])=>{while(n>=v){r+=l;n-=v}});return r};
 const MOIS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 let SAVED=[];try{SAVED=JSON.parse(localStorage.getItem("tranche-ajouts")||"[]")}catch(e){}
@@ -938,7 +944,7 @@ function blob(cx,cy,rx,ry,seed,amp=.1,n=9){const R=rnd(seed),pts=[],o=R()*6;for(
 function wob(x0,x1,y,seed){const R=rnd(seed),pts=[];for(let x=x0;x<x1;x+=80)pts.push([x,y+(R()-.5)*3.4]);pts.push([x1,y+(R()-.5)*3.4]);return curve(pts,false)}
 
 // ---------- Landing ----------
-$("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.length} livres lus`;
+$("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.filter(b=>!b.unread).length} livres lus${BOOKS.some(b=>b.unread)?` · ${BOOKS.filter(b=>b.unread).length} à lire`:""}`;
 (()=>{const sh=$("#lshelf"),tr=document.createElement("div");tr.className="l-track";sh.appendChild(tr);const R=rnd(4),pick=[...BOOKS].sort(()=>R()-.5).slice(0,60),items=[];
   pick.forEach((b,k)=>{items.push(b);if(k%19===9)items.push("candle");if(k%23===15)items.push("stack")});
   const one=(it,k)=>{const d=`animation-delay:${250+(k%items.length)*20}ms`;
@@ -953,7 +959,7 @@ $("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.length} livres lus`;
 // ---------- Tranches ----------
 const world=$("#world"),marks=$("#marks"),stage=$("#stage");
 const spineHTML=b=>`<span class="spine"><span class="sf"></span><span class="cov"></span><span class="txt"><span class="au">${b.last}</span><span class="ti">${b.t}</span><span class="mk"></span></span></span>`;
-function makeEl(b){const e=document.createElement("button");e.className=`book v${b.v}`+(b.w<22?" thin":"");
+function makeEl(b){const e=document.createElement("button");e.className=`book v${b.v}`+(b.w<22?" thin":"")+(b.unread?" unr":"");
   e.style.cssText=`--w:${b.w}px;--h:${b.h}px;--c:${b.c};--t:${b.ink};--fs:${Math.min(15,Math.max(8.5,b.w*.42))}px`;
   e.setAttribute("aria-label",`${b.t}, ${b.a}`);e.innerHTML=spineHTML(b);e.dataset.i=b.i;b.el=e;world.appendChild(e);
   if(b.img){const c=e.querySelector(".cov");c.classList.add("img");c.style.backgroundImage=`url("${b.img}")`}
@@ -1091,7 +1097,7 @@ function openBook(b,el){if(busy||cur)return;cur=b;src=el;SND.paper();const H=Mat
   <div class="info">
     <span class="gk big"><svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path d="${blob(50,15,50,15,b.i+9,.06,8)}"/></svg>${b.g}</span>
     <h2 class="big">${capTitle(b)}</h2><p class="by">${b.a}</p>
-    <dl><div><dt>Paru</dt><dd>${b.y}</dd></div><div><dt>Pages</dt><dd>${b.p}</dd></div>${b.ed?`<div><dt>Édition</dt><dd>${esc(b.ed)}</dd></div>`:""}<div><dt>Lu en</dt><dd>${MOIS[b.rm-1]} ${b.ry}</dd></div></dl>
+    <dl><div><dt>Paru</dt><dd>${b.y}</dd></div><div><dt>Pages</dt><dd>${b.p}</dd></div>${b.ed?`<div><dt>Édition</dt><dd>${esc(b.ed)}</dd></div>`:""}${b.unread?`<div><dt>Statut</dt><dd class="unr-tag">Pas encore lu</dd></div>`:`<div><dt>Lu en</dt><dd>${MOIS[b.rm-1]} ${b.ry}</dd></div>`}</dl>
     <h3>Résumé de l'intrigue</h3>${b.s?`<p class="sum">${b.s}</p>`:`<p class="sum" style="color:var(--ink-soft)">Livre d'exemple sans résumé. Dans l'app, le résumé complet de l'intrigue est généré par l'IA quand tu ajoutes le livre.</p>`}
     <div class="acts"><button class="btn" id="flip">Retourner</button><button class="btn ghost" id="illub">${b.lt?"Refaire la lettrine":"Enluminer la lettrine"}</button><button class="btn ghost" id="close">Ranger</button></div>
   </div>`;
@@ -1142,10 +1148,10 @@ $("#a-form").addEventListener("submit",async e=>{e.preventDefault();const t=$("#
     res.onclick=ev=>{const c=ev.target.closest(".rc");if(!c)return;pick=docs[+c.dataset.k];res.querySelectorAll(".rc").forEach(x=>x.setAttribute("aria-pressed",x===c));if(pick.number_of_pages_median)$("#a-p").value=pick.number_of_pages_median}}
   catch(err){msg.textContent="Open Library n'est pas joignable depuis cet aperçu (il bloque les sites externes). Sur la version en ligne, la recherche marche. Tu peux quand même ajouter le livre à la main."}});
 $("#a-add").addEventListener("click",()=>{const t=(pick?.title||$("#a-t").value).trim(),a=(pick?.author_name?.[0]||$("#a-a").value||"Auteur inconnu").trim();if(!t){$("#a-t").focus();return}
-  const r=[t,a,+$("#a-py").value||pick?.first_publish_year||new Date().getFullYear(),+$("#a-p").value||pick?.number_of_pages_median||250,$("#a-g").value,fmt,null,{cm:+$("#a-cm").value||FMT[fmt].cm,cid:pick?.cover_i,img:photo?.url,c:photo?.paper,t:photo?.ink,spine:spPhoto?.url,rm:new Date().getMonth()+1,ry:+$("#a-y").value,added:1,ed:$("#a-ed").value.trim()||pick?.publisher||undefined,curl:pick?.cover_i?undefined:pick?.cover_url,yman:+$("#a-py").value?1:undefined}];
+  const r=[t,a,+$("#a-py").value||pick?.first_publish_year||new Date().getFullYear(),+$("#a-p").value||pick?.number_of_pages_median||250,$("#a-g").value,fmt,null,{cm:+$("#a-cm").value||FMT[fmt].cm,cid:pick?.cover_i,img:photo?.url,c:photo?.paper,t:photo?.ink,spine:spPhoto?.url,rm:new Date().getMonth()+1,ry:+$("#a-y").value,added:1,ed:$("#a-ed").value.trim()||pick?.publisher||undefined,curl:pick?.cover_i?undefined:pick?.cover_url,yman:+$("#a-py").value?1:undefined,isbn:pick?.isbn,unread:UNR?1:undefined,gq:GSET?undefined:1}];
   if(pick?.desc){r[6]=pick.desc;r[7].auto=1}
   SAVED.push(r);try{localStorage.setItem("tranche-ajouts",JSON.stringify(SAVED))}catch(e){}
-  if(!GORDER.includes(r[4]))GORDER.push(r[4]);const b=makeBook(r,BOOKS.length);BOOKS.push(b);makeEl(b);$("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.length} livres lus`;seal();
+  if(!GORDER.includes(r[4]))GORDER.push(r[4]);const b=makeBook(r,BOOKS.length);BOOKS.push(b);makeEl(b);$("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.filter(b=>!b.unread).length} livres lus${BOOKS.some(b=>b.unread)?` · ${BOOKS.filter(b=>b.unread).length} à lire`:""}`;seal();
   photo=spPhoto=null;$("#a-prev").hidden=$("#a-sprev").hidden=true;addP.classList.remove("on");$("#a-form").reset();$("#a-res").innerHTML="";$("#a-msg").textContent="";pick=null;
   state.sort="recent";press("#sorts","s","recent");render();b.el.classList.add("pre");setTimeout(()=>dropIn(b),2000);if(!b.img)coverURL(b).then(u=>u&&applyCover(b,u));setTimeout(()=>enrichBook(BOOKS[b.i]).catch(()=>{}),3300);
   setTimeout(()=>{const p=b.el.getBoundingClientRect();tgt.x+=innerWidth/2-(p.left+p.width/2);tgt.y+=innerHeight/2-(p.top+p.height/2);K=.08;b.el.classList.add("fresh");toast(`« ${t} » est rangé sur l'étagère.`)},1100)});
@@ -1499,7 +1505,7 @@ function parseCSV(txt){txt=txt.replace(/^﻿/,"");const head=txt.slice(0,txt.ind
   if(ct<0)return[];return rows.slice(1).filter(r=>r[ct]&&(cs<0||!r[cs]||/read|^lu/i.test(r[cs])&&!/to-read|currently/i.test(r[cs]))).map(r=>{const d=cd>=0?(r[cd]||"").match(/(\d{4})/):null;
     return{t:r[ct].replace(/\s*\(.*?#\d+\)\s*$/,"").trim(),a:ca>=0?r[ca].trim():"",p:cp>=0?+r[cp]||0:0,y:cy>=0?+r[cy]||0:0,ry:d?+d[1]:null}})}
 function bulkFrom(items,append){const g=$("#b-g").value,seen=new Set((append?BULK:[]).map(r=>(r.t+r.a).toLowerCase()));if(!append)BULK=[];
-  items.forEach(it=>{if(!it||!it.t)return;const k=(it.t+it.a).toLowerCase();if(seen.has(k))return;seen.add(k);BULK.push({...it,g,on:true})});bulkDraw()}
+  items.forEach(it=>{if(!it||!it.t)return;const k=(it.t+it.a).toLowerCase();if(seen.has(k))return;seen.add(k);BULK.push({...it,g:authorGenre(it.a)||g,on:true})});bulkDraw()}
 function bulkDraw(){const n=BULK.filter(r=>r.on).length,opts=$("#a-g").innerHTML;
   $("#b-prev").innerHTML=BULK.map((r,k)=>`<li class="${r.on?"":"off"}" data-k="${k}"><input type="checkbox" ${r.on?"checked":""} aria-label="Garder"><div class="tx"><b>${esc(r.t)}</b><span>${esc(r.a||"auteur inconnu")}${r.ry?` · lu en ${r.ry}`:""}</span></div><select aria-label="Catégorie">${opts}</select></li>`).join("");
   $("#b-prev").querySelectorAll("li").forEach(li=>{li.querySelector("select").value=BULK[+li.dataset.k].g});
@@ -1508,12 +1514,12 @@ function bulkDraw(){const n=BULK.filter(r=>r.on).length,opts=$("#a-g").innerHTML
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
 let blT;$("#b-list").addEventListener("input",e=>{clearTimeout(blT);blT=setTimeout(()=>{const csvd=BULK.filter(r=>r.csv);bulkFrom(e.target.value.split(/\n/).map(parseLine));if(csvd.length)bulkFrom(csvd,true)},250)});
 $("#b-csv").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(!f)return;f.text().then(t=>{const it=parseCSV(t).map(r=>({...r,csv:1}));if(!it.length){toast("Je n'ai pas trouvé de colonne « Title » ou « Titre » dans ce fichier.");return}bulkFrom(it,true);SND.paper();toast(`${it.length} livres lus trouvés dans le fichier.`)})});
-$("#b-prev").addEventListener("change",e=>{const li=e.target.closest("li");if(!li)return;const r=BULK[+li.dataset.k];if(e.target.type==="checkbox"){r.on=e.target.checked;li.classList.toggle("off",!r.on);const n=BULK.filter(x=>x.on).length;$("#b-add").disabled=!n;$("#b-add").innerHTML=`Ranger ces ${n} livres <i>☞</i>`}else r.g=e.target.value});
-$("#b-g").addEventListener("change",e=>{BULK.forEach(r=>r.g=e.target.value);bulkDraw()});
+$("#b-prev").addEventListener("change",e=>{const li=e.target.closest("li");if(!li)return;const r=BULK[+li.dataset.k];if(e.target.type==="checkbox"){r.on=e.target.checked;li.classList.toggle("off",!r.on);const n=BULK.filter(x=>x.on).length;$("#b-add").disabled=!n;$("#b-add").innerHTML=`Ranger ces ${n} livres <i>☞</i>`}else{r.g=e.target.value;r.gman=1}});
+$("#b-g").addEventListener("change",e=>{BULK.forEach(r=>{if(!r.gman)r.g=authorGenre(r.a)||e.target.value});bulkDraw()});
 $("#b-add").addEventListener("click",()=>{const rows=BULK.filter(r=>r.on);if(!rows.length)return;const ry=+$("#b-y").value||new Date().getFullYear(),nb=[];
-  rows.forEach(r=>{const rr=[r.t,r.a||"Auteur inconnu",r.y||ry,r.p||250,r.g,"S",null,{cm:FMT.S.cm,rm:new Date().getMonth()+1,ry:r.ry||ry,added:1}];SAVED.push(rr);if(!GORDER.includes(rr[4]))GORDER.push(rr[4]);const b=makeBook(rr,BOOKS.length);BOOKS.push(b);makeEl(b);nb.push(b)});
+  rows.forEach(r=>{const ag=r.gman?null:authorGenre(r.a),rr=[r.t,r.a||"Auteur inconnu",r.y||ry,r.p||250,ag||r.g,"S",null,{cm:FMT.S.cm,rm:new Date().getMonth()+1,ry:r.ry||ry,added:1,unread:BUNR?1:undefined,gq:r.gman||ag?undefined:1}];SAVED.push(rr);if(!GORDER.includes(rr[4]))GORDER.push(rr[4]);const b=makeBook(rr,BOOKS.length);BOOKS.push(b);makeEl(b);nb.push(b)});
   try{localStorage.setItem("tranche-ajouts",JSON.stringify(SAVED))}catch(e){}
-  $("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.length} livres lus`;BULK=[];$("#b-list").value="";bulkDraw();addP.classList.remove("on");checkEmpty();
+  $("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.filter(b=>!b.unread).length} livres lus${BOOKS.some(b=>b.unread)?` · ${BOOKS.filter(b=>b.unread).length} à lire`:""}`;BULK=[];$("#b-list").value="";bulkDraw();addP.classList.remove("on");checkEmpty();
   render();nb.forEach(b=>b.el.classList.add("pre"));const st=Math.min(110,2600/nb.length);nb.forEach((b,k)=>setTimeout(()=>dropIn(b,k%3!==0),700+k*st));
   setTimeout(()=>toast(`${nb.length} livres rangés d'un coup. Les suivants, un par un, à chaque livre fini.`),900);
   nb.forEach(b=>coverURL(b).then(u=>u&&applyCover(b,u)).catch(()=>{}));verifyQueue(nb,3500)});
@@ -1676,10 +1682,10 @@ async function lookup(t,a){const out={};
   try{const q=`intitle:${t}`+(a?` inauthor:${a.split(" ").pop()}`:"");const j=await (await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}&maxResults=10&printType=books&langRestrict=fr`)).json();online=true;
     const its=(j.items||[]).map(x=>x.volumeInfo).filter(v=>near(v.title,t)&&(!a||(v.authors||[]).some(x=>near(x,a)||near(x.split(" ").pop(),a.split(" ").pop()))));
     const best=its.find(v=>v.description&&v.description.length>200)||its.find(v=>v.description)||its[0];
-    if(best){out.a=(best.authors||[])[0];out.ed=best.publisher;out.s=stripHTML(best.description||"");out.p=best.pageCount;out.gimg=best.imageLinks?.thumbnail?.replace("http:","https:").replace("&edge=curl","");}}catch(e){}
-  try{const j=await (await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(t)}&author=${encodeURIComponent(a||"")}&limit=5&fields=key,title,author_name,first_publish_year,number_of_pages_median,cover_i`)).json();online=true;
+    if(best){out.a=(best.authors||[])[0];out.ed=best.publisher;out.s=stripHTML(best.description||"");out.p=best.pageCount;out.cats=best.categories;out.gimg=best.imageLinks?.thumbnail?.replace("http:","https:").replace("&edge=curl","");}}catch(e){}
+  try{const j=await (await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(t)}&author=${encodeURIComponent(a||"")}&limit=5&fields=key,title,author_name,first_publish_year,number_of_pages_median,cover_i,subject`)).json();online=true;
     const d=(j.docs||[]).find(d=>!a||(d.author_name||[]).some(x=>near(x,a)))||(j.docs||[])[0];
-    if(d&&(!a||(d.author_name||[]).some(x=>near(x,a)))){out.y=d.first_publish_year;out.cid=d.cover_i;out.p=out.p||d.number_of_pages_median;if(!out.a)out.a=(d.author_name||[]).find(x=>near(x,a))||d.author_name?.[0];
+    if(d&&(!a||(d.author_name||[]).some(x=>near(x,a)))){out.y=d.first_publish_year;out.cid=d.cover_i;out.cats=out.cats||d.subject;out.p=out.p||d.number_of_pages_median;if(!out.a)out.a=(d.author_name||[]).find(x=>near(x,a))||d.author_name?.[0];
       if(!out.s&&d.key){try{const w=await (await fetch(`https://openlibrary.org${d.key}.json`)).json();const ds=typeof w.description==="string"?w.description:w.description?.value;if(ds)out.s=ds.replace(/\(\[source\].*$/s,"").replace(/-{3,}[\s\S]*$/,"").trim()}catch(e){}}}}catch(e){}
   return out}
 const isSaved=b=>b&&b.r&&SAVED.includes(b.r);
@@ -1694,6 +1700,7 @@ async function enrichBook(b,{redraw=true}={}){const r=b.r;if(!r)return false;con
   if(L.p&&(!x.pman)&&(r[3]===250||!r[3])){r[3]=L.p;vis=true}
   if(L.y&&!x.yman)r[2]=L.y;if(L.ed&&!x.ed)x.ed=L.ed;
   if(!x.img&&!x.cid&&L.cid){x.cid=L.cid;vis=true}else if(!x.img&&!x.cid&&L.gimg){x.gimg=L.gimg}
+  if(x.gq){const g=authorGenre(r[1],b)||genreFrom(L.cats,r[0]);if(g&&g!==r[4]){r[4]=g;if(!GORDER.includes(g))GORDER.push(g);vis=true}if(L.cats||g)delete x.gq}
   x.chk=1;moveLettrine(oldK,r[0]+"|"+r[1]);if(isSaved(b))saveSaved();
   if(vis&&redraw){rebuildBook(b.i);render()}else{b.s=r[6];b.a=r[1];b.y=r[2]}return true}
 // rattrape les livres déjà rangés qui n'ont jamais été vérifiés (ceux de la liste, par exemple)
@@ -1719,7 +1726,7 @@ async function saveEdit(){const b=EDIT,r=b.r,x=r[7]=r[7]||{},oldK=r[0]+"|"+r[1],
   r[4]=$("#a-g").value;r[5]=fmt;x.cm=+$("#a-cm").value||FMT[fmt].cm;const ry=+$("#a-y").value;if(ry)x.ry=ry;
   if(pick?.cover_i){x.cid=pick.cover_i;delete x.img;delete x.gimg;delete x.c;delete x.t}
   if(photo){x.img=photo.url;x.c=photo.paper;x.t=photo.ink;delete x.cid}if(spPhoto)x.spine=spPhoto.url;
-  {const ed=$("#a-ed").value.trim(),py=+$("#a-py").value;x.ed=ed||pick?.publisher||x.ed;if(py){r[2]=py;x.yman=1}if(pick?.cover_url&&!pick.cover_i){x.curl=pick.cover_url;delete x.cid;delete x.img}if(pick?.desc&&(!r[6]||x.auto)){r[6]=pick.desc;x.auto=1}}
+  {const ed=$("#a-ed").value.trim(),py=+$("#a-py").value;x.ed=ed||pick?.publisher||x.ed;if(py){r[2]=py;x.yman=1}if(pick?.cover_url&&!pick.cover_i){x.curl=pick.cover_url;delete x.cid;delete x.img}if(pick?.desc&&(!r[6]||x.auto)){r[6]=pick.desc;x.auto=1}if(pick?.isbn)x.isbn=pick.isbn;if(x.unread&&!UNR){x.ry=+$("#a-y").value||new Date().getFullYear();x.rm=new Date().getMonth()+1}if(UNR)x.unread=1;else delete x.unread;if(GSET)delete x.gq}
   if(!GORDER.includes(r[4]))GORDER.push(r[4]);moveLettrine(oldK,r[0]+"|"+r[1]);
   const changedId=norm(oldT)!==norm(r[0])||norm(oldA)!==norm(r[1]);if(changedId){x.chk=0;if(x.auto)r[6]=null}
   saveSaved();addP.classList.remove("on");const i=b.i;endEdit();const nb=rebuildBook(i);render();SND.seal();
@@ -1762,10 +1769,10 @@ function fillLists(){const au=[...new Set(BOOKS.map(b=>b.a).filter(a=>a&&a!=="Au
 $("#fab").addEventListener("click",fillLists);$("#a-a").addEventListener("focus",fillLists,{once:false});
 async function srcGoogle(t,a){const q=`intitle:${t}`+(a?` inauthor:${a.split(" ").pop()}`:"");const j=await (await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}&maxResults=12&printType=books&langRestrict=fr`)).json();
   return (j.items||[]).map(x=>x.volumeInfo).map(v=>({src:"Google Books",title:v.title+(v.subtitle&&v.subtitle.length<40?` : ${v.subtitle}`:""),author_name:v.authors||[],first_publish_year:+(v.publishedDate||"").slice(0,4)||null,number_of_pages_median:v.pageCount||null,
-    publisher:v.publisher,cover_url:v.imageLinks?.thumbnail?.replace("http:","https:").replace("&edge=curl","").replace("zoom=1","zoom=2"),isbn:(v.industryIdentifiers||[]).find(i=>i.type==="ISBN_13")?.identifier,desc:stripHTML(v.description||"")}))}
-async function srcOL(t,a){const j=await (await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(t)}&author=${encodeURIComponent(a)}&limit=8&fields=title,author_name,first_publish_year,number_of_pages_median,cover_i,publisher`)).json();
-  return (j.docs||[]).map(d=>({src:"Open Library",...d,publisher:(d.publisher||[])[0]}))}
-async function srcBnF(t,a){if(!ACU||!SB)return[];const{data}=await SB.functions.invoke("resume",{body:{op:"bnf",t,a}});return (data?.records||[]).map(d=>({src:"BnF",...d,cover_url:d.isbn?`https://covers.openlibrary.org/b/isbn/${d.isbn}-M.jpg?default=false`:null}))}
+    publisher:v.publisher,cover_url:v.imageLinks?.thumbnail?.replace("http:","https:").replace("&edge=curl","").replace("zoom=1","zoom=2"),isbn:(v.industryIdentifiers||[]).find(i=>i.type==="ISBN_13")?.identifier,desc:stripHTML(v.description||""),cats:v.categories||[]}))}
+async function srcOL(t,a){const j=await (await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(t)}&author=${encodeURIComponent(a)}&limit=8&fields=title,author_name,first_publish_year,number_of_pages_median,cover_i,publisher,subject,isbn`)).json();
+  return (j.docs||[]).map(d=>({src:"Open Library",...d,publisher:(d.publisher||[])[0],cats:(d.subject||[]).slice(0,40),isbn:(d.isbn||[]).find(i=>i.length===13)}))}
+async function srcBnF(t,a){if(!ACU||!SB)return[];const{data}=await SB.functions.invoke("resume",{body:{op:"bnf",t,a}});return (data?.records||[]).map(d=>({src:"BnF",...d,cats:d.subject||[],cover_url:d.isbn?`https://covers.openlibrary.org/b/isbn/${d.isbn}-M.jpg?default=false`:null}))}
 $("#a-form").addEventListener("submit",async e=>{e.preventDefault();e.stopImmediatePropagation();const t=$("#a-t").value.trim(),a=$("#a-a").value.trim();if(!t)return;const res=$("#a-res"),msg=$("#a-msg");pick=null;
   msg.innerHTML=`<svg class="lettrine mini" viewBox="0 0 220 240" aria-hidden="true"><text x="110" y="185" text-anchor="middle">T</text></svg>Recherche sur Google Books, la BnF et Open Library…`;res.innerHTML="";
   const all=await Promise.allSettled([srcGoogle(t,a),srcBnF(t,a),srcOL(t,a)]);const ok=all.filter(r=>r.status==="fulfilled");
@@ -1777,12 +1784,68 @@ $("#a-form").addEventListener("submit",async e=>{e.preventDefault();e.stopImmedi
   msg.textContent=`${docs.length} édition${docs.length>1?"s":""} trouvée${docs.length>1?"s":""}. Choisis la tienne :`;
   res.innerHTML=docs.map((d,k)=>{const cv=d.cover_i?`https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg`:d.cover_url;return`<button type="button" class="rc" data-k="${k}" aria-pressed="false"><span class="im" style="${cv?`background-image:url(${cv})`:""}"></span><b>${esc(d.title)}</b><span>${esc((d.author_name||[""])[0])}${d.publisher?` · ${esc(d.publisher)}`:""} · ${d.first_publish_year||"?"}${d.number_of_pages_median?` · ${d.number_of_pages_median} p.`:""}</span><i class="srcb">${d.src}</i></button>`}).join("");
   res.onclick=ev=>{const c=ev.target.closest(".rc");if(!c)return;pick=docs[+c.dataset.k];res.querySelectorAll(".rc").forEach(x=>x.setAttribute("aria-pressed",x===c));
-    if(pick.number_of_pages_median)$("#a-p").value=pick.number_of_pages_median;if(pick.publisher)$("#a-ed").value=pick.publisher;if(pick.first_publish_year)$("#a-py").value=pick.first_publish_year;if((pick.author_name||[])[0])$("#a-a").value=pick.author_name[0];SND.rustle()}},true);
+    if(pick.number_of_pages_median)$("#a-p").value=pick.number_of_pages_median;if(pick.publisher)$("#a-ed").value=pick.publisher;if(pick.first_publish_year)$("#a-py").value=pick.first_publish_year;if((pick.author_name||[])[0])$("#a-a").value=pick.author_name[0];autoGenre(pick);SND.rustle()}},true);
 // couverture choisie (Google Books ou BnF) prioritaire
 const _cov2=coverURL;coverURL=async b=>{const c=b.r?.[7]?.curl;if(c)return covers[b.i]=c;return _cov2(b)};
 // édition et année saisies à la main, aussi en modification
 const _openEdit=openEdit;openEdit=b=>{_openEdit(b);setTimeout(()=>{fillLists();const x=b.r[7]||{};$("#a-ed").value=x.ed||"";$("#a-py").value=x.yman?b.r[2]:""},closeT()+20)};
 const clearEdFields=()=>{$("#a-ed").value="";$("#a-py").value=""};const _endEdit=endEdit;endEdit=()=>{_endEdit();clearEdFields()};$("#a-add").addEventListener("click",()=>setTimeout(()=>{if(!addP.classList.contains("on"))clearEdFields()},50));
+
+// ================= v16 : lu / pas encore lu, couvertures fiables, catégorie devinée =================
+// --- statut ---
+let UNR=0,BUNR=0,GSET=false;
+function setSeg(id,u){document.querySelectorAll(`#${id} button`).forEach(b=>b.setAttribute("aria-pressed",+b.dataset.u===u));const l=$(id==="a-st"?"#a-yl":"#b-yl");if(l)l.style.opacity=u?.3:1}
+$("#a-st").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;UNR=+b.dataset.u;setSeg("a-st",UNR);SND.rustle()});
+$("#b-st").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;BUNR=+b.dataset.u;setSeg("b-st",BUNR);SND.rustle()});
+const resetAddExtras=()=>{UNR=0;GSET=false;setSeg("a-st",0)};
+$("#a-add").addEventListener("click",()=>setTimeout(()=>{if(!addP.classList.contains("on"))resetAddExtras()},60));
+$("#b-add").addEventListener("click",()=>setTimeout(()=>{BUNR=0;setSeg("b-st",0)},60));
+{const _oe=openEdit;openEdit=b=>{_oe(b);setTimeout(()=>{const x=b.r[7]||{};UNR=x.unread?1:0;setSeg("a-st",UNR);GSET=!x.gq},closeT()+30)}}
+{const _ee=endEdit;endEdit=()=>{_ee();resetAddExtras()}}
+SORTS.lu={key:b=>b.unread?"À lire":"Lus",sort:a=>a.sort((x,y)=>(y.unread-x.unread)||GORDER.indexOf(x.g)-GORDER.indexOf(y.g)||x.y-y.y)};
+// dans la fiche d'un livre pas encore lu : « Je l'ai lu »
+new MutationObserver(()=>{const acts=$("#sh .acts");if(!acts||acts.querySelector("#readb")||!cur||!cur.unread||!isSaved(cur))return;const b=cur,bt=document.createElement("button");bt.className="btn";bt.id="readb";bt.textContent="Je l'ai lu";
+  bt.onclick=()=>{const r=b.r,x=r[7]=r[7]||{},d=new Date();delete x.unread;x.ry=d.getFullYear();x.rm=d.getMonth()+1;saveSaved();closeBook();
+    setTimeout(()=>{const nb=rebuildBook(b.i);render();SND.seal();const u=BOOKS.filter(b=>b.unread).length;$("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.length-u} livres lus${u?` · ${u} à lire`:""}`;toast(`« ${r[0]} » rejoint les livres lus.`);if(state.sort==="lu"||state.sort==="recent")setTimeout(()=>nb.el.classList.add("fresh"),900)},closeT())};acts.prepend(bt)}).observe($("#sh"),{childList:true});
+
+// --- catégorie : d'abord tes autres livres du même auteur, sinon les bases ---
+function authorGenre(a,except){if(!a||a==="Auteur inconnu")return null;const n=norm(a),last=n.split(" ").pop(),c={};
+  BOOKS.forEach(b=>{if(b===except||!b.g||b.g==="Autres"||b.r?.[7]?.gq)return;const m=norm(b.a);if(m===n||(last.length>3&&m.split(" ").pop()===last&&m[0]===n[0]))c[b.g]=(c[b.g]||0)+1});
+  return Object.entries(c).sort((x,y)=>y[1]-x[1])[0]?.[0]||null}
+const GRULES=[["Mangas",/\bmanga|comic|bande dessinee|bandes dessinees|graphic novel|\bbd\b|seinen|shonen|shojo/],
+  ["Science-fiction",/science fiction|science-fiction|sci fi|\bsf\b|dystop|space opera|anticipation|cyberpunk|extraterrest|time travel|robots?\b/],
+  ["Fantasy",/fantasy|fantastique|fantasie|magie|magic|sorcel|wizard|dragons?\b|elfes?|fees?\b/],
+  ["Polars",/thriller|crime|criminal|polic|detecti|mystery|myster|suspense|roman noir|\bnoir\b|murder|meurtre|espionnage|spy|enquete|serial killer|inspecteur/],
+  ["Artbooks",/artbook|art book|\bthe art of\b|concept art/],
+  ["Beaux livres",/photograph|\barts?\b|peinture|painting|design|architecture|cuisine|cooking|beaux livres/],
+  ["Classiques",/classi|19th century|xixe|18th century|xviiie|17th century|antiquit|litterature francaise 19/],
+  ["Essais",/biograph|histoire|history|philosoph|essai|essays?\b|psycholog|sociolog|politi|economi|religion|self help|developpement personnel|non ?fiction|sciences? humaines|memoir|temoignage/],
+  ["Contemporain",/fiction|roman|novel|litterature|literature|literary/]];
+function genreFrom(cats,title){const txt=norm([].concat(cats||[]).join(" | "));if(!txt)return null;const fic=/fiction|roman|novel/.test(txt)&&!/non ?fiction/.test(txt),sc={};
+  GRULES.forEach(([g,re],k)=>{if(fic&&(g==="Essais"||g==="Beaux livres"))return;const m=txt.match(new RegExp(re.source,"g"));if(m)sc[g]=m.length*10-k*.1});
+  const best=Object.entries(sc).sort((x,y)=>y[1]-x[1])[0]?.[0];return best&&[...$("#a-g").options].some(o=>o.value===best)?best:best?"Autres":null}
+function autoGenre(p){if($("#a-g").dataset.man||(EDIT&&GSET))return;const a=(p?.author_name||[])[0]||$("#a-a").value.trim(),fromA=authorGenre(a),g=fromA||genreFrom(p?.cats,p?.title);if(!g)return;
+  $("#a-g").value=g;GSET=true;const m=$("#a-msg");if(m)m.textContent=fromA?`Catégorie : ${g}, comme tes autres livres de ${a}.`:`Catégorie : ${g}, d'après ${p.src}. Tu peux la changer plus bas.`}
+$("#a-g").addEventListener("change",()=>{GSET=true;$("#a-g").dataset.man=1});
+$("#a-a").addEventListener("change",()=>{if($("#a-g").dataset.man||EDIT)return;const g=authorGenre($("#a-a").value.trim());if(g){$("#a-g").value=g;GSET=true}});
+{const _ee=endEdit;endEdit=()=>{_ee();delete $("#a-g").dataset.man}}
+$("#a-add").addEventListener("click",()=>setTimeout(()=>{if(!addP.classList.contains("on"))delete $("#a-g").dataset.man},60));
+
+// --- couvertures : on essaie chaque piste et on garde la première image qui se charge vraiment ---
+const okImg=(u,ms=8000)=>new Promise(res=>{if(!u)return res(false);const im=new Image(),t=setTimeout(()=>res(false),ms);im.onload=()=>{clearTimeout(t);res(im.naturalWidth>20&&im.naturalHeight>30)};im.onerror=()=>{clearTimeout(t);res(false)};im.src=u});
+const gz=(u,z)=>u&&/books\.google|googleusercontent/.test(u)?u.replace(/zoom=\d/,"zoom="+z):u;
+coverURL=async b=>{if(b.i in covers)return covers[b.i];const x=b.r?.[7]||{},c=[];
+  if(x.curl)c.push(gz(x.curl,1),x.curl.replace("?default=false",""));if(b.cid)c.push(`https://covers.openlibrary.org/b/id/${b.cid}-L.jpg`);if(x.gimg)c.push(gz(x.gimg,1));
+  if(x.isbn)c.push(`https://covers.openlibrary.org/b/isbn/${x.isbn}-L.jpg?default=false`);
+  for(const u of [...new Set(c.filter(Boolean))])if(await okImg(u))return covers[b.i]=u;
+  if(online===false)return covers[b.i]=null;
+  try{const j=await (await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(b.t)}&author=${encodeURIComponent(b.last)}&limit=3&fields=cover_i`)).json();online=true;
+    for(const d of j.docs||[])if(d.cover_i){const u=`https://covers.openlibrary.org/b/id/${d.cover_i}-L.jpg`;if(await okImg(u)){if(b.r&&isSaved(b)){x.cid=d.cover_i;saveSaved()}return covers[b.i]=u}}}catch(e){if(online===null)online=false}
+  if(b.r&&isSaved(b))try{const q=`intitle:${b.t}`+(b.a&&b.a!=="Auteur inconnu"?` inauthor:${b.last}`:"");const j=await (await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}&maxResults=8&printType=books`)).json();
+    for(const v of (j.items||[]).map(i=>i.volumeInfo))if(v.imageLinks?.thumbnail&&near(v.title,b.t)){const u=gz(v.imageLinks.thumbnail.replace("http:","https:").replace("&edge=curl",""),1);if(await okImg(u)){x.gimg=u;saveSaved();return covers[b.i]=u}}}catch(e){}
+  return covers[b.i]=null};
+// les livres rangés sans couverture retentent une fois au chargement
+setTimeout(()=>{const q=BOOKS.filter(b=>isSaved(b)&&!b.img&&!covers[b.i]);q.forEach(b=>delete covers[b.i]);(async()=>{for(const b of q){const u=await coverURL(b);if(u)applyCover(b,u)}})()},6000);
 </script>
 
 </body></html>

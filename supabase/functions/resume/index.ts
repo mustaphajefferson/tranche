@@ -64,7 +64,8 @@ async function bnf(t: string, a: string) {
     const first_publish_year = +(get(r, "date")[0] || "").slice(0, 4) || null;
     const pages = +((get(r, "format")[0] || "").match(/(\d+)\s*p\./)?.[1] || 0) || null;
     const isbn = get(r, "identifier").map((i) => i.match(/ISBN\s*([\d-]{10,17}X?)/i)?.[1]?.replace(/-/g, "")).find(Boolean);
-    return { title, author_name, publisher, first_publish_year, number_of_pages_median: pages, isbn };
+    const subject = get(r, "subject");
+    return { title, author_name, publisher, first_publish_year, number_of_pages_median: pages, isbn, subject };
   }).filter((r) => r.title);
 }
 
