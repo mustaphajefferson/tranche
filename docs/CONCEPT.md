@@ -12,8 +12,8 @@ Le nom joue sur deux sens : la tranche du livre, et une « tranche de vie », ce
 
 1. **Rien que des livres déjà lus.** Pas de progression, pas d'objectifs, pas de stats à remplir. C'est une mémoire, pas un tableau de bord.
 2. **Le dos comme interface.** Chaque tranche est générée à partir du vrai livre : la hauteur vient du format (poche, standard, grand format, beau livre), l'épaisseur vient du nombre de pages, la couleur vient de la couverture. Ta bibliothèque a donc la même silhouette qu'en vrai.
-3. **Une nuit au scriptorium.** Un bouton bougie : la page s'assombrit, une lueur chaude suit le curseur ou le doigt et vacille avec le vent. Dehors, l'orage : pluie, rafales, éclairs qui illuminent un instant toute la bibliothèque, tonnerre. Sons discrets synthétisés : papier, livre qu'on pose, sceau de cire.
-4. **L'atelier de reliure.** Pour les livres qu'on aime vraiment : l'app détecte les contours de la couverture, on les repasse au stylet avec une plume biseautée (la pression et le sens du trait comptent, le doigt n'imprime rien). On choisit le cuir, la dorure, les nerfs, les coins, le fermoir et le signet. Le dessin est doré au fer sur la couverture, et la tranche devient une vraie reliure en cuir sur l'étagère. Plus on est fidèle, plus le titre gagné est beau (Apprenti, Copiste, Enlumineur, Maître relieur).
+3. **Une nuit au scriptorium.** Un bouton bougie : noir complet, seule la lueur de la flamme (qui suit le curseur ou le doigt et vacille avec le vent) montre les livres. Dehors, l'orage : à chaque éclair, la lumière d'un grand vitrail gothique se projette un instant sur les étagères, puis le tonnerre. Sons discrets synthétisés : papier, livre qu'on pose, sceau de cire.
+4. **L'enluminure.** Pour les livres qu'on aime vraiment : on dessine soi-même la lettrine, la première lettre du titre. L'encre ne remplit que la lettre grisée, jamais autour, donc c'est facile et beau au stylet comme au doigt. On choisit parmi des cadres (nœuds, rinceaux, lombarde, hampe, médaillon, ogive, fleurons, sobre), des dessins de lettre (fractures, onciale, capitales, gravure…), un fond et une encre (noir, rouge, or, vélin). La lettrine scellée orne le haut de la tranche, le titre de la fiche et la couverture.
 5. **Tu ranges comme tu veux.** Tri par genre, auteur, taille ou au hasard, et vue en étagère, en grande pile.
 6. **Le stylet dessine l'étagère.** Sur iPad, on trace une ligne et les livres viennent s'y poser. Voir [STYLET.md](STYLET.md).
 
@@ -37,7 +37,7 @@ Le nom joue sur deux sens : la tranche du livre, et une « tranche de vie », ce
 
 | Écran | Ce qu'on y fait |
 |---|---|
-| **Landing** | Une lettrine T enluminée se dessine, puis son T glisse et devient la première lettre de « Tranches », en rouge. En dessous, une étagère de petites tranches (nerfs, pièces de titre, bougies, piles), une rangée de tranches qui monte. Un bouton pour entrer. |
+| **Landing** | Une lettrine T enluminée (cadre perlé, nœuds, rinceaux, feuilles) se dessine, puis son T noir glisse et devient la première lettre de « Tranches ». En entrant, la page s'ouvre comme la couverture d'un livre. En dessous, une étagère de petites tranches (nerfs, pièces de titre, bougies, piles), une rangée de tranches qui monte. Un bouton pour entrer. |
 | **Bibliothèque** | Le canvas de tranches. Glisser à deux doigts pour naviguer, pincer pour zoomer. Survol = le livre grandit un peu. Un seul bouton rond pour la vue et le tri. |
 | **Fiche livre** | Clic sur une tranche : elle pivote en 3D et devient la couverture, les infos à côté (genre, année, pages, lu en) et le résumé de l'intrigue. Clic sur la couverture : le livre se retourne et montre la 4e. |
 | **Wish list** | Même logique de tranches, mais en « fantômes » (contour seulement) : les livres que tu n'as pas encore. Pratique pour les idées cadeaux. |

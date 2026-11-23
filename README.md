@@ -15,9 +15,10 @@ Ouvre [`prototype/index.html`](prototype/index.html) dans un navigateur (double-
 - Deux doigts sur le trackpad : naviguer. Pincer : zoomer.
 - Survol : le livre grandit. Clic : la fiche s'ouvre, clic sur la couverture pour la retourner.
 - Bouton rond en bas à droite : vue (étagère, pile) et tri (genre, auteur, taille, hasard).
-- Maj + glisser (ou stylet sur iPad) : dessine une ligne, les livres s'y rangent.
-- Bougie en haut à droite : nuit d'orage à la chandelle (pluie, vent, éclairs, tonnerre). Sons dans « Ranger ».
-- Dans la fiche d'un livre : « Relier à la main » ouvre l'atelier de reliure (stylet sur iPad, souris sur ordi).
+- « Ranger » → Vue → Tracé : dessine une ligne (stylet, doigt ou souris), les livres s'y rangent. Sinon le stylet navigue comme le doigt.
+- Bougie en haut à droite : nuit noire, seule la flamme éclaire ; l'orage projette par moments la lumière d'un vitrail sur les livres. Sons dans « Ranger ».
+- Le logo T ramène à l'accueil.
+- Dans la fiche d'un livre : « Enluminer la lettrine » : on colorie la première lettre du titre dans un cadre au choix (8 cadres, 8 dessins de lettre, fonds et encres). Elle apparaît ensuite sur la tranche et dans la fiche.
 
 Les 150 livres sont des exemples (une trentaine ont un résumé complet). Ouvert en local, le prototype va chercher la vraie couverture sur Open Library.
 
