@@ -295,8 +295,6 @@ button{font:inherit;color:inherit}
 #landing::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,0),rgba(0,0,0,.45));opacity:0;transition:opacity 1.5s}
 #landing.out{transform:perspective(2400px) rotateY(-97deg);pointer-events:none}
 #landing.out::after{opacity:1}
-#landing.leaving .l-title .ch{animation:none;opacity:0;transform:translateY(-.18em) rotate(4deg);filter:blur(6px);transition:opacity .45s,transform .5s var(--ease),filter .45s}
-#landing.leaving .l-title .ch.first{opacity:1;transform:none;filter:none}
 #stage.arrive{animation:arrive 1.7s .25s var(--ease) both}
 @keyframes arrive{from{transform:scale(.92);opacity:0}}
 /* ---------- v8 : plaque enluminée (boutons principaux) ---------- */
@@ -796,6 +794,7 @@ button{font:inherit;color:inherit}
   <div class="ms-sec"><h3><b>II</b>Réglages</h3><div class="set">
     <div class="row"><div><b>Sauvegarder</b><span>Télécharge toute ta collection dans un fichier.</span></div><button class="btn ghost" id="s-exp" type="button">Exporter</button></div>
     <div class="row"><div><b>Restaurer</b><span>Recharge un fichier de sauvegarde.</span></div><label class="btn ghost">Importer<input type="file" id="s-imp" accept=".json,application/json" hidden></label></div>
+    <div class="row"><div><b>Résumés complets</b><span>L'IA écrit l'intrigue entière de chacun de tes livres (il faut être connecté).</span></div><button class="btn" id="s-ai" type="button">Écrire les résumés</button></div>
     <div class="row"><div><b>Livres d'exemple</b><span>Les 150 livres de démonstration.</span></div><button class="btn ghost" id="s-demo" type="button"></button></div>
     <div class="row danger"><div><b>Réinitialiser la collection</b><span>Efface tous tes livres, tes lettrines et ta lecture. Ton compte reste.</span></div><button class="btn" id="s-reset" type="button">Réinitialiser</button></div>
   </div></div>
@@ -1539,7 +1538,7 @@ async function pull(){if(!SB||!ACU)return;const{data,error}=await SB.from("tranc
 const _si=Storage.prototype.setItem,_ri=Storage.prototype.removeItem;
 try{Storage.prototype.setItem=function(k,v){_si.call(this,k,v);if(this===window.localStorage&&SYNCK.includes(k))schedPush()};Storage.prototype.removeItem=function(k){_ri.call(this,k);if(this===window.localStorage&&SYNCK.includes(k))schedPush()}}catch(e){}
 function schedPush(){if(!ACU)return;clearTimeout(pushT);pushT=setTimeout(push,1500)}
-function acRender(){const box=$("#ac-box"),av=$("#t-acct .av");if(av){av.classList.toggle("in",!!ACU);av.textContent=ACU?(ACU.email||"?")[0].toUpperCase():"?"}if(!box)return;const c=sbCfg(),m=acMsg?`<p class="msg" style="color:var(--rub)">${esc(acMsg)}</p>`:"";
+function acRender(){const box=$("#ac-box"),av=$("#t-acct .av");if(av){av.classList.toggle("in",!!ACU);av.textContent=ACU?(ACU.email||"?")[0].toUpperCase():"?"}if(!box)return;if(!$("#acct").classList.contains("on")){box.innerHTML="";return}const c=sbCfg(),m=acMsg?`<p class="msg" style="color:var(--rub)">${esc(acMsg)}</p>`:"";
   if(!c){box.innerHTML=`<p class="msg">Pour que les comptes marchent pour de vrai, Tranches s'appuie sur Supabase (gratuit). Une fois la base branchée, tu crées ton compte ici : livres, lettrines et progression de lecture te suivent sur tous tes appareils.</p>
     <div class="frm"><label class="ms-fld sm"><span>Adresse du projet</span><input id="ac-url" placeholder="https://xxxx.supabase.co" style="font-size:20px"></label><label class="ms-fld sm"><span>Clé publique (anon)</span><input id="ac-key" placeholder="eyJ…" style="font-size:20px"></label></div>
     <div class="ac-acts"><button class="plate" id="ac-cfg" type="button">Brancher ☞</button></div>${m}`;
@@ -1553,7 +1552,7 @@ function acRender(){const box=$("#ac-box"),av=$("#t-acct .av");if(av){av.classLi
   box.innerHTML=`<p class="ac-who"><span class="av">${esc((ACU.email||"?")[0].toUpperCase())}</span><span>${esc(ACU.email||"")}<br><small class="msg">${lastSync?"Synchronisé à "+lastSync.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}):"Synchronisation…"}</small></span></p>
     <div class="ac-acts"><button class="btn ghost" id="ac-now" type="button">Synchroniser maintenant</button><button class="btn ghost" id="ac-out" type="button">Se déconnecter</button></div>${m}`;
   $("#ac-now").onclick=()=>push();$("#ac-out").onclick=async()=>{await SB.auth.signOut();ACU=null;acRender()}}
-const acP=$("#acct");$("#t-acct").addEventListener("click",()=>{closeMenu();SND.paper(.7);acMsg="";acRender();acP.classList.add("on");loadSB()});$("#acct .pclose").addEventListener("click",()=>acP.classList.remove("on"));
+const acP=$("#acct");$("#t-acct").addEventListener("click",()=>{closeMenu();SND.paper(.7);acMsg="";acP.classList.add("on");acRender();loadSB()});$("#acct .pclose").addEventListener("click",()=>{acP.classList.remove("on");$("#ac-box").innerHTML=""});new MutationObserver(()=>{if(!acP.classList.contains("on"))$("#ac-box").innerHTML=""}).observe(acP,{attributes:true,attributeFilter:["class"]});
 const EMPTY0=(()=>{try{return localStorage.getItem("tranches-vide")==="1"}catch(e){return false}})();
 $("#s-demo").textContent=EMPTY0?"Remettre":"Retirer";
 $("#s-demo").addEventListener("click",()=>{try{EMPTY0?localStorage.removeItem("tranches-vide"):localStorage.setItem("tranches-vide","1")}catch(e){}sessionStorage.setItem("tranches-msg",EMPTY0?"Les livres d'exemple sont revenus.":"Livres d'exemple retirés.");setTimeout(()=>location.reload(),ACU?1700:0)});
@@ -1728,6 +1727,28 @@ let delArm=null;$("#a-del").addEventListener("click",e=>{const btn=e.currentTarg
 new MutationObserver(()=>{const acts=$("#sh .acts");if(!acts||acts.querySelector("#editb")||!cur||!isSaved(cur))return;const bt=document.createElement("button");bt.className="btn ghost";bt.id="editb";bt.textContent="Modifier";const b=cur;bt.onclick=()=>openEdit(b);acts.insertBefore(bt,$("#close"))}).observe($("#sh"),{childList:true});
 // couverture Google Books en secours quand Open Library n'en a pas
 const _cov=coverURL;coverURL=async b=>{const u=await _cov(b);if(u)return u;const g=b.r?.[7]?.gimg;return g?covers[b.i]=g.replace("zoom=1","zoom=2"):null};
+
+// ================= v14 : résumés complets écrits par l'IA (fonction Supabase « resume ») =================
+async function aiSummary(b){const r=b?.r;if(!r)return{err:"Livre d'exemple"};const x=r[7]=r[7]||{};if(!(await loadSB())||!ACU)return{err:"login"};
+  try{const{data,error}=await SB.functions.invoke("resume",{body:{t:r[0],a:r[1]==="Auteur inconnu"?"":r[1],y:r[2],desc:x.auto?r[6]:""}});
+    if(error){let m=error.message;try{const j=await error.context?.json?.();if(j?.error)m=j.error}catch(_){}return{err:m}}
+    if(data?.unknown){x.aitry=1;saveSaved();return{unknown:true}}
+    if(data?.resume){r[6]=data.resume;x.ai=1;x.auto=0;saveSaved();const bb=BOOKS[b.i];bb.s=r[6];
+      if(cur===bb){const sm=$("#sh .sum");if(sm){sm.removeAttribute("style");sm.textContent=r[6];inkWords(sm)}}return{ok:true}}
+    return{err:"réponse vide"}}catch(e){return{err:e.message}}}
+const aiMsg=res=>res.err==="login"?"Connecte-toi (rond en haut à droite) pour que l'IA écrive les résumés.":res.unknown?"L'IA ne connaît pas assez ce livre pour le résumer sans inventer.":res.err?(/not found|404/i.test(res.err)?"La fonction « resume » n'est pas encore installée dans Supabase.":"Résumé impossible : "+res.err):"";
+// bouton dans la fiche
+new MutationObserver(()=>{const acts=$("#sh .acts");if(!acts||acts.querySelector("#aib")||!cur||!isSaved(cur)||cur.r[7]?.ai)return;const b=cur,bt=document.createElement("button");bt.className="btn";bt.id="aib";bt.textContent="Écrire le résumé complet";
+  bt.onclick=async()=>{bt.disabled=true;bt.textContent="Le copiste écrit…";const res=await aiSummary(b);if(res.ok){bt.remove();SND.seal();toast("Résumé complet écrit.")}else{bt.disabled=false;bt.textContent="Écrire le résumé complet";toast(aiMsg(res))}};acts.prepend(bt)}).observe($("#sh"),{childList:true});
+// tous les résumés manquants, depuis Compte → Réglages
+function missingAI(){return BOOKS.filter(b=>isSaved(b)&&!b.r[7]?.ai&&!b.r[7]?.aitry)}
+function aiRowText(){const n=missingAI().length;$("#s-ai").textContent=n?`Écrire les ${n} résumés`:"Tout est écrit";$("#s-ai").disabled=!n}
+let aiRun=false;$("#s-ai").addEventListener("click",async()=>{if(aiRun)return;const list=missingAI();if(!list.length)return;aiRun=true;let ok=0,k=0;
+  for(const b of list){k++;$("#s-ai").textContent=`Le copiste écrit… ${k}/${list.length}`;const res=await aiSummary(b);if(res.ok)ok++;else if(res.err){toast(aiMsg(res));break}}
+  aiRun=false;aiRowText();if(ok)toast(`${ok} résumé${ok>1?"s":""} complet${ok>1?"s":""} écrit${ok>1?"s":""}.`)});
+new MutationObserver(()=>{if(acP.classList.contains("on"))aiRowText()}).observe(acP,{attributes:true,attributeFilter:["class"]});
+// les livres ajoutés après connexion reçoivent leur résumé tout seuls
+const _enrich=enrichBook;enrichBook=async(b,o)=>{const ok=await _enrich(b,o);const bb=BOOKS[b.i];if(ok&&ACU&&isSaved(bb)&&!bb.r[7]?.ai&&!bb.r[7]?.aitry)aiSummary(bb);return ok};
 </script>
 
 </body></html>
