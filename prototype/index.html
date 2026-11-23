@@ -7,7 +7,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@400..900&family=UnifrakturMaguntia&family=Inter:ital,wght@0,300..800;1,400&display=swap">
 <style>
 /* Layout : la collection occupe tout l'écran (canvas). Interface réduite à un logo et un bouton rond. */
 :root{
@@ -15,23 +15,24 @@
   --paper-2:#E9E9E4;
   --ink:#0E0E0E;
   --ink-soft:#6B6B66;
-  --klein:#2323FF;      /* bleu Klein : la seule couleur de l'interface et des traits dessinés */
+  --rub:#C8201A;       /* rouge de rubrique (les titres rouges des manuscrits) : la seule couleur */
   --glass:rgba(244,244,241,.86);
   --shadow:rgba(10,10,20,.2);
   --pages:#EFE9DA;
-  --f-big:"Archivo", "Arial Narrow", Arial, sans-serif;
-  --f-text:"Libre Caslon Text", Georgia, "Times New Roman", serif;
+  --f-big:"Grenze Gotisch", "Old English Text MT", Georgia, serif;
+  --f-goth:"UnifrakturMaguntia", "Grenze Gotisch", Georgia, serif;
+  --f-text:"Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --ease:cubic-bezier(.2,.85,.2,1);
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --paper:#0E0E0E;--paper-2:#1A1A1A;--ink:#F2F2EE;--ink-soft:#8E8E88;--klein:#7C7CFF;--glass:rgba(20,20,20,.86);--shadow:rgba(0,0,0,.6);--pages:#D9D3C4;color-scheme:dark}}
-:root[data-theme="dark"]{--paper:#0E0E0E;--paper-2:#1A1A1A;--ink:#F2F2EE;--ink-soft:#8E8E88;--klein:#7C7CFF;--glass:rgba(20,20,20,.86);--shadow:rgba(0,0,0,.6);--pages:#D9D3C4;color-scheme:dark}
+  --paper:#0E0E0E;--paper-2:#1A1A1A;--ink:#F2F2EE;--ink-soft:#8E8E88;--rub:#FF5A4A;--glass:rgba(20,20,20,.86);--shadow:rgba(0,0,0,.6);--pages:#D9D3C4;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#0E0E0E;--paper-2:#1A1A1A;--ink:#F2F2EE;--ink-soft:#8E8E88;--rub:#FF5A4A;--glass:rgba(20,20,20,.86);--shadow:rgba(0,0,0,.6);--pages:#D9D3C4;color-scheme:dark}
 
 html,body{height:100%}
-body{background:var(--paper);color:var(--ink);font-family:var(--f-big);overflow:hidden;-webkit-font-smoothing:antialiased}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-text);overflow:hidden;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--klein);outline-offset:3px}
-.big{font-family:var(--f-big);font-stretch:68%;font-weight:860;text-transform:uppercase;letter-spacing:-.02em;line-height:.84}
+:focus-visible{outline:2px solid var(--rub);outline-offset:3px}
+.big{font-family:var(--f-big);font-weight:800;letter-spacing:-.01em;line-height:.92}
 
 /* ---------- Landing ---------- */
 #landing{position:fixed;inset:0;z-index:50;background:var(--paper);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;
@@ -41,15 +42,15 @@ button{font:inherit;color:inherit}
 .l-top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;font-size:13px;font-weight:500;font-stretch:90%}
 .l-top span:last-child{color:var(--ink-soft)}
 .l-mid{position:relative}
-.l-title{margin:0;font-size:min(27vw,42vh);color:var(--ink);white-space:nowrap;margin-left:-.04em}
-.l-title .k{color:var(--klein)}
+.l-title{margin:0;font-size:min(25vw,40vh);font-family:var(--f-goth);font-weight:400;letter-spacing:0;color:var(--ink);white-space:nowrap;margin-left:-.04em}
+.l-title .k{color:var(--rub)}
 .l-tw{position:relative;display:inline-block}
-.l-scrib{position:absolute;left:52%;top:-14%;width:52%;height:128%;overflow:visible;pointer-events:none}
-.l-scrib path{fill:none;stroke:var(--klein);stroke-width:4;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.6s 1s var(--ease) forwards}
+.l-scrib{position:absolute;left:47%;top:-10%;width:56%;height:120%;overflow:visible;pointer-events:none}
+.l-scrib path{fill:none;stroke:var(--rub);stroke-width:4;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.6s 1s var(--ease) forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
 .l-row{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-top:18px}
 .l-tag{font-family:var(--f-text);font-style:italic;font-size:clamp(18px,2.2vw,26px);margin:0;max-width:26ch;line-height:1.3}
-.l-cta{border:0;background:var(--klein);color:#fff;padding:18px 30px;border-radius:999px;font-weight:700;font-stretch:90%;font-size:16px;cursor:pointer;transition:transform .35s var(--ease)}
+.l-cta{border:0;background:var(--rub);color:#fff;padding:18px 30px;border-radius:999px;font-weight:700;font-stretch:90%;font-size:16px;cursor:pointer;transition:transform .35s var(--ease)}
 .l-cta:hover{transform:scale(1.06) rotate(-2deg)}
 .l-shelf{display:flex;align-items:flex-end;gap:2px;height:150px;margin:0 -16px;overflow:hidden;border-bottom:2px solid var(--ink)}
 .l-shelf span{flex:none;border-radius:2px 2px 0 0;animation:rise 1s var(--ease) both}
@@ -62,9 +63,9 @@ button{font:inherit;color:inherit}
 #world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
 #marks{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none}
 #marks path{fill:none;stroke:var(--ink);stroke-linecap:round;stroke-width:2;opacity:.75}
-#marks .k{stroke:var(--klein);opacity:1;stroke-width:3}
+#marks .k{stroke:var(--rub);opacity:1;stroke-width:3}
 #ink{position:fixed;inset:0;pointer-events:none;width:100%;height:100%;z-index:5}
-#ink path{fill:none;stroke:var(--klein);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+#ink path{fill:none;stroke:var(--rub);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
 .clones{position:absolute;left:0;top:0;animation:fadein .8s .5s both}
 @keyframes fadein{from{opacity:0}}
 
@@ -87,23 +88,23 @@ button{font:inherit;color:inherit}
 .txt .ti{flex:1;min-height:0;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--fs);line-height:1}
 .txt .au{font-stretch:75%;font-weight:600;font-size:9px;letter-spacing:.05em;text-transform:uppercase;opacity:.78;white-space:nowrap}
 .txt .mk{width:8px;height:8px;flex:none;border-radius:50% 40% 55% 45%;background:currentColor;opacity:.6}
-.v0 .ti{font-stretch:62%;font-weight:850;text-transform:uppercase}
+.v0 .ti{font-weight:800;text-transform:uppercase;letter-spacing:-.01em;font-size:calc(var(--fs)*.86)}
 .v1 .ti{font-stretch:100%;font-weight:300;letter-spacing:.02em}
-.v2 .ti{font-family:var(--f-text);font-style:italic}
-.v3 .ti{font-stretch:80%;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:calc(var(--fs)*.78)}
+.v2 .ti{font-family:var(--f-big);font-weight:700;font-size:calc(var(--fs)*1.12)}
+.v3 .ti{font-weight:600;text-transform:uppercase;letter-spacing:.12em;font-size:calc(var(--fs)*.7)}
 .v3 .sf::after{content:"";position:absolute;left:0;right:0;top:12%;height:4px;background:var(--t);opacity:.55}
 .thin .au,.thin .mk{display:none}
 
-.glabel{position:absolute;left:0;top:0;transform-origin:0 100%;pointer-events:none;animation:fadein .6s .4s both;color:var(--klein);white-space:nowrap}
+.glabel{position:absolute;left:0;top:0;transform-origin:0 100%;pointer-events:none;animation:fadein .6s .4s both;color:var(--rub);white-space:nowrap}
 .glabel span{display:block;font-size:var(--gs,56px)}
 .glabel svg{position:absolute;left:-14%;top:-22%;width:128%;height:150%;overflow:visible}
-.glabel path{fill:none;stroke:var(--klein);stroke-width:2.2;stroke-linecap:round}
+.glabel path{fill:none;stroke:var(--rub);stroke-width:2.2;stroke-linecap:round}
 
 /* ---------- Interface minimale ---------- */
-.logo{position:fixed;z-index:10;background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:6px 10px 4px;border-radius:10px;margin-left:-10px;top:calc(14px + env(safe-area-inset-top,0px));left:max(16px,env(safe-area-inset-left,0px));font-size:28px;color:var(--klein);pointer-events:none}
-.fab{position:fixed;z-index:12;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;background:var(--klein);color:#fff;cursor:pointer;
-  display:grid;place-items:center;box-shadow:0 10px 30px -8px var(--klein);transition:transform .45s var(--ease)}
-.fab svg{width:24px;height:24px}
+.logo{position:fixed;z-index:10;background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:6px 10px 4px;border-radius:10px;margin-left:-10px;top:calc(14px + env(safe-area-inset-top,0px));left:max(16px,env(safe-area-inset-left,0px));font-size:44px;line-height:1;color:var(--rub);pointer-events:none;font-family:var(--f-goth);font-weight:400;padding:4px 10px 6px}
+.fab{position:fixed;z-index:12;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--rub);cursor:pointer;
+  display:grid;place-items:center;transition:transform .45s var(--ease)}
+.fab svg{width:34px;height:34px}
 .fab[aria-expanded="true"]{transform:rotate(135deg)}
 .menu{position:fixed;z-index:11;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(90px + env(safe-area-inset-bottom,0px));width:min(300px,calc(100vw - 32px));
   background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:22px;padding:18px 20px;display:grid;gap:16px;
@@ -112,14 +113,14 @@ button{font:inherit;color:inherit}
 .menu.on{transform:none;opacity:1;pointer-events:auto}
 .menu h4{margin:0 0 4px;font-size:11px;font-weight:600;font-stretch:90%;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
 .opts{display:flex;flex-wrap:wrap;gap:2px 14px}
-.opts button{border:0;background:none;padding:2px 0;cursor:pointer;font-size:30px;color:var(--ink);opacity:.32;transition:opacity .25s,color .25s}
+.opts button{border:0;background:none;padding:2px 0;cursor:pointer;font-size:32px;font-family:var(--f-big);font-weight:800;color:var(--ink);opacity:.32;transition:opacity .25s,color .25s}
 .opts button:hover{opacity:.7}
-.opts button[aria-pressed="true"]{opacity:1;color:var(--klein)}
+.opts button[aria-pressed="true"]{opacity:1;color:var(--rub)}
 .opts button:disabled{opacity:.12;cursor:default}
 .menu .soon{display:flex;gap:8px}
 .menu .soon button{border:1px solid color-mix(in srgb,var(--ink) 18%,transparent);background:none;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600;font-stretch:90%;cursor:pointer}
 .menu p{margin:0;font-family:var(--f-text);font-size:12.5px;line-height:1.5;color:var(--ink-soft)}
-.menu p b{color:var(--klein);font-weight:400;font-style:italic}
+.menu p b{color:var(--rub);font-weight:400;font-style:italic}
 
 .toast{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);opacity:0;z-index:60;background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:999px;font-size:13px;font-weight:500;font-stretch:90%;transition:.4s var(--ease);pointer-events:none;max-width:calc(100vw - 110px);text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -133,43 +134,46 @@ button{font:inherit;color:inherit}
 .b3{flex:none;perspective:2000px;cursor:pointer}
 .bx{position:relative;width:var(--W);height:var(--H);transform-style:preserve-3d;will-change:transform}
 .bf{position:absolute;backface-visibility:hidden;-webkit-backface-visibility:hidden}
-.front,.back{inset:0;border-radius:2px 5px 5px 2px;overflow:hidden}
+.front,.back{top:0;bottom:0;left:-1px;right:0;border-radius:0 4px 4px 0;overflow:hidden}
+.front .real{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s}
+.front .real.on{opacity:1}
 .front{transform:translateZ(calc(var(--D)/2));background:var(--c);color:var(--t);padding:9% 9% 8% 12%;display:flex;flex-direction:column;
   box-shadow:inset 10px 0 14px -10px rgba(0,0,0,.45)}
 .front .ca{font-stretch:80%;font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
 .front .ct{font-size:calc(var(--W)*.13);margin-top:8%;text-wrap:balance;overflow-wrap:anywhere}
-.front.v1 .ct{font-stretch:100%;font-weight:300;text-transform:none;letter-spacing:-.03em;line-height:.95}
-.front.v2 .ct{font-family:var(--f-text);font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.02em;line-height:1}
+.front.v1 .ct{font-family:var(--f-text);font-weight:300;letter-spacing:-.03em;line-height:.98;font-size:calc(var(--W)*.11)}
+.front.v0 .ct,.front.v3 .ct{font-family:var(--f-text);font-weight:800;text-transform:uppercase;letter-spacing:-.02em;line-height:.95;font-size:calc(var(--W)*.105)}
 .front svg{flex:1;width:100%;min-height:0;margin-top:6%}
 .front svg path{fill:none;stroke:var(--t);stroke-width:2.4;stroke-linecap:round}
 .front .cy{font-size:12px;font-weight:600;opacity:.75}
 .back{transform:rotateY(180deg) translateZ(calc(var(--D)/2));background:var(--c);color:var(--t);padding:12% 10% 8%;display:flex;flex-direction:column;gap:18px}
 .back .bk{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
-.back p{font-family:var(--f-text);font-size:clamp(14px,1.4vw,17px);line-height:1.55;margin:0}
+.back p{font-size:clamp(13px,1.3vw,16px);line-height:1.55;margin:0}
 .bars{margin-top:auto;align-self:flex-end;display:flex;gap:1.5px;height:40px;background:#fff;padding:5px 7px}
 .bars span{background:#111;width:var(--bw)}
-.side{top:0;height:100%;width:var(--D);left:calc((var(--W) - var(--D))/2)}
+.side{top:0;height:100%;width:calc(var(--D) + 2px);left:calc((var(--W) - var(--D))/2 - 1px)}
 .bsp{transform:rotateY(-90deg) translateZ(calc(var(--W)/2));background:linear-gradient(90deg,rgba(0,0,0,.28),rgba(255,255,255,.16) 16%,rgba(0,0,0,0) 60%,rgba(0,0,0,.22)),var(--c);color:var(--t)}
 .bsp .txt{padding:6% 0}
 .bsp .ti{font-size:calc(var(--D)*.42)}
 .bpg{transform:rotateY(90deg) translateZ(calc(var(--W)/2 - 2px));background:repeating-linear-gradient(90deg,var(--pages) 0 1px,#d6cfbd 1px 2.5px)}
 .btop{left:0;width:calc(100% - 2px);height:var(--D);top:calc((var(--H) - var(--D))/2);transform:rotateX(90deg) translateZ(calc(var(--H)/2));background:repeating-linear-gradient(0deg,var(--pages) 0 1px,#d6cfbd 1px 2.5px)}
-.shadow3{position:absolute;left:6%;right:-4%;bottom:-6%;height:8%;background:radial-gradient(closest-side,var(--shadow),transparent);filter:blur(6px);transform:translateZ(-80px)}
+.shadow3{position:absolute;left:6%;right:-4%;bottom:-6%;height:8%;background:radial-gradient(closest-side,var(--shadow),transparent);transform:translateZ(-80px)}
 
 .info{flex:1;min-width:0;display:grid;gap:22px;opacity:0;transform:translateY(16px);transition:.7s var(--ease)}
 #sheet.ready .info{opacity:1;transform:none;transition-delay:.35s}
-.gk{justify-self:start;position:relative;color:var(--klein);font-size:22px;padding:4px 2px}
+.gk{justify-self:start;position:relative;color:var(--rub);font-size:22px;padding:4px 2px}
 .gk svg{position:absolute;left:-18%;top:-30%;width:136%;height:160%;overflow:visible}
-.gk path{fill:none;stroke:var(--klein);stroke-width:2;stroke-linecap:round}
+.gk path{fill:none;stroke:var(--rub);stroke-width:2;stroke-linecap:round}
 .info h2{margin:0;font-size:clamp(54px,8.6vw,138px);text-wrap:balance;overflow-wrap:anywhere}
 .info .by{font-family:var(--f-text);font-style:italic;font-size:clamp(20px,2vw,26px);margin:-4px 0 0}
 .info dl{display:flex;flex-wrap:wrap;gap:8px 36px;margin:0}
 .info dt{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
 .info dd{margin:2px 0 0;font-size:24px;font-weight:700;font-stretch:80%;font-variant-numeric:tabular-nums}
-.info .sum{font-family:var(--f-text);font-size:19px;line-height:1.6;margin:0;max-width:54ch;text-wrap:pretty}
+.info h3{margin:6px 0 -8px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--rub)}
+.info .sum{font-size:17px;line-height:1.7;margin:0;max-width:62ch;text-wrap:pretty}
 .info .note{font-size:12px;color:var(--ink-soft);margin:0}
 .acts{display:flex;gap:10px;flex-wrap:wrap}
-.btn{border:0;background:var(--klein);color:#fff;border-radius:999px;padding:12px 20px;font-weight:700;font-stretch:90%;font-size:15px;cursor:pointer}
+.btn{border:0;background:var(--rub);color:#fff;border-radius:999px;padding:12px 20px;font-weight:700;font-stretch:90%;font-size:15px;cursor:pointer}
 .btn.ghost{background:none;color:var(--ink);border:1px solid color-mix(in srgb,var(--ink) 22%,transparent)}
 @media (max-width:820px){
   .sh{flex-direction:column;align-items:stretch;gap:40px}
@@ -184,7 +188,7 @@ button{font:inherit;color:inherit}
 <section id="landing" aria-label="Accueil">
   <div class="l-top"><span>Bibliothèque personnelle</span><span id="lcount"></span></div>
   <div class="l-mid">
-    <div class="l-tw"><h1 class="l-title big">Tran<span class="k">che</span></h1>
+    <div class="l-tw"><h1 class="l-title">Tran<span class="k">che</span></h1>
     <svg class="l-scrib" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M30,8 C62,-4 98,8 99,48 C100,88 60,99 30,94 C4,90 -2,52 6,30 C12,14 26,8 44,6"/></svg></div>
     <div class="l-row">
       <p class="l-tag">Tout ce que tu as lu, vu de dos. Et de quoi t'en souvenir.</p>
@@ -197,14 +201,13 @@ button{font:inherit;color:inherit}
 <!-- Bibliothèque -->
 <div id="stage" aria-label="Bibliothèque"><div id="world"><svg id="marks" aria-hidden="true"></svg></div></div>
 <svg id="ink" aria-hidden="true"><path id="inkp" d=""/></svg>
-<div class="logo big" aria-hidden="true">Tranche</div>
+<div class="logo" aria-hidden="true">T</div>
 
-<button class="fab" id="fab" aria-expanded="false" aria-controls="menu" aria-label="Affichage"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+<button class="fab" id="fab" aria-expanded="false" aria-controls="menu" aria-label="Affichage"><svg viewBox="0 0 40 40" aria-hidden="true" fill="currentColor"><path d="M20 2l4 4-1.6 14 1.6 14-4 4-4-4 1.6-14L16 6z"/><path d="M2 20l4-4 14 1.6 14-1.6 4 4-4 4-14-1.6L6 24z"/><path d="M20 15l5 5-5 5-5-5z" fill="var(--paper)"/></svg></button>
 <div class="menu" id="menu" role="dialog" aria-label="Affichage">
   <div><h4>Vue</h4><div class="opts big" id="layouts">
     <button data-l="etagere" aria-pressed="true">Étagère</button>
     <button data-l="pile" aria-pressed="false">Pile</button>
-    <button data-l="cosmos" aria-pressed="false">Cosmos</button>
     <button data-l="trace" aria-pressed="false" disabled>Tracé</button>
   </div></div>
   <div><h4>Ranger par</h4><div class="opts big" id="sorts">
@@ -228,12 +231,12 @@ button{font:inherit;color:inherit}
 // ---------- Données d'exemple (dans l'app : Open Library / Google Books + résumé IA) ----------
 // [titre, auteur, parution, pages, genre, format(P poche, S standard, G grand, B beau livre), résumé?]
 const RAW=[
-["L'Étranger","Albert Camus",1942,186,"Classiques","P","Meursault, employé à Alger, enterre sa mère sans émotion puis tue un homme sur une plage écrasée de soleil. À son procès, on le juge autant pour son indifférence que pour son crime."],
-["Le Petit Prince","Antoine de Saint-Exupéry",1943,96,"Classiques","S","Un aviateur en panne dans le Sahara rencontre un petit garçon venu d'un astéroïde, qui lui raconte ses voyages de planète en planète et sa rose."],
-["Madame Bovary","Gustave Flaubert",1857,480,"Classiques","P","Emma, mariée à un médecin de campagne, s'ennuie. Elle rêve de passion, prend des amants, s'endette, puis s'empoisonne quand tout s'effondre."],
-["Germinal","Émile Zola",1885,590,"Classiques","P","Étienne Lantier arrive dans un bassin minier du Nord, découvre la misère des mineurs et mène une grève qui tourne au drame."],
-["Le Comte de Monte-Cristo","Alexandre Dumas",1844,1250,"Classiques","S","Edmond Dantès, emprisonné à tort au château d'If, s'évade, découvre un trésor et revient, sous un autre nom, se venger de ceux qui l'ont trahi."],
-["Les Choses","Georges Perec",1965,160,"Classiques","P","Jérôme et Sylvie, jeune couple parisien, rêvent d'objets et de richesse. Leurs désirs les enlisent plus qu'ils ne les rendent heureux."],
+["L'Étranger","Albert Camus",1942,186,"Classiques","P","Meursault, petit employé à Alger, apprend la mort de sa mère et assiste à l'enterrement sans pleurer. Le lendemain, il retrouve Marie, va au cinéma et se laisse entraîner par son voisin Raymond dans une histoire de vengeance. Sur une plage écrasée de soleil, il tue un Arabe de cinq coups de revolver, presque sans raison. En prison puis au procès, on lui reproche moins son crime que son indifférence, et surtout de ne pas avoir pleuré sa mère. Condamné à mort, il refuse le réconfort de l'aumônier et accepte enfin « la tendre indifférence du monde »."],
+["Le Petit Prince","Antoine de Saint-Exupéry",1943,96,"Classiques","S","Un aviateur tombe en panne dans le Sahara. Un petit garçon surgit et lui demande de dessiner un mouton. Il vient de l'astéroïde B 612, où il a laissé une rose orgueilleuse qu'il aime sans savoir le lui dire. Avant d'arriver sur Terre, il a visité des planètes peuplées d'adultes absurdes : un roi, un vaniteux, un buveur, un businessman, un allumeur de réverbères, un géographe. Sur Terre, un renard lui apprend ce que veut dire « apprivoiser » et que l'essentiel est invisible pour les yeux. Un an après sa chute, il se laisse mordre par un serpent pour rentrer chez lui. L'aviateur repart, et regarde désormais les étoiles autrement."],
+["Madame Bovary","Gustave Flaubert",1857,480,"Classiques","P","Emma Rouault, nourrie de romans sentimentaux, épouse Charles Bovary, un officier de santé brave mais terne. La vie de province l'ennuie à mourir. Après un bal au château de la Vaubyessard, elle rêve d'une autre existence. Elle s'éprend du jeune clerc Léon, qui part pour Paris, puis devient la maîtresse de Rodolphe, un séducteur qui l'abandonne la veille de leur fuite. Elle retrouve Léon à Rouen et multiplie les achats à crédit auprès du marchand Lheureux. Couverte de dettes, menacée de saisie, rejetée de tous, elle s'empoisonne à l'arsenic. Charles meurt peu après, ruiné, et leur fille finit ouvrière."],
+["Germinal","Émile Zola",1885,590,"Classiques","P","Étienne Lantier, ouvrier sans travail, est embauché à la mine du Voreux, dans le Nord. Il découvre la misère des familles de mineurs, en particulier celle des Maheu, et s'éprend de Catherine, la fille, qui vit avec la brute Chaval. Quand la Compagnie baisse les salaires, Étienne organise une grève. Elle dure des semaines, la faim s'installe, la révolte tourne à l'émeute et l'armée tire sur la foule : Maheu est tué. L'anarchiste Souvarine sabote alors la mine, qui s'effondre. Étienne et Catherine restent emmurés au fond ; elle meurt dans ses bras. Sauvé, Étienne part pour Paris, convaincu qu'une révolte germe sous la terre."],
+["Le Comte de Monte-Cristo","Alexandre Dumas",1844,1250,"Classiques","S","En 1815, le jeune marin Edmond Dantès va épouser Mercédès quand il est dénoncé comme bonapartiste par trois jaloux : Danglars, Fernand et Caderousse, avec la complicité du procureur Villefort. Il passe quatorze ans au château d'If, où l'abbé Faria l'instruit et lui révèle un trésor caché sur l'île de Monte-Cristo. Évadé et immensément riche, il réapparaît à Paris sous le nom du comte de Monte-Cristo. Il ruine Danglars, pousse Fernand, devenu comte de Morcerf et mari de Mercédès, au suicide, et fait sombrer Villefort dans la folie. Effrayé par les victimes collatérales de sa vengeance, il finit par épargner certains et part avec Haydée, en laissant un message : « attendre et espérer »."],
+["Les Choses","Georges Perec",1965,160,"Classiques","P","Jérôme et Sylvie, la vingtaine, vivent à Paris au début des années 1960. Psychosociologues, ils font des enquêtes d'opinion à la pige. Ils rêvent d'un appartement parfait, de beaux objets, de vêtements anglais, de richesse sans effort. Le livre décrit surtout ces choses qu'ils désirent et ne possèdent pas. Lassés, ils partent enseigner à Sfax, en Tunisie, où ils s'ennuient encore davantage. Ils rentrent en France et finissent par accepter des postes de cadres à Bordeaux : une vie confortable, sans passion, exactement ce qu'ils voulaient éviter."],
 ["Les Misérables","Victor Hugo",1862,1900,"Classiques","G"],["Notre-Dame de Paris","Victor Hugo",1831,940,"Classiques","P"],["Le Rouge et le Noir","Stendhal",1830,640,"Classiques","P"],
 ["Le Père Goriot","Honoré de Balzac",1835,400,"Classiques","P"],["Bel-Ami","Guy de Maupassant",1885,420,"Classiques","P"],["Candide","Voltaire",1759,180,"Classiques","P"],
 ["Les Trois Mousquetaires","Alexandre Dumas",1844,900,"Classiques","P"],["Vingt mille lieues sous les mers","Jules Verne",1870,600,"Classiques","P"],
@@ -245,13 +248,13 @@ const RAW=[
 ["Frankenstein","Mary Shelley",1818,300,"Classiques","P"],["Dracula","Bram Stoker",1897,600,"Classiques","P"],["Le Portrait de Dorian Gray","Oscar Wilde",1890,330,"Classiques","P"],
 ["Cent ans de solitude","Gabriel García Márquez",1967,460,"Classiques","S"],["Le Maître et Marguerite","Mikhaïl Boulgakov",1967,520,"Classiques","S"],["L'Attrape-cœurs","J.D. Salinger",1951,250,"Classiques","P"],
 ["Sur la route","Jack Kerouac",1957,400,"Classiques","P"],["La Vie devant soi","Romain Gary",1975,270,"Classiques","P"],
-["L'Élégance du hérisson","Muriel Barbery",2006,360,"Contemporain","S","Renée, concierge cultivée, et Paloma, adolescente surdouée, cachent leur intelligence. L'arrivée de M. Ozu les fait se rencontrer."],
-["La Tresse","Laetitia Colombani",2017,220,"Contemporain","S","Smita en Inde, Giulia en Sicile, Sarah au Canada : trois femmes qui se battent, liées sans le savoir par un même fil."],
-["Kafka sur le rivage","Haruki Murakami",2002,640,"Contemporain","S","Un adolescent fugue vers Shikoku tandis que Nakata, vieil homme qui parle aux chats, suit sans le savoir le même chemin."],
-["L'Alchimiste","Paulo Coelho",1988,190,"Contemporain","P","Santiago, jeune berger andalou, traverse le désert jusqu'aux pyramides pour trouver un trésor vu en rêve."],
-["L'Anomalie","Hervé Le Tellier",2020,330,"Contemporain","S","Les passagers d'un vol Paris–New York atterrissent deux fois, à trois mois d'écart, et se retrouvent face à leurs doubles."],
-["Le Liseur","Bernhard Schlink",1995,240,"Contemporain","P","Michael, quinze ans, a une liaison avec Hanna. Des années plus tard, étudiant en droit, il la retrouve sur le banc des accusés d'un procès nazi."],
-["Americanah","Chimamanda Ngozi Adichie",2013,600,"Contemporain","S","Ifemelu quitte le Nigeria pour les États-Unis, y découvre ce que veut dire être noire, puis revient à Lagos retrouver Obinze."],
+["L'Élégance du hérisson","Muriel Barbery",2006,360,"Contemporain","S","Au 7 rue de Grenelle, immeuble bourgeois de Paris, Renée Michel, cinquante-quatre ans, est la concierge. Elle joue la concierge bourrue mais lit Tolstoï, écoute Mahler et adore le cinéma japonais. Au cinquième étage, Paloma, douze ans, surdouée, tient un journal et a décidé de se suicider le jour de ses treize ans. L'arrivée d'un nouveau voisin, Kakuro Ozu, change tout : il devine qui est Renée et l'invite à dîner. Une amitié naît entre eux trois. Mais Renée meurt renversée par une camionnette. Bouleversée, Paloma renonce à son projet de mort."],
+["La Tresse","Laetitia Colombani",2017,220,"Contemporain","S","Trois femmes sur trois continents. En Inde, Smita est une intouchable qui vide les latrines ; elle fuit son village pour que sa fille aille à l'école, et fait offrande de leurs cheveux au temple de Tirupati. En Sicile, Giulia découvre que l'atelier familial de perruques, où l'on travaille les cheveux siciliens, est au bord de la faillite ; elle le sauve en important des cheveux d'Inde. Au Canada, Sarah, avocate brillante, apprend qu'elle a un cancer et cache sa maladie au cabinet. À la fin, elle porte une perruque faite des cheveux de Smita, travaillés chez Giulia."],
+["Kafka sur le rivage","Haruki Murakami",2002,640,"Contemporain","S","Kafka Tamura, quinze ans, fuit son père à Tokyo, qui lui a prédit qu'il tuerait son père et coucherait avec sa mère et sa sœur. Il se réfugie dans une bibliothèque privée de Shikoku, tenue par l'énigmatique Mlle Saeki et par Oshima. En parallèle, Nakata, un vieil homme devenu simple d'esprit après un étrange incident pendant la guerre, parle aux chats et tue un homme qui se fait appeler Johnnie Walker : c'est peut-être le père de Kafka. Nakata part vers Shikoku avec un routier, Hoshino. Les deux histoires se croisent sans que les personnages se rencontrent. Kafka passe par une forêt hors du temps, puis décide de rentrer à Tokyo."],
+["L'Alchimiste","Paulo Coelho",1988,190,"Contemporain","P","Santiago, jeune berger andalou, fait deux fois le même rêve : un trésor l'attend au pied des pyramides d'Égypte. Un vieux roi lui parle de sa « légende personnelle ». Il vend ses moutons, se fait voler à Tanger, travaille un an chez un marchand de cristaux puis rejoint une caravane. Dans une oasis, il tombe amoureux de Fatima et rencontre un alchimiste qui lui apprend à écouter son cœur et le langage du monde. Arrivé aux pyramides, il est battu par des pillards ; l'un d'eux raconte avoir rêvé d'un trésor dans une église en ruine d'Espagne. C'est là, d'où il était parti, que Santiago le trouve."],
+["L'Anomalie","Hervé Le Tellier",2020,330,"Contemporain","S","En mars 2021, un vol Air France Paris–New York traverse une violente turbulence et atterrit. En juin, exactement le même avion, avec le même équipage et les mêmes passagers, se présente au-dessus de New York. Le gouvernement américain l'isole et réunit des scientifiques. Le roman suit plusieurs passagers : un tueur à gages, un écrivain, une monteuse, un architecte, un enfant. Chacun doit rencontrer son double, qui a vécu trois mois de plus. Une hypothèse s'impose : notre monde serait une simulation. Certains doubles s'arrangent, d'autres se détruisent. À la fin, un troisième vol se présente."],
+["Le Liseur","Bernhard Schlink",1995,240,"Contemporain","P","Dans l'Allemagne d'après-guerre, Michael Berg, quinze ans, est soigné par Hanna, une contrôleuse de tramway de trente-six ans. Ils deviennent amants. Rituel : il lui fait la lecture avant l'amour. Un jour, Hanna disparaît. Des années plus tard, étudiant en droit, Michael assiste à un procès d'anciennes gardiennes de camp nazi et la reconnaît parmi les accusées. Il comprend qu'elle est analphabète, ce qu'elle cache au point d'accepter la responsabilité la plus lourde. Il se tait. Elle est condamnée à perpétuité. Il lui envoie des cassettes de lectures, elle apprend à lire en prison, puis se suicide la veille de sa libération."],
+["Americanah","Chimamanda Ngozi Adichie",2013,600,"Contemporain","S","Au Nigeria, Ifemelu et Obinze s'aiment depuis le lycée. Les universités étant en grève, Ifemelu part étudier aux États-Unis. Elle y découvre la pauvreté, l'humiliation et ce que signifie être noire en Amérique, ce qu'elle n'avait jamais ressenti chez elle. Elle coupe le contact avec Obinze, sort avec un riche Américain blanc puis un professeur afro-américain, et tient un blog à succès sur la race. Obinze, refoulé des États-Unis, vit clandestinement à Londres avant d'être expulsé ; il fait ensuite fortune à Lagos et se marie. Treize ans plus tard, Ifemelu rentre au Nigeria. Ils se retrouvent, et Obinze quitte sa femme pour elle."],
 ["Chanson douce","Leïla Slimani",2016,240,"Contemporain","S"],["Petit Pays","Gaël Faye",2016,220,"Contemporain","S"],["Les Années","Annie Ernaux",2008,250,"Contemporain","P"],
 ["Les Bienveillantes","Jonathan Littell",2006,900,"Contemporain","G"],["Réparer les vivants","Maylis de Kerangal",2014,280,"Contemporain","S"],["La Carte et le Territoire","Michel Houellebecq",2010,430,"Contemporain","S"],
 ["Au revoir là-haut","Pierre Lemaitre",2013,570,"Contemporain","S"],["Leurs enfants après eux","Nicolas Mathieu",2018,430,"Contemporain","S"],["Ne tirez pas sur l'oiseau moqueur","Harper Lee",1960,330,"Contemporain","P"],
@@ -259,42 +262,42 @@ const RAW=[
 ["Ensemble, c'est tout","Anna Gavalda",2004,600,"Contemporain","P"],["Le Parfum","Patrick Süskind",1985,280,"Contemporain","P"],["L'Amie prodigieuse","Elena Ferrante",2011,430,"Contemporain","S"],
 ["Veiller sur elle","Jean-Baptiste Andrea",2023,580,"Contemporain","S"],["Le Mage du Kremlin","Giuliano da Empoli",2022,280,"Contemporain","S"],["Vernon Subutex","Virginie Despentes",2015,400,"Contemporain","S"],
 ["Yellowface","R.F. Kuang",2023,380,"Contemporain","S"],["Les Gratitudes","Delphine de Vigan",2019,180,"Contemporain","S"],["Kiffe kiffe demain","Faïza Guène",2004,190,"Contemporain","P"],
-["Dune","Frank Herbert",1965,830,"Science-fiction","S","Paul Atréides survit à la trahison de sa famille sur Arrakis, planète désert de l'Épice, et prend la tête des Fremen."],
-["Fondation","Isaac Asimov",1951,280,"Science-fiction","P","Le mathématicien Hari Seldon prévoit la chute de l'Empire galactique et crée une Fondation pour abréger l'âge sombre qui suivra."],
-["1984","George Orwell",1949,400,"Science-fiction","P","Winston Smith, employé du Parti, tente d'aimer et de penser librement sous l'œil de Big Brother, jusqu'à ce que le régime le brise."],
-["Le Problème à trois corps","Liu Cixin",2008,440,"Science-fiction","S","Une astrophysicienne meurtrie par la Révolution culturelle répond à un signal venu d'une autre étoile, et l'humanité entière en subit les conséquences."],
-["Projet Dernière Chance","Andy Weir",2021,500,"Science-fiction","S","Un professeur se réveille seul et amnésique dans un vaisseau, chargé de sauver le Soleil, et se lie d'amitié avec un ingénieur extraterrestre."],
-["Fahrenheit 451","Ray Bradbury",1953,220,"Science-fiction","P","Montag, pompier chargé de brûler les livres, se met à les lire. Traqué, il rejoint des marginaux qui apprennent les livres par cœur."],
-["Klara et le Soleil","Kazuo Ishiguro",2021,340,"Science-fiction","S","Klara, une « amie artificielle », observe avec dévotion la famille de Josie, l'adolescente malade qu'elle accompagne."],
+["Dune","Frank Herbert",1965,830,"Science-fiction","S","Dans un lointain futur, l'empereur confie au duc Leto Atréides la planète désert Arrakis, seule source de l'Épice, une drogue qui permet les voyages spatiaux. C'est un piège : les Harkonnen attaquent avec l'aide de troupes impériales, et Leto est trahi par son médecin, Yueh. Son fils Paul et sa mère Jessica, de l'ordre Bene Gesserit, s'enfuient dans le désert et sont recueillis par les Fremen. Paul boit l'Eau de vie, développe des dons de prescience, épouse Chani et devient leur chef, Muad'Dib. À la tête des Fremen, il reprend Arrakeen, tue Feyd-Rautha en duel et force l'empereur à abdiquer, tout en pressentant le jihad sanglant qui viendra."],
+["Fondation","Isaac Asimov",1951,280,"Science-fiction","P","Hari Seldon a inventé la psychohistoire, qui prédit le comportement des masses. Ses calculs annoncent la chute de l'Empire galactique et trente mille ans de barbarie. Pour réduire cette période à mille ans, il crée une Fondation sur Terminus, une planète au bord de la galaxie, officiellement pour écrire une encyclopédie. Le livre suit les crises successives de la Fondation sur plus d'un siècle. Salvor Hardin joue les royaumes voisins les uns contre les autres grâce à une religion fondée sur la technologie. Plus tard, les marchands, comme Hober Mallow, imposent la Fondation par le commerce. À chaque crise, un hologramme de Seldon confirme que tout était prévu."],
+["1984","George Orwell",1949,400,"Science-fiction","P","En 1984, Londres fait partie de l'Océania, gouvernée par le Parti et Big Brother. Winston Smith travaille au ministère de la Vérité, où il réécrit les archives pour qu'elles collent à la propagande. Il tient en secret un journal et tombe amoureux de Julia. Ils se cachent dans une chambre au-dessus d'une brocante et croient rejoindre une résistance, la Fraternité, par l'intermédiaire d'O'Brien. C'est un piège : O'Brien est de la Police de la pensée. Arrêté, torturé au ministère de l'Amour, confronté à sa pire peur dans la salle 101, Winston trahit Julia. Libéré, brisé, il découvre qu'il aime Big Brother."],
+["Le Problème à trois corps","Liu Cixin",2008,440,"Science-fiction","S","Pendant la Révolution culturelle, l'astrophysicienne Ye Wenjie voit son père battu à mort. Envoyée dans une base militaire secrète, elle reçoit un message d'une civilisation extraterrestre, Trisolaris, dont le monde est ravagé par trois soleils instables. Désespérée de l'humanité, elle répond et leur indique où est la Terre. Quarante ans plus tard, le chercheur en nanomatériaux Wang Miao enquête sur des suicides de scientifiques et découvre un jeu vidéo étrange, « Trois Corps », qui sert à recruter des partisans des extraterrestres. La flotte trisolarienne est en route et arrivera dans quatre siècles. Pour bloquer le progrès humain d'ici là, elle a envoyé des sophons qui sabotent la physique."],
+["Projet Dernière Chance","Andy Weir",2021,500,"Science-fiction","S","Ryland Grace se réveille amnésique dans un vaisseau, seul survivant de l'équipage. La mémoire lui revient par fragments : professeur de sciences, il a découvert l'astrophage, un micro-organisme qui dévore l'énergie du Soleil et va plonger la Terre dans une ère glaciaire. Il est en mission vers Tau Ceti, la seule étoile épargnée, pour comprendre pourquoi. Il y rencontre Rocky, un ingénieur extraterrestre venu pour la même raison, et ils deviennent amis. Ensemble, ils trouvent un prédateur de l'astrophage. Grace apprend qu'on l'a embarqué de force. Sur le chemin du retour, il fait demi-tour pour sauver Rocky, renonce à la Terre et finit professeur sur la planète de son ami."],
+["Fahrenheit 451","Ray Bradbury",1953,220,"Science-fiction","P","Dans une société où les livres sont interdits, Guy Montag est pompier : il ne combat pas le feu, il brûle les bibliothèques. Sa rencontre avec Clarisse, une jeune voisine curieuse, puis le suicide d'une femme qui préfère brûler avec ses livres le font douter. Il en cache chez lui. Sa femme Mildred, droguée aux écrans muraux, le dénonce. Son chef Beatty le force à brûler sa propre maison ; Montag le tue au lance-flammes et s'enfuit, traqué par le Limier mécanique. Il rejoint dans les bois des marginaux qui apprennent chacun un livre par cœur. La ville est rasée par une guerre, et ils marchent vers elle pour reconstruire."],
+["Klara et le Soleil","Kazuo Ishiguro",2021,340,"Science-fiction","S","Klara est une AA, une « amie artificielle » conçue pour tenir compagnie aux enfants. Dans la vitrine du magasin, elle observe le monde et vénère le Soleil, dont elle tire son énergie. Josie, une adolescente malade, la choisit. Klara découvre que Josie a été « relevée », génétiquement améliorée, ce qui l'a rendue malade, comme sa sœur avant elle, morte. Sa mère prévoit, si Josie meurt, que Klara apprenne à la « continuer ». Klara conclut un pacte avec le Soleil et sacrifie une partie de son fluide pour détruire une machine polluante. Josie guérit, grandit et part à l'université. Klara finit dans une décharge, contente, à trier ses souvenirs."],
 ["Le Meilleur des mondes","Aldous Huxley",1932,290,"Science-fiction","P"],["Neuromancien","William Gibson",1984,320,"Science-fiction","P"],["Hypérion","Dan Simmons",1989,600,"Science-fiction","P"],
 ["La Main gauche de la nuit","Ursula K. Le Guin",1969,340,"Science-fiction","P"],["Les Dépossédés","Ursula K. Le Guin",1974,450,"Science-fiction","P"],["Ubik","Philip K. Dick",1969,270,"Science-fiction","P"],
 ["Solaris","Stanisław Lem",1961,250,"Science-fiction","P"],["La Planète des singes","Pierre Boulle",1963,220,"Science-fiction","P"],["Le Guide du voyageur galactique","Douglas Adams",1979,240,"Science-fiction","P"],
 ["Seul sur Mars","Andy Weir",2011,410,"Science-fiction","S"],["Ravage","René Barjavel",1943,310,"Science-fiction","P"],["La Nuit des temps","René Barjavel",1968,400,"Science-fiction","P"],
 ["Les Fourmis","Bernard Werber",1991,300,"Science-fiction","P"],["Chroniques martiennes","Ray Bradbury",1950,280,"Science-fiction","P"],["La Servante écarlate","Margaret Atwood",1985,510,"Science-fiction","P"],
 ["Expiration","Ted Chiang",2019,400,"Science-fiction","S"],["Station Eleven","Emily St. John Mandel",2014,450,"Science-fiction","S"],["Les Robots","Isaac Asimov",1950,300,"Science-fiction","P"],
-["Le Seigneur des anneaux","J.R.R. Tolkien",1954,1200,"Fantasy","G","Frodon traverse la Terre du Milieu avec la Communauté pour détruire l'Anneau unique dans les flammes de la Montagne du Destin."],
-["Le Hobbit","J.R.R. Tolkien",1937,390,"Fantasy","S","Bilbon Sacquet accompagne treize nains pour reprendre leur trésor au dragon Smaug, et trouve en chemin un anneau d'invisibilité."],
-["Le Nom du vent","Patrick Rothfuss",2007,830,"Fantasy","G","Kvothe, devenu un aubergiste anonyme, raconte sa jeunesse : sa troupe massacrée, ses années à la rue, puis son entrée à l'Université."],
-["La Passe-miroir","Christelle Dabos",2013,520,"Fantasy","S","Ophélie, qui lit le passé des objets et traverse les miroirs, est fiancée de force à Thorn et part vivre au Pôle, une arche glaciale pleine d'intrigues."],
-["Harry Potter à l'école des sorciers","J.K. Rowling",1997,310,"Fantasy","S","Harry apprend à onze ans qu'il est sorcier, entre à Poudlard et empêche Voldemort de s'emparer de la pierre philosophale."],
+["Le Seigneur des anneaux","J.R.R. Tolkien",1954,1200,"Fantasy","G","Le hobbit Frodon hérite de son oncle Bilbon d'un anneau qui se révèle être l'Anneau unique de Sauron, le Seigneur des ténèbres. Seul moyen de l'arrêter : le détruire dans la Montagne du Destin, au cœur du Mordor. Une Communauté se forme : Frodon, Sam, Merry, Pippin, Gandalf, Aragorn, Boromir, Legolas et Gimli. Gandalf tombe dans la Moria, Boromir meurt et la Communauté se disperse. Pendant que les autres combattent au Gouffre de Helm et à Minas Tirith, Frodon et Sam avancent vers le Mordor guidés par Gollum. Au dernier moment, Frodon refuse de jeter l'Anneau ; Gollum le lui arrache avec le doigt et tombe dans la lave. Aragorn devient roi. Frodon, blessé à jamais, part vers les Terres immortelles."],
+["Le Hobbit","J.R.R. Tolkien",1937,390,"Fantasy","S","Bilbon Sacquet, hobbit casanier, voit débarquer chez lui le magicien Gandalf et treize nains menés par Thorin Écu-de-Chêne. Ils veulent reprendre au dragon Smaug le trésor de leurs ancêtres sous la Montagne Solitaire, et ont besoin d'un cambrioleur. En route, ils affrontent des trolls, des gobelins, des araignées géantes et les elfes de la forêt. Perdu dans une grotte, Bilbon trouve un anneau d'invisibilité en gagnant un concours d'énigmes contre Gollum. Smaug, réveillé, attaque Lacville et y est tué par l'archer Bard. Le trésor attise les convoitises jusqu'à la bataille des Cinq Armées, où Thorin meurt. Bilbon rentre chez lui, avec l'anneau."],
+["Le Nom du vent","Patrick Rothfuss",2007,830,"Fantasy","G","Dans une auberge de campagne, l'aubergiste Kote est en réalité Kvothe, un héros devenu légende. Il accepte de raconter sa vraie histoire à un chroniqueur, en trois jours. Ce premier tome couvre le premier jour : enfant d'une troupe de comédiens itinérants, il voit les siens massacrés par les Chandrian, des êtres de légende. Il survit des années dans les rues de Tarbean, puis entre à l'Université, beaucoup trop jeune. Il y apprend la sympathie, se fait un ennemi juré, Ambrose, et tombe amoureux de l'insaisissable Denna. Il affronte un draccus et commence à chercher le vrai nom du vent."],
+["La Passe-miroir","Christelle Dabos",2013,520,"Fantasy","S","Dans un monde éclaté en arches flottantes, Ophélie, jeune femme maladroite d'Anima, sait lire le passé des objets et traverser les miroirs. Elle est fiancée de force à Thorn, un homme froid et taciturne du Pôle, une arche glaciale gouvernée par l'esprit de famille Farouk. À la Citacielle, la cité céleste, les clans s'affrontent par les illusions et les assassinats. Ophélie doit se cacher, sous l'apparence d'un valet, et comprend que Thorn l'a choisie pour une raison secrète : lire le Livre de Farouk. Elle apprend peu à peu à s'affirmer, et à apprécier Thorn."],
+["Harry Potter à l'école des sorciers","J.K. Rowling",1997,310,"Fantasy","S","Harry, orphelin, vit maltraité chez son oncle et sa tante Dursley. Le jour de ses onze ans, le géant Hagrid lui apprend qu'il est un sorcier et que ses parents ont été tués par Voldemort, dont il a survécu au sortilège en gardant une cicatrice en forme d'éclair. À Poudlard, il entre à Gryffondor, se lie d'amitié avec Ron et Hermione, et devient attrapeur au Quidditch. Les trois amis découvrent qu'on cherche à voler la pierre philosophale, gardée dans l'école. Ils soupçonnent Rogue, mais c'est le professeur Quirrell, qui abrite Voldemort. Harry l'affronte et protège la pierre."],
 ["Harry Potter et la Chambre des secrets","J.K. Rowling",1998,360,"Fantasy","S"],["Harry Potter et le Prisonnier d'Azkaban","J.K. Rowling",1999,460,"Fantasy","S"],
 ["Le Trône de fer","George R.R. Martin",1996,800,"Fantasy","G"],["Le Sorceleur","Andrzej Sapkowski",1993,380,"Fantasy","P"],["Les Annales du Disque-monde","Terry Pratchett",1983,280,"Fantasy","P"],
 ["L'Empire ultime","Brandon Sanderson",2006,700,"Fantasy","G"],["Le Monde de Narnia","C.S. Lewis",1950,800,"Fantasy","G"],["À la croisée des mondes","Philip Pullman",1995,450,"Fantasy","S"],
 ["Eragon","Christopher Paolini",2002,700,"Fantasy","S"],["Gagner la guerre","Jean-Philippe Jaworski",2009,980,"Fantasy","G"],["La Horde du Contrevent","Alain Damasio",2004,700,"Fantasy","S"],
 ["Circé","Madeline Miller",2018,400,"Fantasy","S"],["Le Chant d'Achille","Madeline Miller",2011,400,"Fantasy","S"],["Neverwhere","Neil Gaiman",1996,370,"Fantasy","P"],
 ["American Gods","Neil Gaiman",2001,630,"Fantasy","P"],["Jonathan Strange et Mr Norrell","Susanna Clarke",2004,1000,"Fantasy","G"],["Terremer","Ursula K. Le Guin",1968,250,"Fantasy","P"],
-["Millénium","Stieg Larsson",2005,710,"Polars","S","Le journaliste Mikael Blomkvist et la hackeuse Lisbeth Salander enquêtent sur la disparition d'Harriet Vanger, quarante ans plus tôt."],
-["Ils étaient dix","Agatha Christie",1939,250,"Polars","P","Dix inconnus invités sur une île coupée du monde meurent un à un, selon les couplets d'une comptine."],
-["Le Crime de l'Orient-Express","Agatha Christie",1934,250,"Polars","P","Dans un train bloqué par la neige, Hercule Poirot découvre que tous les passagers ont un lien avec la victime."],
-["La Vérité sur l'affaire Harry Quebert","Joël Dicker",2012,670,"Polars","S","Marcus Goldman enquête pour innocenter son mentor, accusé du meurtre de Nola Kellergan, disparue en 1975."],
-["Shining","Stephen King",1977,570,"Polars","P","Jack Torrance devient gardien d'un hôtel isolé pour l'hiver. L'hôtel, hanté, le pousse vers la folie et contre sa famille."],
+["Millénium","Stieg Larsson",2005,710,"Polars","S","Condamné pour diffamation contre l'industriel Wennerström, le journaliste Mikael Blomkvist accepte une mission de Henrik Vanger : découvrir ce qui est arrivé à sa nièce Harriet, disparue en 1966 sur l'île familiale. Il est aidé par Lisbeth Salander, hackeuse asociale et brillante. Ensemble, ils découvrent une série de meurtres de femmes. Le coupable est Martin Vanger, frère d'Harriet, héritier des crimes de son père ; il meurt en fuyant. Harriet est vivante : elle avait fui en Australie pour échapper à son frère et à son père. Lisbeth pirate ensuite Wennerström et lui vole une fortune, ce qui permet à Mikael de révéler ses crimes."],
+["Ils étaient dix","Agatha Christie",1939,250,"Polars","P","Dix personnes sans lien apparent sont invitées par un mystérieux M. Owen sur une île au large du Devon. Au premier dîner, un disque les accuse chacune d'un meurtre resté impuni. Puis elles meurent une à une, de la manière décrite dans une comptine accrochée dans chaque chambre, et une figurine disparaît de la table à chaque mort. Il n'y a personne d'autre sur l'île : l'assassin est parmi eux. La dernière, Vera Claythorne, se pend. L'épilogue révèle que le juge Wargrave a tout organisé, simulé sa propre mort, puis s'est suicidé pour laisser une énigme parfaite."],
+["Le Crime de l'Orient-Express","Agatha Christie",1934,250,"Polars","P","Hercule Poirot rentre d'Istanbul dans l'Orient-Express. Pendant la nuit, le train est bloqué par la neige en Yougoslavie et un riche Américain, Ratchett, est retrouvé poignardé de douze coups dans son compartiment. Poirot découvre que Ratchett était en réalité Cassetti, qui avait enlevé et tué la petite Daisy Armstrong des années plus tôt avant d'échapper à la justice. Les douze passagers ont tous des alibis qui se croisent. Poirot comprend qu'ils sont tous liés à la famille Armstrong et ont tous frappé. Il propose deux solutions à la police, et choisit de donner la fausse : un inconnu qui se serait enfui."],
+["La Vérité sur l'affaire Harry Quebert","Joël Dicker",2012,670,"Polars","S","En 2008, le jeune écrivain Marcus Goldman est en panne d'inspiration. Il rejoint son mentor Harry Quebert dans le New Hampshire, au moment où l'on retrouve dans son jardin le corps de Nola Kellergan, quinze ans, disparue en 1975, avec qui Harry avait eu une liaison. Persuadé de son innocence, Marcus enquête et en tire un livre. Les fausses pistes s'enchaînent. On découvre que Harry n'a pas écrit son chef-d'œuvre : c'était le roman de Luther Caleb, mort depuis. Et le véritable meurtrier de Nola est le policier Travis Dawn, qui a aussi tué la mère de Nola, celle-ci la battant."],
+["Shining","Stephen King",1977,570,"Polars","P","Jack Torrance, écrivain alcoolique en sevrage, accepte le poste de gardien de l'hôtel Overlook, isolé dans les montagnes du Colorado et fermé tout l'hiver. Il s'y installe avec sa femme Wendy et leur fils Danny, cinq ans, qui possède un don de voyance, le « shining ». Le chef cuisinier Hallorann, qui l'a aussi, le prévient du danger. Coupés du monde par la neige, ils subissent l'influence de l'hôtel, hanté par ses morts. L'Overlook prend possession de Jack, qui tente de tuer sa famille au maillet de roque. Hallorann revient pour les sauver. La chaudière, que Jack n'a pas surveillée, explose et détruit l'hôtel avec lui."],
 ["Le Silence des agneaux","Thomas Harris",1988,370,"Polars","P"],["Les Rivières pourpres","Jean-Christophe Grangé",1998,400,"Polars","P"],["Le Chien des Baskerville","Arthur Conan Doyle",1902,250,"Polars","P"],
 ["Une étude en rouge","Arthur Conan Doyle",1887,190,"Polars","P"],["Le Meurtre de Roger Ackroyd","Agatha Christie",1926,300,"Polars","P"],["Mort sur le Nil","Agatha Christie",1937,330,"Polars","P"],
 ["Les Apparences","Gillian Flynn",2012,600,"Polars","P"],["Le Nom de la rose","Umberto Eco",1980,630,"Polars","P"],["Travail soigné","Pierre Lemaitre",2006,400,"Polars","P"],
 ["Alex","Pierre Lemaitre",2011,390,"Polars","P"],["Le Dahlia noir","James Ellroy",1987,450,"Polars","P"],["La Fille du train","Paula Hawkins",2015,450,"Polars","P"],
 ["Misery","Stephen King",1987,400,"Polars","P"],["Ça","Stephen King",1986,1100,"Polars","G"],["Le Mystère de la chambre jaune","Gaston Leroux",1907,300,"Polars","P"],
 ["Pars vite et reviens tard","Fred Vargas",2001,350,"Polars","P"],["L'Homme à l'envers","Fred Vargas",1999,300,"Polars","P"],["Shutter Island","Dennis Lehane",2003,380,"Polars","P"],
-["Sapiens","Yuval Noah Harari",2011,500,"Essais","G","Une histoire de l'humanité, de la révolution cognitive à la révolution scientifique, en passant par l'agriculture et l'argent."],
+["Sapiens","Yuval Noah Harari",2011,500,"Essais","G","Il y a 70 000 ans, Homo sapiens n'était qu'une espèce parmi d'autres. Harari raconte comment elle a dominé la planète en trois révolutions. La révolution cognitive lui donne le langage et surtout la capacité de croire à des fictions partagées (dieux, nations, argent, entreprises), ce qui permet de coopérer à des millions. La révolution agricole augmente la population mais rend la vie plus dure pour la plupart. Puis l'unification par l'argent, les empires et les religions, et enfin la révolution scientifique, qui s'allie au capitalisme. Le livre se termine sur la question du bonheur et sur un futur où sapiens pourrait se transformer lui-même."],
 ["Homo Deus","Yuval Noah Harari",2015,460,"Essais","G"],["Une brève histoire du temps","Stephen Hawking",1988,240,"Essais","S"],["Le Deuxième Sexe","Simone de Beauvoir",1949,1000,"Essais","G"],
 ["Le Mythe de Sisyphe","Albert Camus",1942,190,"Essais","P"],["Factfulness","Hans Rosling",2018,380,"Essais","S"],
 ["The Americans","Robert Frank",1958,180,"Beaux livres","B","Un voyage photographique à travers les États-Unis du milieu des années 1950 : routes, bars, juke-box et visages."],
@@ -303,7 +306,7 @@ const RAW=[
 ["Images à la sauvette","Henri Cartier-Bresson",1952,150,"Beaux livres","B"],["La France","Raymond Depardon",2010,180,"Beaux livres","B"],["The Last Resort","Martin Parr",1986,96,"Beaux livres","B"],
 ["Street Photographer","Vivian Maier",2011,140,"Beaux livres","B"],["Genesis","Sebastião Salgado",2013,520,"Beaux livres","B"],["Early Color","Saul Leiter",2006,112,"Beaux livres","B"]
 ];
-const PAL=["#1B2A4A","#CDBDA2","#9B2B25","#2E4D3D","#E6DCCB","#E0A93A","#33306B","#B9C5C9","#6A4D37","#F2EEE6","#A3365C","#242424","#3F6D80","#D2662F","#7B8957","#D9CFEE","#0F5257","#EAC6BC","#F1D04B","#5C2A3E","#8FB3A2","#2323FF"];
+const PAL=["#1B2A4A","#CDBDA2","#9B2B25","#2E4D3D","#E6DCCB","#E0A93A","#2F4858","#B9C5C9","#6A4D37","#F2EEE6","#B5452E","#242424","#3F6D80","#D2662F","#7B8957","#D8D2C2","#0F5257","#EAC6BC","#F1D04B","#4A3A2A","#8FB3A2","#C8201A"];
 const FMT={P:{h:178,n:"Poches"},S:{h:212,n:"Standards"},G:{h:240,n:"Grands formats"},B:{h:290,n:"Beaux livres"}};
 const GORDER=["Classiques","Contemporain","Science-fiction","Fantasy","Polars","Essais","Beaux livres"];
 const lum=h=>{const n=parseInt(h.slice(1),16);return(.299*(n>>16&255)+.587*(n>>8&255)+.114*(n&255))/255};
@@ -360,17 +363,6 @@ const LAY={
     G.forEach((g,gi)=>{g.items.forEach((b,k)=>{const R=rnd(b.i*31+gi);if(k===0&&g.key)labels.push({t:g.key,x:190,y:y+50,s:64});
       pos[b.i]={x:(R()-.5)*30,y:y+b.w/2,r:90+(R()-.5)*4};y+=b.w+1})});
     paths.push({d:wob(-220,220,y+4,3)});return{pos,labels,paths,top:true}},
-  cosmos(G){// mini-étagères disposées en colonnes (façon Pinterest), répétées à l'infini
-    const pos={},labels=[],paths=[],COLW=330,COLS=8,colH=new Array(COLS).fill(80),R=rnd(state.seed*3+state.sort.length);
-    G.forEach(g=>{let k=0;const it=g.items;while(k<it.length){const n=Math.min(it.length-k,3+Math.floor(R()*6)),cl=it.slice(k,k+n);k+=n;
-      const lying=R()<.28&&cl.every(b=>b.h<260),c=colH.indexOf(Math.min(...colH)),cx=c*COLW+COLW/2;let hgt;
-      if(lying){let yy=0;const tot=cl.reduce((s,b)=>s+b.w+1,0);hgt=tot;const base=colH[c]+tot;
-        cl.forEach(b=>{pos[b.i]={x:cx+(R()-.5)*20,y:base-yy-b.w/2,r:90+(R()-.5)*5};yy+=b.w+1});paths.push({d:wob(cx-130,cx+130,base+3,c*31+colH[c])})}
-      else{const tw=cl.reduce((s,b)=>s+b.w+2,0);hgt=Math.max(...cl.map(b=>b.h));const base=colH[c]+hgt;let xx=cx-tw/2;
-        cl.forEach(b=>{pos[b.i]={x:xx+b.w/2,y:base-b.h/2,r:0};xx+=b.w+2});paths.push({d:wob(cx-tw/2-18,cx+tw/2+18,base+3,c*17+colH[c])})}
-      if(k===n&&g.key){labels.push({t:g.key,x:cx-lw(g.key,34)/2,y:colH[c]-8,s:34});hgt+=0}
-      colH[c]+=hgt+(k===n&&g.key?150:110)}});
-    tile={w:COLS*COLW,h:Math.max(...colH)};return{pos,labels,paths,tile:true}},
   trace(G){const pos={},paths=[],P=state.trace;if(!P)return LAY.etagere(G);
     const L=[0];for(let i=1;i<P.length;i++)L.push(L[i-1]+Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]));const tot=L.at(-1);
     const at=s=>{let i=1;while(i<L.length-1&&L[i]<s)i++;const t=(s-L[i-1])/((L[i]-L[i-1])||1);return{x:P[i-1][0]+(P[i][0]-P[i-1][0])*t,y:P[i-1][1]+(P[i][1]-P[i-1][1])*t,a:Math.atan2(P[i][1]-P[i-1][1],P[i][0]-P[i-1][0])}};
@@ -451,7 +443,7 @@ document.querySelectorAll("[data-soon]").forEach(b=>b.addEventListener("click",(
 
 // ---------- Fiche : la tranche pivote et devient la couverture ----------
 const sheet=$("#sheet");let src=null,startT="",busy=false;
-const restT="rotateY(-24deg) rotateX(4deg)",flipT="rotateY(156deg) rotateX(4deg)";
+const restT="rotateY(-24deg)",flipT="rotateY(156deg)",covers={};
 function openBook(b,el){if(busy||cur)return;cur=b;src=el;const H=Math.round(Math.min(innerHeight*.62,innerWidth<820?360:500)*(b.f==="B"?1:Math.min(1,.86+b.h/1500))),
   W=Math.round(H*(b.f==="B"?.8:.66)),D=Math.max(10,Math.round(b.w*H/b.h)),R=rnd(b.i*7+1);
   const bars=Array.from({length:32},()=>`<span style="--bw:${1+Math.floor(R()*3)}px"></span>`).join("");
@@ -462,8 +454,8 @@ function openBook(b,el){if(busy||cur)return;cur=b;src=el;const H=Math.round(Math
       <div class="shadow3"></div>
       <div class="bf front v${b.v}"><div class="ca">${b.a}</div><div class="ct big">${b.t}</div>
         <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="${blob(100,100,58+R()*25,52+R()*25,b.i*3+2,.2,7)}"/><path d="${blob(104,96,30+R()*20,28+R()*20,b.i*3+9,.25,6)}"/></svg>
-        <div class="cy">${b.y}</div></div>
-      <div class="bf back"><div class="bk">${b.t}</div><p>${b.s||"Texte de quatrième de couverture récupéré automatiquement (Open Library ou Google Books)."}</p><div class="bars" aria-hidden="true">${bars}</div></div>
+        <div class="cy">${b.y}</div><img class="real" alt=""></div>
+      <div class="bf back"><div class="bk">${b.t}</div><p>${b.s?b.s.split(/(?<=[.!?»])\s/).slice(0,2).join(" "):"Texte de quatrième de couverture récupéré automatiquement (Open Library ou Google Books)."}</p><div class="bars" aria-hidden="true">${bars}</div></div>
       <div class="bf side bsp v${b.v}" style="--fs:${Math.max(10,D*.42)}px"><span class="txt"><span class="au">${b.last}</span><span class="ti">${b.t}</span><span class="mk"></span></span></div>
       <div class="bf side bpg"></div><div class="bf btop"></div>
     </div></div>
@@ -471,7 +463,7 @@ function openBook(b,el){if(busy||cur)return;cur=b;src=el;const H=Math.round(Math
     <span class="gk big"><svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path d="${blob(50,15,50,15,b.i+9,.06,8)}"/></svg>${b.g}</span>
     <h2 class="big">${b.t}</h2><p class="by">${b.a}</p>
     <dl><div><dt>Paru</dt><dd>${b.y}</dd></div><div><dt>Pages</dt><dd>${b.p}</dd></div><div><dt>Lu en</dt><dd>${b.ry}</dd></div><div><dt>Revu</dt><dd>${seen}</dd></div></dl>
-    ${b.s?`<p class="sum">${b.s}</p>`:`<p class="sum" style="color:var(--ink-soft)">Livre d'exemple sans résumé. Dans l'app, le résumé complet de l'intrigue est généré par l'IA quand tu ajoutes le livre.</p>`}
+    <h3>Résumé de l'intrigue</h3>${b.s?`<p class="sum">${b.s}</p>`:`<p class="sum" style="color:var(--ink-soft)">Livre d'exemple sans résumé. Dans l'app, le résumé complet de l'intrigue est généré par l'IA quand tu ajoutes le livre.</p>`}
     <div class="acts"><button class="btn" id="flip">Retourner</button><button class="btn ghost" id="close">Ranger</button></div>
   </div>`;
   sheet.scrollTop=0;sheet.classList.add("on");
@@ -479,9 +471,13 @@ function openBook(b,el){if(busy||cur)return;cur=b;src=el;const H=Math.round(Math
   startT=`translate(${r1.left+r1.width/2-(r0.left+r0.width/2)}px,${r1.top+r1.height/2-(r0.top+r0.height/2)}px) scale(${Math.max(k,.05)}) rotateY(90deg)`;
   bx.style.transition="none";bx.style.transform=startT;bx.getBoundingClientRect();el.classList.add("gone");
   requestAnimationFrame(()=>{bx.style.transition="transform 1.15s cubic-bezier(.3,.8,.2,1)";bx.style.transform=restT;sheet.classList.add("ready")});
-  const b3=$("#sh .b3");let flipped=false;const flip=()=>{flipped=!flipped;bx.style.transition="transform 1s var(--ease)";bx.style.transform=flipped?flipT:restT};
+  const b3=$("#sh .b3");let flipped=false;const flip=()=>{if(sheet.scrollTop>40&&innerWidth<820)sheet.scrollTo({top:0,behavior:"smooth"});flipped=!flipped;bx.style.transition="transform 1s var(--ease)";bx.style.transform=flipped?flipT:restT};
   b3.addEventListener("click",flip);b3.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip()}});$("#flip").addEventListener("click",flip);$("#close").addEventListener("click",closeBook);
-  setTimeout(()=>$("#close")?.focus({preventScroll:true}),600)}
+  setTimeout(()=>$("#close")?.focus({preventScroll:true}),600);realCover(b,$("#sh .real"))}
+// Vraie couverture via Open Library (marche en local ou en ligne ; bloqué dans l'aperçu Claude, on garde alors la couverture générée)
+async function realCover(b,img){try{let u=covers[b.i];if(u===undefined){const q=`https://openlibrary.org/search.json?title=${encodeURIComponent(b.t)}&author=${encodeURIComponent(b.last)}&limit=1&fields=cover_i`;
+  const r=await fetch(q);const j=await r.json();const id=j.docs?.[0]?.cover_i;u=covers[b.i]=id?`https://covers.openlibrary.org/b/id/${id}-L.jpg`:null}
+  if(u&&img){img.onload=()=>img.classList.add("on");img.src=u}}catch(e){covers[b.i]=null}}
 function closeBook(){if(!cur||busy)return;busy=true;const b=cur,el=src,bx=$("#sh .bx");sheet.classList.remove("ready");
   const r1=el.getBoundingClientRect(),r0=(bx.style.transform="none",bx.style.transition="none",bx.getBoundingClientRect());bx.style.transform=restT;bx.getBoundingClientRect();
   const k=r1.height/parseFloat(getComputedStyle(bx).getPropertyValue("--H"));

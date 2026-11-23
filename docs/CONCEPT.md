@@ -13,16 +13,16 @@ Le nom joue sur deux sens : la tranche du livre, et une « tranche de vie », ce
 1. **Rien que des livres déjà lus.** Pas de progression, pas d'objectifs, pas de stats à remplir. C'est une mémoire, pas un tableau de bord.
 2. **Le dos comme interface.** Chaque tranche est générée à partir du vrai livre : la hauteur vient du format (poche, standard, grand format, beau livre), l'épaisseur vient du nombre de pages, la couleur vient de la couverture. Ta bibliothèque a donc la même silhouette qu'en vrai.
 3. **La poussière du souvenir.** Un livre que tu n'as pas ouvert dans l'app depuis plus d'un an perd peu à peu ses couleurs. Le rouvrir (relire son résumé) le ravive. L'étagère montre ainsi, sans un mot, ce que tu es en train d'oublier. C'est l'idée forte du projet.
-4. **Tu ranges comme tu veux.** Tri par genre, auteur, taille ou au hasard, et vue en étagère, en grande pile ou en « cosmos » (un mur infini dans toutes les directions).
+4. **Tu ranges comme tu veux.** Tri par genre, auteur, taille ou au hasard, et vue en étagère, en grande pile.
 5. **Le stylet dessine l'étagère.** Sur iPad, on trace une ligne et les livres viennent s'y poser. Voir [STYLET.md](STYLET.md).
 
 ## Direction artistique
 
 - **La collection prend toute la place.** L'interface se réduit à un petit logo et un bouton rond qui ouvre les réglages (vue, tri, wish list, reader).
-- **Noir, blanc et bleu Klein.** Fond blanc cassé neutre (ou noir en mode sombre), encre noire, et une seule couleur : le bleu Klein (#2323FF). Il sert au logo, aux boutons et à tout ce qui est « dessiné à la main ».
+- **Noir, blanc et rouge de rubrique.** Fond blanc cassé neutre (ou noir en mode sombre), encre noire, et une seule couleur : le rouge (#C8201A) des titres enluminés dans les manuscrits. Il sert au logo, aux boutons et à tout ce qui est « dessiné à la main ».
 - **Formes dessinées à la main.** Les catégories sont entourées d'un trait irrégulier qui ne se referme pas tout à fait, comme au stylo. Les étagères sont des traits légèrement tremblés. Chaque couverture générée porte un gribouillis unique.
-- **Titres très gros.** *Archivo* en version très condensée et très grasse, en capitales : titres de catégories, titre du livre ouvert, landing. La même famille, en largeurs et graisses variées, compose les tranches (comme de vraies collections d'éditeurs).
-- **Texte de lecture.** *Libre Caslon Text* pour les résumés et la 4e de couverture.
+- **Titres gothiques, très gros.** *Grenze Gotisch* pour les catégories et le titre du livre ouvert, *UnifrakturMaguntia* pour la landing et le logo (un simple « T »).
+- **Le reste en Inter**, classique et lisible : résumés, infos, interface, et la plupart des tranches.
 - **Des livres en 3D.** Au survol, le livre sort de l'étagère et pivote pour montrer un bout de sa couverture. Au clic, la tranche pivote en 3D et devient la première de couverture, à gauche, avec les infos à droite. On clique sur le livre pour le retourner.
 - **Mouvement.** Une seule courbe douce partout. Quand on change de tri ou de vue, les livres se rangent un par un. La caméra suit le trackpad, avec de l'inertie.
 
@@ -30,7 +30,6 @@ Le nom joue sur deux sens : la tranche du livre, et une « tranche de vie », ce
 
 - **Étagère** : des rangées de tranches, par catégorie.
 - **Pile** : une seule très grande pile, à parcourir de haut en bas.
-- **Cosmos** : un mur infini façon Pinterest. Des petites étagères et des petites piles, et on peut glisser dans toutes les directions sans jamais arriver au bout.
 - **Tracé** : l'étagère que tu as dessinée (stylet, ou Maj + glisser).
 
 ## Les écrans

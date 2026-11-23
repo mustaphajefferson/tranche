@@ -14,11 +14,11 @@ Ouvre [`prototype/index.html`](prototype/index.html) dans un navigateur (double-
 
 - Deux doigts sur le trackpad : naviguer. Pincer : zoomer.
 - Survol : le livre grandit. Clic : la fiche s'ouvre, clic sur la couverture pour la retourner.
-- Bouton rond en bas à droite : vue (étagère, pile, cosmos) et tri (genre, auteur, taille, hasard).
+- Bouton rond en bas à droite : vue (étagère, pile) et tri (genre, auteur, taille, hasard).
 - Maj + glisser (ou stylet sur iPad) : dessine une ligne, les livres s'y rangent.
 - Les tranches pâles sont des livres pas revus depuis plus d'un an : ouvre-les pour les raviver.
 
-Les 150 livres sont des exemples (une quarantaine ont un résumé).
+Les 150 livres sont des exemples (une trentaine ont un résumé complet). Ouvert en local, le prototype va chercher la vraie couverture sur Open Library..
 
 ## Feuille de route
 
