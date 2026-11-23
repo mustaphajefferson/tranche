@@ -668,7 +668,7 @@ $("#openReader").addEventListener("click",()=>{closeMenu();$("#reader").classLis
 
 // ---------- Entrée ----------
 render(true);cam.x=tgt.x;cam.y=tgt.y+300;cam.s=tgt.s*.92;apply();
-$("#enter").addEventListener("click",()=>{$("#landing").classList.add("out");K=.05});
+$("#enter").addEventListener("click",()=>{$("#landing").classList.add("out");K=.05;setTimeout(seal,700);setTimeout(()=>toast("Clique sur une tranche pour l'ouvrir. Le + range un nouveau livre."),2300)});
 coverQueue();
 </script>
 </body>
