@@ -7,48 +7,53 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap">
 <style>
-/* Layout : une scène plein écran (canvas infini) + barre flottante. La couleur vient des livres ; l'interface reste à l'encre. */
+/* Layout : la collection occupe tout l'écran (canvas). Interface réduite à un logo et un bouton rond. */
 :root{
-  --paper:#E7E8E4;      /* gris papier froid, pas crème */
-  --paper-2:#DCDDD8;
-  --ink:#191A1C;
-  --ink-soft:#5D6064;
-  --bic:#2B44D9;        /* bleu stylo bille : la seule couleur de l'interface */
-  --glass:rgba(240,241,237,.78);
-  --shadow:rgba(20,22,26,.18);
-  --f-display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
-  --f-text:"Newsreader", Georgia, "Times New Roman", serif;
-  --f-data:"JetBrains Mono", ui-monospace, Menlo, monospace;
+  --paper:#F4F4F1;
+  --paper-2:#E9E9E4;
+  --ink:#0E0E0E;
+  --ink-soft:#6B6B66;
+  --klein:#2323FF;      /* bleu Klein : la seule couleur de l'interface et des traits dessinés */
+  --glass:rgba(244,244,241,.86);
+  --shadow:rgba(10,10,20,.2);
+  --pages:#EFE9DA;
+  --f-big:"Archivo", "Arial Narrow", Arial, sans-serif;
+  --f-text:"Libre Caslon Text", Georgia, "Times New Roman", serif;
   --ease:cubic-bezier(.2,.85,.2,1);
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --paper:#141517;--paper-2:#1D1F22;--ink:#ECEAE5;--ink-soft:#9A9DA2;--bic:#8D9BFF;--glass:rgba(28,30,33,.78);--shadow:rgba(0,0,0,.5);color-scheme:dark}}
-:root[data-theme="dark"]{--paper:#141517;--paper-2:#1D1F22;--ink:#ECEAE5;--ink-soft:#9A9DA2;--bic:#8D9BFF;--glass:rgba(28,30,33,.78);--shadow:rgba(0,0,0,.5);color-scheme:dark}
+  --paper:#0E0E0E;--paper-2:#1A1A1A;--ink:#F2F2EE;--ink-soft:#8E8E88;--klein:#7C7CFF;--glass:rgba(20,20,20,.86);--shadow:rgba(0,0,0,.6);--pages:#D9D3C4;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#0E0E0E;--paper-2:#1A1A1A;--ink:#F2F2EE;--ink-soft:#8E8E88;--klein:#7C7CFF;--glass:rgba(20,20,20,.86);--shadow:rgba(0,0,0,.6);--pages:#D9D3C4;color-scheme:dark}
 
 html,body{height:100%}
-body{background:var(--paper);color:var(--ink);font-family:var(--f-display);overflow:hidden;-webkit-font-smoothing:antialiased}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-big);overflow:hidden;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--bic);outline-offset:3px}
+:focus-visible{outline:2px solid var(--klein);outline-offset:3px}
+.big{font-family:var(--f-big);font-stretch:68%;font-weight:860;text-transform:uppercase;letter-spacing:-.02em;line-height:.84}
 
 /* ---------- Landing ---------- */
-#landing{position:fixed;inset:0;z-index:50;background:var(--paper);display:grid;place-items:center;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
-  transition:transform 1.1s var(--ease),opacity .9s var(--ease)}
-#landing.out{transform:translateY(-100%);opacity:.4;pointer-events:none}
-.l-wrap{display:grid;justify-items:center;gap:28px;text-align:center}
-.l-shelf{display:flex;align-items:flex-end;gap:3px;height:190px}
-.l-shelf .ls{border-radius:2px 2px 1px 1px;box-shadow:0 1px 2px var(--shadow);animation:rise 1.1s var(--ease) both;transform-origin:50% 100%}
-@keyframes rise{from{transform:translateY(60px) rotate(var(--tilt));opacity:0}to{transform:none;opacity:1}}
-.l-title{font-size:clamp(64px,13vw,168px);font-weight:760;letter-spacing:-.055em;line-height:.85;margin:0;font-variation-settings:"opsz" 96;position:relative}
-.l-title svg{position:absolute;left:-4%;bottom:-.16em;width:108%;height:.3em;overflow:visible}
-.l-title path{fill:none;stroke:var(--bic);stroke-width:5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.2s .9s var(--ease) forwards}
+#landing{position:fixed;inset:0;z-index:50;background:var(--paper);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;
+  padding-top:calc(20px + env(safe-area-inset-top,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  transition:transform 1.2s var(--ease)}
+#landing.out{transform:translateY(-104%);pointer-events:none}
+.l-top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;font-size:13px;font-weight:500;font-stretch:90%}
+.l-top span:last-child{color:var(--ink-soft)}
+.l-mid{position:relative}
+.l-title{margin:0;font-size:min(27vw,42vh);color:var(--ink);white-space:nowrap;margin-left:-.04em}
+.l-title .k{color:var(--klein)}
+.l-tw{position:relative;display:inline-block}
+.l-scrib{position:absolute;left:52%;top:-14%;width:52%;height:128%;overflow:visible;pointer-events:none}
+.l-scrib path{fill:none;stroke:var(--klein);stroke-width:4;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.6s 1s var(--ease) forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
-.l-tag{font-family:var(--f-text);font-style:italic;font-size:clamp(19px,2.4vw,26px);color:var(--ink-soft);margin:0;max-width:30ch;text-wrap:balance}
-.l-cta{border:0;background:var(--ink);color:var(--paper);padding:15px 26px;border-radius:999px;font-weight:600;font-size:15px;cursor:pointer;transition:transform .3s var(--ease)}
-.l-cta:hover{transform:scale(1.05)}
-.l-meta{font-family:var(--f-data);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+.l-row{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-top:18px}
+.l-tag{font-family:var(--f-text);font-style:italic;font-size:clamp(18px,2.2vw,26px);margin:0;max-width:26ch;line-height:1.3}
+.l-cta{border:0;background:var(--klein);color:#fff;padding:18px 30px;border-radius:999px;font-weight:700;font-stretch:90%;font-size:16px;cursor:pointer;transition:transform .35s var(--ease)}
+.l-cta:hover{transform:scale(1.06) rotate(-2deg)}
+.l-shelf{display:flex;align-items:flex-end;gap:2px;height:150px;margin:0 -16px;overflow:hidden;border-bottom:2px solid var(--ink)}
+.l-shelf span{flex:none;border-radius:2px 2px 0 0;animation:rise 1s var(--ease) both}
+@keyframes rise{from{transform:translateY(105%)}to{transform:none}}
 
 /* ---------- Scène ---------- */
 #stage{position:fixed;inset:0;touch-action:none;cursor:grab}
@@ -56,117 +61,119 @@ button{font:inherit;color:inherit}
 #stage.drawing{cursor:crosshair}
 #world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
 #marks{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none}
-#marks path{fill:none;stroke:var(--bic);stroke-linecap:round;stroke-linejoin:round}
-#marks .draw{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1s .25s var(--ease) forwards}
-#marks .shelf{stroke:var(--ink);opacity:.55;stroke-width:1.6}
-#marks .blob{stroke-width:1.5}
-#marks .blobfill{fill:var(--bic);opacity:.05;stroke:none}
-#ink{position:fixed;inset:0;pointer-events:none;width:100%;height:100%}
-#ink path{fill:none;stroke:var(--bic);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+#marks path{fill:none;stroke:var(--ink);stroke-linecap:round;stroke-width:2;opacity:.75}
+#marks .k{stroke:var(--klein);opacity:1;stroke-width:3}
+#ink{position:fixed;inset:0;pointer-events:none;width:100%;height:100%;z-index:5}
+#ink path{fill:none;stroke:var(--klein);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.clones{position:absolute;left:0;top:0;animation:fadein .8s .5s both}
+@keyframes fadein{from{opacity:0}}
 
-.book{position:absolute;left:0;top:0;width:var(--w);height:var(--h);padding:0;border:0;background:none;cursor:pointer;
-  transition:transform 1s var(--ease);will-change:transform}
+/* Livre : tranche + couverture repliée à 90°, révélée au survol */
+.book{position:absolute;left:0;top:0;width:var(--w);height:var(--h);padding:0;border:0;background:none;cursor:pointer;transition:transform 1s var(--ease);will-change:transform}
 .book:hover,.book:focus-visible{z-index:3}
-.spine{position:absolute;inset:0;border-radius:2px 2px 1px 1px;color:var(--t);
-  background:linear-gradient(90deg,rgba(0,0,0,.16),rgba(255,255,255,.10) 18%,rgba(255,255,255,0) 45%,rgba(0,0,0,.10) 92%),var(--c);
-  box-shadow:0 1px 1.5px var(--shadow),inset 0 0 0 .5px rgba(0,0,0,.12);
-  transition:transform .35s var(--ease),box-shadow .35s var(--ease),filter 1.4s ease}
-.book:hover .spine,.book:focus-visible .spine{transform:translateY(-4px) scale(1.075);box-shadow:0 10px 22px var(--shadow)}
-.book.dusty .spine{filter:saturate(.18) contrast(.82) brightness(1.06)}
+.spine{position:absolute;inset:0;transform-style:preserve-3d;transform:perspective(900px);transition:transform .45s var(--ease),filter 1.4s ease;color:var(--t)}
+.sf{position:absolute;inset:0;border-radius:2px 1px 1px 2px;
+  background:linear-gradient(90deg,rgba(0,0,0,.28),rgba(255,255,255,.16) 16%,rgba(255,255,255,.04) 36%,rgba(0,0,0,0) 60%,rgba(0,0,0,.22)),var(--c);
+  box-shadow:0 1px 2px var(--shadow),inset 0 1px 0 rgba(255,255,255,.18)}
+.cov{position:absolute;top:0;left:100%;width:calc(var(--h)*.66);height:100%;transform-origin:0 50%;transform:rotateY(90deg);backface-visibility:hidden;
+  background:linear-gradient(90deg,rgba(0,0,0,.3),rgba(0,0,0,0) 12%),var(--c);border-radius:0 2px 2px 0}
+.pg{position:absolute;left:0;top:0;width:calc(var(--h)*.64);height:7px;transform-origin:0 0;transform:rotateX(-90deg);background:repeating-linear-gradient(0deg,var(--pages) 0 1px,#cfc7b4 1px 2px)}
+.cov,.pg{visibility:hidden}
+.book:hover .cov,.book:hover .pg,.book:focus-visible .cov{visibility:visible}
+.book:hover .spine,.book:focus-visible .spine{transform:perspective(900px) translateY(-12px) translateZ(40px) rotateY(-34deg)}
+.book.dusty .spine{filter:saturate(.1) contrast(.75) brightness(1.08)}
+.book.gone{visibility:hidden}
 .txt{position:absolute;inset:0;writing-mode:vertical-rl;transform:rotate(180deg);display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;overflow:hidden}
 .txt .ti{flex:1;min-height:0;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--fs);line-height:1}
-.txt .au{font-family:var(--f-data);font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;opacity:.75;white-space:nowrap}
-.txt .mk{width:7px;height:7px;flex:none;border-radius:50% 40% 55% 45%;background:currentColor;opacity:.55}
-.v0 .ti{font-family:var(--f-text);font-weight:500}
-.v1 .ti{font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:calc(var(--fs)*.86)}
+.txt .au{font-stretch:75%;font-weight:600;font-size:9px;letter-spacing:.05em;text-transform:uppercase;opacity:.78;white-space:nowrap}
+.txt .mk{width:8px;height:8px;flex:none;border-radius:50% 40% 55% 45%;background:currentColor;opacity:.6}
+.v0 .ti{font-stretch:62%;font-weight:850;text-transform:uppercase}
+.v1 .ti{font-stretch:100%;font-weight:300;letter-spacing:.02em}
 .v2 .ti{font-family:var(--f-text);font-style:italic}
-.v3 .ti{font-family:var(--f-display);font-weight:500;letter-spacing:-.01em}
-.v1 .spine::after{content:"";position:absolute;left:0;right:0;top:14%;height:3px;background:var(--t);opacity:.5}
+.v3 .ti{font-stretch:80%;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:calc(var(--fs)*.78)}
+.v3 .sf::after{content:"";position:absolute;left:0;right:0;top:12%;height:4px;background:var(--t);opacity:.55}
 .thin .au,.thin .mk{display:none}
 
-.glabel{position:absolute;left:0;top:0;display:grid;place-items:center;pointer-events:none;animation:fade .6s .45s both}
-.glabel svg{position:absolute;inset:-6px -8px;width:calc(100% + 16px);height:calc(100% + 12px);overflow:visible}
-.glabel svg path{fill:none;stroke:var(--bic);stroke-width:1.4;stroke-linecap:round}
-.glabel span{position:relative;font-size:15px;font-weight:600;color:var(--bic);padding:8px 18px;white-space:nowrap}
-@keyframes fade{from{opacity:0;transform:var(--tr) translateY(6px)}to{opacity:1;transform:var(--tr)}}
-.glabel{transform:var(--tr)}
+.glabel{position:absolute;left:0;top:0;transform-origin:0 100%;pointer-events:none;animation:fadein .6s .4s both;color:var(--klein);white-space:nowrap}
+.glabel span{display:block;font-size:var(--gs,56px)}
+.glabel svg{position:absolute;left:-14%;top:-22%;width:128%;height:150%;overflow:visible}
+.glabel path{fill:none;stroke:var(--klein);stroke-width:2.2;stroke-linecap:round}
 
-/* ---------- Chrome ---------- */
-.top{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:12px;pointer-events:none;
-  padding-top:calc(14px + env(safe-area-inset-top,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.top>*{pointer-events:auto}
-.brand{display:flex;align-items:baseline;gap:10px}
-.brand b{font-size:22px;font-weight:760;letter-spacing:-.04em}
-.brand small{font-family:var(--f-data);font-size:11px;color:var(--ink-soft)}
-.pills{display:flex;gap:8px}
-.pill{border:1px solid color-mix(in srgb,var(--ink) 18%,transparent);background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px}
-.pill i{font-style:normal;font-family:var(--f-data);font-size:9.5px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
-.pill:hover{border-color:var(--bic)}
+/* ---------- Interface minimale ---------- */
+.logo{position:fixed;z-index:10;background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:6px 10px 4px;border-radius:10px;margin-left:-10px;top:calc(14px + env(safe-area-inset-top,0px));left:max(16px,env(safe-area-inset-left,0px));font-size:28px;color:var(--klein);pointer-events:none}
+.fab{position:fixed;z-index:12;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;background:var(--klein);color:#fff;cursor:pointer;
+  display:grid;place-items:center;box-shadow:0 10px 30px -8px var(--klein);transition:transform .45s var(--ease)}
+.fab svg{width:24px;height:24px}
+.fab[aria-expanded="true"]{transform:rotate(135deg)}
+.menu{position:fixed;z-index:11;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(90px + env(safe-area-inset-bottom,0px));width:min(300px,calc(100vw - 32px));
+  background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:22px;padding:18px 20px;display:grid;gap:16px;
+  border:1px solid color-mix(in srgb,var(--ink) 10%,transparent);box-shadow:0 20px 60px -20px var(--shadow);
+  transform-origin:100% 100%;transform:scale(.6) translateY(20px);opacity:0;pointer-events:none;transition:.4s var(--ease)}
+.menu.on{transform:none;opacity:1;pointer-events:auto}
+.menu h4{margin:0 0 4px;font-size:11px;font-weight:600;font-stretch:90%;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.opts{display:flex;flex-wrap:wrap;gap:2px 14px}
+.opts button{border:0;background:none;padding:2px 0;cursor:pointer;font-size:30px;color:var(--ink);opacity:.32;transition:opacity .25s,color .25s}
+.opts button:hover{opacity:.7}
+.opts button[aria-pressed="true"]{opacity:1;color:var(--klein)}
+.opts button:disabled{opacity:.12;cursor:default}
+.menu .soon{display:flex;gap:8px}
+.menu .soon button{border:1px solid color-mix(in srgb,var(--ink) 18%,transparent);background:none;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600;font-stretch:90%;cursor:pointer}
+.menu p{margin:0;font-family:var(--f-text);font-size:12.5px;line-height:1.5;color:var(--ink-soft)}
+.menu p b{color:var(--klein);font-weight:400;font-style:italic}
 
-.dock{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:10;
-  display:flex;gap:6px;align-items:center;padding:6px;border-radius:20px;background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border:1px solid color-mix(in srgb,var(--ink) 12%,transparent);box-shadow:0 8px 30px var(--shadow);max-width:calc(100vw - 32px);overflow-x:auto;scrollbar-width:none}
-.seg{display:flex;gap:2px;align-items:center}
-.seg+.seg{border-left:1px solid color-mix(in srgb,var(--ink) 14%,transparent);padding-left:6px}
-.seg em{font-style:normal;font-family:var(--f-data);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);padding:0 6px 0 8px}
-.seg button{border:0;background:none;padding:8px 11px;border-radius:13px;font-size:13px;font-weight:550;cursor:pointer;white-space:nowrap;transition:background .25s}
-.seg button:hover{background:color-mix(in srgb,var(--ink) 7%,transparent)}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
-.seg button:disabled{opacity:.35;cursor:default}
-.hint{position:fixed;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:9;font-family:var(--f-data);font-size:10.5px;line-height:1.7;color:var(--ink-soft);max-width:250px}
-.hint b{color:var(--bic);font-weight:500}
-@media (max-width:1100px){.hint{display:none}}
-
-.toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top,0px));transform:translate(-50%,-10px);opacity:0;z-index:60;background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:12px;font-size:13px;transition:.35s var(--ease);pointer-events:none;max-width:calc(100vw - 32px);text-align:center}
+.toast{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);opacity:0;z-index:60;background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:999px;font-size:13px;font-weight:500;font-stretch:90%;transition:.4s var(--ease);pointer-events:none;max-width:calc(100vw - 110px);text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 
-/* ---------- Fiche livre ---------- */
-#sheet{position:fixed;inset:0;z-index:30;display:grid;place-items:center;background:color-mix(in srgb,var(--paper) 62%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  opacity:0;pointer-events:none;transition:opacity .45s var(--ease);overflow-y:auto;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:72px}
+/* ---------- Fiche : livre 3D ---------- */
+#sheet{position:fixed;inset:0;z-index:30;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .5s var(--ease);
+  background:color-mix(in srgb,var(--paper) 80%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:64px}
 #sheet.on{opacity:1;pointer-events:auto}
-.sh{display:flex;gap:clamp(28px,6vw,80px);align-items:center;max-width:960px;width:100%}
-.b3{perspective:1600px;flex:none;width:var(--cw);aspect-ratio:var(--ar);max-width:100%;cursor:pointer;transform:scale(.86) translateY(20px);transition:transform .7s var(--ease)}
-#sheet.on .b3{transform:none}
-.b3in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 1s var(--ease)}
-.b3.flip .b3in{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:3px 6px 6px 3px;overflow:hidden;box-shadow:0 30px 60px -20px var(--shadow),0 2px 6px var(--shadow)}
-.face::before{content:"";position:absolute;left:0;top:0;bottom:0;width:14px;background:linear-gradient(90deg,rgba(0,0,0,.22),rgba(255,255,255,.12) 40%,rgba(0,0,0,0))}
-.front{background:var(--c);color:var(--t);padding:28px 26px 24px 34px;display:flex;flex-direction:column}
-.front .ca{font-family:var(--f-data);font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.8}
-.front .ct{font-size:clamp(28px,3.6vw,40px);font-weight:720;letter-spacing:-.035em;line-height:.98;margin-top:14px;text-wrap:balance}
-.front.v0 .ct,.front.v2 .ct{font-family:var(--f-text);font-weight:500;letter-spacing:-.02em}
-.front.v2 .ct{font-style:italic}
-.front svg{flex:1;width:100%;min-height:0;margin-top:10px}
-.front svg path{fill:var(--t);opacity:.9}
-.front .cy{font-family:var(--f-data);font-size:11px;opacity:.7}
-.back{transform:rotateY(180deg);background:var(--paper-2);color:var(--ink);padding:30px 26px 22px 34px;display:flex;flex-direction:column;gap:16px;border:1px solid color-mix(in srgb,var(--ink) 8%,transparent)}
-.back .bk{font-family:var(--f-data);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
-.back p{font-family:var(--f-text);font-size:17px;line-height:1.5;margin:0;text-wrap:pretty}
-.bars{margin-top:auto;align-self:flex-end;display:flex;gap:1.5px;height:38px;background:#fff;padding:5px 7px;border-radius:2px}
+.sh{min-height:100%;display:flex;gap:clamp(36px,7vw,110px);align-items:center;max-width:1240px;margin:0 auto}
+.b3{flex:none;perspective:2000px;cursor:pointer}
+.bx{position:relative;width:var(--W);height:var(--H);transform-style:preserve-3d;will-change:transform}
+.bf{position:absolute;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.front,.back{inset:0;border-radius:2px 5px 5px 2px;overflow:hidden}
+.front{transform:translateZ(calc(var(--D)/2));background:var(--c);color:var(--t);padding:9% 9% 8% 12%;display:flex;flex-direction:column;
+  box-shadow:inset 10px 0 14px -10px rgba(0,0,0,.45)}
+.front .ca{font-stretch:80%;font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+.front .ct{font-size:calc(var(--W)*.13);margin-top:8%;text-wrap:balance;overflow-wrap:anywhere}
+.front.v1 .ct{font-stretch:100%;font-weight:300;text-transform:none;letter-spacing:-.03em;line-height:.95}
+.front.v2 .ct{font-family:var(--f-text);font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.02em;line-height:1}
+.front svg{flex:1;width:100%;min-height:0;margin-top:6%}
+.front svg path{fill:none;stroke:var(--t);stroke-width:2.4;stroke-linecap:round}
+.front .cy{font-size:12px;font-weight:600;opacity:.75}
+.back{transform:rotateY(180deg) translateZ(calc(var(--D)/2));background:var(--c);color:var(--t);padding:12% 10% 8%;display:flex;flex-direction:column;gap:18px}
+.back .bk{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+.back p{font-family:var(--f-text);font-size:clamp(14px,1.4vw,17px);line-height:1.55;margin:0}
+.bars{margin-top:auto;align-self:flex-end;display:flex;gap:1.5px;height:40px;background:#fff;padding:5px 7px}
 .bars span{background:#111;width:var(--bw)}
-.info{flex:1;min-width:0;display:grid;gap:18px}
-.gpill{justify-self:start;position:relative;color:var(--bic);font-weight:600;font-size:14px;padding:6px 16px}
-.gpill svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.gpill path{fill:none;stroke:var(--bic);stroke-width:1.4}
-.info h2{font-size:clamp(32px,4.4vw,54px);line-height:.95;letter-spacing:-.045em;margin:0;font-weight:740;text-wrap:balance}
-.info .by{font-family:var(--f-text);font-style:italic;font-size:21px;color:var(--ink-soft);margin:-6px 0 0}
-.info dl{display:grid;grid-template-columns:repeat(4,auto);justify-content:start;gap:4px 28px;margin:0}
-.info dt{font-family:var(--f-data);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
-.info dd{margin:0;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;grid-row:2}
-.info h3{margin:6px 0 0;font-family:var(--f-data);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:400}
-.info .sum{font-family:var(--f-text);font-size:18.5px;line-height:1.55;margin:0;max-width:52ch;text-wrap:pretty}
-.info .note{font-family:var(--f-data);font-size:10.5px;color:var(--ink-soft);margin:0;line-height:1.6}
+.side{top:0;height:100%;width:var(--D);left:calc((var(--W) - var(--D))/2)}
+.bsp{transform:rotateY(-90deg) translateZ(calc(var(--W)/2));background:linear-gradient(90deg,rgba(0,0,0,.28),rgba(255,255,255,.16) 16%,rgba(0,0,0,0) 60%,rgba(0,0,0,.22)),var(--c);color:var(--t)}
+.bsp .txt{padding:6% 0}
+.bsp .ti{font-size:calc(var(--D)*.42)}
+.bpg{transform:rotateY(90deg) translateZ(calc(var(--W)/2 - 2px));background:repeating-linear-gradient(90deg,var(--pages) 0 1px,#d6cfbd 1px 2.5px)}
+.btop{left:0;width:calc(100% - 2px);height:var(--D);top:calc((var(--H) - var(--D))/2);transform:rotateX(90deg) translateZ(calc(var(--H)/2));background:repeating-linear-gradient(0deg,var(--pages) 0 1px,#d6cfbd 1px 2.5px)}
+.shadow3{position:absolute;left:6%;right:-4%;bottom:-6%;height:8%;background:radial-gradient(closest-side,var(--shadow),transparent);filter:blur(6px);transform:translateZ(-80px)}
+
+.info{flex:1;min-width:0;display:grid;gap:22px;opacity:0;transform:translateY(16px);transition:.7s var(--ease)}
+#sheet.ready .info{opacity:1;transform:none;transition-delay:.35s}
+.gk{justify-self:start;position:relative;color:var(--klein);font-size:22px;padding:4px 2px}
+.gk svg{position:absolute;left:-18%;top:-30%;width:136%;height:160%;overflow:visible}
+.gk path{fill:none;stroke:var(--klein);stroke-width:2;stroke-linecap:round}
+.info h2{margin:0;font-size:clamp(54px,8.6vw,138px);text-wrap:balance;overflow-wrap:anywhere}
+.info .by{font-family:var(--f-text);font-style:italic;font-size:clamp(20px,2vw,26px);margin:-4px 0 0}
+.info dl{display:flex;flex-wrap:wrap;gap:8px 36px;margin:0}
+.info dt{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.info dd{margin:2px 0 0;font-size:24px;font-weight:700;font-stretch:80%;font-variant-numeric:tabular-nums}
+.info .sum{font-family:var(--f-text);font-size:19px;line-height:1.6;margin:0;max-width:54ch;text-wrap:pretty}
+.info .note{font-size:12px;color:var(--ink-soft);margin:0}
 .acts{display:flex;gap:10px;flex-wrap:wrap}
-.btn{border:1px solid color-mix(in srgb,var(--ink) 20%,transparent);background:none;border-radius:999px;padding:10px 18px;font-weight:600;font-size:14px;cursor:pointer}
-.btn.pri{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.x{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px));width:42px;height:42px;border-radius:50%;border:1px solid color-mix(in srgb,var(--ink) 20%,transparent);background:var(--glass);cursor:pointer;font-size:20px;line-height:1}
-@media (max-width:760px){
-  .sh{flex-direction:column;align-items:stretch;gap:28px}
-  .b3{align-self:center;--cw:210px!important}
-  .info dl{grid-template-columns:repeat(2,auto)} .info dd{grid-row:auto}
-  .info dl div{display:contents}
-  .brand small{display:none}
+.btn{border:0;background:var(--klein);color:#fff;border-radius:999px;padding:12px 20px;font-weight:700;font-stretch:90%;font-size:15px;cursor:pointer}
+.btn.ghost{background:none;color:var(--ink);border:1px solid color-mix(in srgb,var(--ink) 22%,transparent)}
+@media (max-width:820px){
+  .sh{flex-direction:column;align-items:stretch;gap:40px}
+  .b3{align-self:center}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
 </style>
@@ -175,97 +182,133 @@ button{font:inherit;color:inherit}
 
 <!-- Landing -->
 <section id="landing" aria-label="Accueil">
-  <div class="l-wrap">
-    <div class="l-shelf" id="lshelf" aria-hidden="true"></div>
-    <h1 class="l-title">Tranche<svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2,6 C20,2 38,9 55,5 S88,3 98,6"/></svg></h1>
-    <p class="l-tag">Tout ce que tu as lu, vu de dos. Et de quoi t'en souvenir.</p>
-    <button class="l-cta" id="enter">Entrer dans la bibliothèque</button>
-    <span class="l-meta">Prototype · 34 livres d'exemple</span>
+  <div class="l-top"><span>Bibliothèque personnelle</span><span id="lcount"></span></div>
+  <div class="l-mid">
+    <div class="l-tw"><h1 class="l-title big">Tran<span class="k">che</span></h1>
+    <svg class="l-scrib" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M30,8 C62,-4 98,8 99,48 C100,88 60,99 30,94 C4,90 -2,52 6,30 C12,14 26,8 44,6"/></svg></div>
+    <div class="l-row">
+      <p class="l-tag">Tout ce que tu as lu, vu de dos. Et de quoi t'en souvenir.</p>
+      <button class="l-cta" id="enter">Entrer dans la bibliothèque →</button>
+    </div>
   </div>
+  <div class="l-shelf" id="lshelf" aria-hidden="true"></div>
 </section>
 
 <!-- Bibliothèque -->
 <div id="stage" aria-label="Bibliothèque"><div id="world"><svg id="marks" aria-hidden="true"></svg></div></div>
 <svg id="ink" aria-hidden="true"><path id="inkp" d=""/></svg>
+<div class="logo big" aria-hidden="true">Tranche</div>
 
-<header class="top">
-  <div class="brand"><b>Tranche</b><small id="count"></small></div>
-  <nav class="pills">
-    <button class="pill" data-soon="La wish list arrive bientôt : les livres que tu veux, pour les idées cadeaux.">Wish list</button>
-    <button class="pill" data-soon="Le Reader (mangas .cbz, romans .epub) viendra beaucoup plus tard.">Reader <i>bientôt</i></button>
-  </nav>
-</header>
-
-<div class="dock" role="toolbar" aria-label="Disposition et tri">
-  <div class="seg" id="layouts"><em>Vue</em>
+<button class="fab" id="fab" aria-expanded="false" aria-controls="menu" aria-label="Affichage"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+<div class="menu" id="menu" role="dialog" aria-label="Affichage">
+  <div><h4>Vue</h4><div class="opts big" id="layouts">
     <button data-l="etagere" aria-pressed="true">Étagère</button>
     <button data-l="pile" aria-pressed="false">Pile</button>
-    <button data-l="epars" aria-pressed="false">Éparpillé</button>
     <button data-l="cosmos" aria-pressed="false">Cosmos</button>
-    <button data-l="trace" aria-pressed="false" disabled title="Dessine une ligne (Maj + glisser, ou au stylet)">Tracé</button>
-  </div>
-  <div class="seg" id="sorts"><em>Tri</em>
-    <button data-s="hasard" aria-pressed="false">Hasard</button>
-    <button data-s="taille" aria-pressed="false">Taille</button>
+    <button data-l="trace" aria-pressed="false" disabled>Tracé</button>
+  </div></div>
+  <div><h4>Ranger par</h4><div class="opts big" id="sorts">
     <button data-s="genre" aria-pressed="true">Genre</button>
     <button data-s="auteur" aria-pressed="false">Auteur</button>
+    <button data-s="taille" aria-pressed="false">Taille</button>
+    <button data-s="hasard" aria-pressed="false">Hasard</button>
+  </div></div>
+  <p>Deux doigts pour naviguer, pincer pour zoomer. <b>Maj + glisser</b> (ou le stylet) dessine une étagère. Les livres pâles prennent la poussière : ouvre-les.</p>
+  <div class="soon">
+    <button data-soon="La wish list arrive bientôt : les livres que tu veux, pour les idées cadeaux.">Wish list</button>
+    <button data-soon="Le Reader (mangas .cbz, romans .epub) viendra beaucoup plus tard.">Reader</button>
   </div>
 </div>
-
-<p class="hint">Glisser à deux doigts : naviguer<br>Pincer : zoomer<br><b>Maj + tracer</b> (ou stylet) : dessine ta propre étagère<br>Les livres pâles prennent la poussière : ouvre-les pour les raviver.</p>
 
 <div class="toast" id="toast" role="status"></div>
 
-<div id="sheet" role="dialog" aria-modal="true" aria-label="Fiche du livre">
-  <button class="x" id="close" aria-label="Fermer">×</button>
-  <div class="sh" id="sh"></div>
-</div>
+<div id="sheet" role="dialog" aria-modal="true" aria-label="Fiche du livre"><div class="sh" id="sh"></div></div>
 
 <script>
 // ---------- Données d'exemple (dans l'app : Open Library / Google Books + résumé IA) ----------
-// [titre, auteur, parution, pages, genre, format, jours depuis la dernière visite, lu en, résumé]
+// [titre, auteur, parution, pages, genre, format(P poche, S standard, G grand, B beau livre), résumé?]
 const RAW=[
-["L'Étranger","Albert Camus",1942,186,"Classiques","P",420,2017,"Meursault, employé à Alger, enterre sa mère sans émotion puis tue un homme sur une plage écrasée de soleil. À son procès, on le juge autant pour son indifférence que pour son crime."],
-["Le Petit Prince","Antoine de Saint-Exupéry",1943,96,"Classiques","S",30,2021,"Un aviateur en panne dans le Sahara rencontre un petit garçon venu d'un astéroïde, qui lui raconte ses voyages de planète en planète et sa rose."],
-["Madame Bovary","Gustave Flaubert",1857,480,"Classiques","P",900,2015,"Emma, mariée à un médecin de campagne, s'ennuie. Elle rêve de passion, prend des amants, s'endette, puis s'empoisonne quand tout s'effondre."],
-["Germinal","Émile Zola",1885,590,"Classiques","P",610,2016,"Étienne Lantier arrive dans un bassin minier du Nord, découvre la misère des mineurs et mène une grève qui tourne au drame."],
-["Le Comte de Monte-Cristo","Alexandre Dumas",1844,1250,"Classiques","S",210,2020,"Edmond Dantès, emprisonné à tort au château d'If, s'évade, découvre un trésor et revient, sous un autre nom, se venger de ceux qui l'ont trahi."],
-["Les Choses","Georges Perec",1965,160,"Classiques","P",380,2019,"Jérôme et Sylvie, jeune couple parisien, rêvent d'objets et de richesse. Leurs désirs les enlisent plus qu'ils ne les rendent heureux."],
-["Dune","Frank Herbert",1965,830,"Science-fiction","S",45,2022,"Paul Atréides survit à la trahison de sa famille sur Arrakis, planète désert de l'Épice, et prend la tête des Fremen."],
-["Fondation","Isaac Asimov",1951,280,"Science-fiction","P",700,2018,"Le mathématicien Hari Seldon prévoit la chute de l'Empire galactique et crée une Fondation pour abréger l'âge sombre qui suivra."],
-["1984","George Orwell",1949,400,"Science-fiction","P",320,2018,"Winston Smith, employé du Parti, tente d'aimer et de penser librement sous l'œil de Big Brother, jusqu'à ce que le régime le brise."],
-["Le Problème à trois corps","Liu Cixin",2008,440,"Science-fiction","S",90,2023,"Une astrophysicienne meurtrie par la Révolution culturelle répond à un signal venu d'une autre étoile, et l'humanité entière en subit les conséquences."],
-["Projet Dernière Chance","Andy Weir",2021,500,"Science-fiction","S",12,2024,"Un professeur se réveille seul et amnésique dans un vaisseau, chargé de sauver le Soleil, et se lie d'amitié avec un ingénieur extraterrestre."],
-["Fahrenheit 451","Ray Bradbury",1953,220,"Science-fiction","P",530,2017,"Montag, pompier chargé de brûler les livres, se met à les lire. Traqué, il rejoint des marginaux qui apprennent les livres par cœur."],
-["Klara et le Soleil","Kazuo Ishiguro",2021,340,"Science-fiction","S",160,2023,"Klara, une « amie artificielle », observe avec dévotion la famille de Josie, l'adolescente malade qu'elle accompagne."],
-["Le Seigneur des anneaux","J.R.R. Tolkien",1954,1200,"Fantasy","G",260,2019,"Frodon traverse la Terre du Milieu avec la Communauté pour détruire l'Anneau unique dans les flammes de la Montagne du Destin."],
-["Le Hobbit","J.R.R. Tolkien",1937,390,"Fantasy","S",820,2014,"Bilbon Sacquet accompagne treize nains pour reprendre leur trésor au dragon Smaug, et trouve en chemin un anneau d'invisibilité."],
-["Le Nom du vent","Patrick Rothfuss",2007,830,"Fantasy","G",140,2022,"Kvothe, devenu un aubergiste anonyme, raconte sa jeunesse : sa troupe massacrée, ses années à la rue, puis son entrée à l'Université."],
-["La Passe-miroir","Christelle Dabos",2013,520,"Fantasy","S",60,2023,"Ophélie, qui lit le passé des objets et traverse les miroirs, est fiancée de force à Thorn et part vivre au Pôle, une arche glaciale pleine d'intrigues."],
-["Harry Potter à l'école des sorciers","J.K. Rowling",1997,310,"Fantasy","S",1100,2005,"Harry apprend à onze ans qu'il est sorcier, entre à Poudlard et empêche Voldemort de s'emparer de la pierre philosophale."],
-["Millénium","Stieg Larsson",2005,710,"Polars","S",480,2016,"Le journaliste Mikael Blomkvist et la hackeuse Lisbeth Salander enquêtent sur la disparition d'Harriet Vanger, quarante ans plus tôt."],
-["Ils étaient dix","Agatha Christie",1939,250,"Polars","P",360,2018,"Dix inconnus invités sur une île coupée du monde meurent un à un, selon les couplets d'une comptine."],
-["Le Crime de l'Orient-Express","Agatha Christie",1934,250,"Polars","P",400,2018,"Dans un train bloqué par la neige, Hercule Poirot découvre que tous les passagers ont un lien avec la victime."],
-["La Vérité sur l'affaire Harry Quebert","Joël Dicker",2012,670,"Polars","S",230,2020,"Marcus Goldman enquête pour innocenter son mentor, accusé du meurtre de Nola Kellergan, disparue en 1975."],
-["Shining","Stephen King",1977,570,"Polars","P",290,2021,"Jack Torrance devient gardien d'un hôtel isolé pour l'hiver. L'hôtel, hanté, le pousse vers la folie et contre sa famille."],
-["L'Élégance du hérisson","Muriel Barbery",2006,360,"Contemporain","S",510,2017,"Renée, concierge cultivée, et Paloma, adolescente surdouée, cachent leur intelligence. L'arrivée de M. Ozu les fait se rencontrer."],
-["La Tresse","Laetitia Colombani",2017,220,"Contemporain","S",75,2022,"Smita en Inde, Giulia en Sicile, Sarah au Canada : trois femmes qui se battent, liées sans le savoir par un même fil."],
-["Kafka sur le rivage","Haruki Murakami",2002,640,"Contemporain","S",190,2021,"Un adolescent fugue vers Shikoku tandis que Nakata, vieil homme qui parle aux chats, suit sans le savoir le même chemin."],
-["L'Alchimiste","Paulo Coelho",1988,190,"Contemporain","P",950,2013,"Santiago, jeune berger andalou, traverse le désert jusqu'aux pyramides pour trouver un trésor vu en rêve."],
-["L'Anomalie","Hervé Le Tellier",2020,330,"Contemporain","S",110,2022,"Les passagers d'un vol Paris–New York atterrissent deux fois, à trois mois d'écart, et se retrouvent face à leurs doubles."],
-["Le Liseur","Bernhard Schlink",1995,240,"Contemporain","P",640,2016,"Michael, quinze ans, a une liaison avec Hanna. Des années plus tard, étudiant en droit, il la retrouve sur le banc des accusés d'un procès nazi."],
-["Americanah","Chimamanda Ngozi Adichie",2013,600,"Contemporain","S",170,2023,"Ifemelu quitte le Nigeria pour les États-Unis, y découvre ce que veut dire être noire, puis revient à Lagos retrouver Obinze."],
-["Sapiens","Yuval Noah Harari",2011,500,"Essais","G",300,2019,"Une histoire de l'humanité, de la révolution cognitive à la révolution scientifique, en passant par l'agriculture et l'argent."],
-["The Americans","Robert Frank",1958,180,"Photo","B",240,2020,"Un voyage photographique à travers les États-Unis du milieu des années 1950 : routes, bars, juke-box et visages."],
-["Sleeping by the Mississippi","Alec Soth",2004,112,"Photo","B",410,2019,"Portraits, chambres et paysages photographiés en descendant le Mississippi, du Minnesota jusqu'à la Louisiane."],
-["Paris de nuit","Brassaï",1932,64,"Photo","B",870,2018,"Les rues, les ponts et les pavés de Paris photographiés la nuit, au début des années 1930."]
+["L'Étranger","Albert Camus",1942,186,"Classiques","P","Meursault, employé à Alger, enterre sa mère sans émotion puis tue un homme sur une plage écrasée de soleil. À son procès, on le juge autant pour son indifférence que pour son crime."],
+["Le Petit Prince","Antoine de Saint-Exupéry",1943,96,"Classiques","S","Un aviateur en panne dans le Sahara rencontre un petit garçon venu d'un astéroïde, qui lui raconte ses voyages de planète en planète et sa rose."],
+["Madame Bovary","Gustave Flaubert",1857,480,"Classiques","P","Emma, mariée à un médecin de campagne, s'ennuie. Elle rêve de passion, prend des amants, s'endette, puis s'empoisonne quand tout s'effondre."],
+["Germinal","Émile Zola",1885,590,"Classiques","P","Étienne Lantier arrive dans un bassin minier du Nord, découvre la misère des mineurs et mène une grève qui tourne au drame."],
+["Le Comte de Monte-Cristo","Alexandre Dumas",1844,1250,"Classiques","S","Edmond Dantès, emprisonné à tort au château d'If, s'évade, découvre un trésor et revient, sous un autre nom, se venger de ceux qui l'ont trahi."],
+["Les Choses","Georges Perec",1965,160,"Classiques","P","Jérôme et Sylvie, jeune couple parisien, rêvent d'objets et de richesse. Leurs désirs les enlisent plus qu'ils ne les rendent heureux."],
+["Les Misérables","Victor Hugo",1862,1900,"Classiques","G"],["Notre-Dame de Paris","Victor Hugo",1831,940,"Classiques","P"],["Le Rouge et le Noir","Stendhal",1830,640,"Classiques","P"],
+["Le Père Goriot","Honoré de Balzac",1835,400,"Classiques","P"],["Bel-Ami","Guy de Maupassant",1885,420,"Classiques","P"],["Candide","Voltaire",1759,180,"Classiques","P"],
+["Les Trois Mousquetaires","Alexandre Dumas",1844,900,"Classiques","P"],["Vingt mille lieues sous les mers","Jules Verne",1870,600,"Classiques","P"],
+["Le Tour du monde en 80 jours","Jules Verne",1872,320,"Classiques","P"],["La Peste","Albert Camus",1947,340,"Classiques","P"],["Le Grand Meaulnes","Alain-Fournier",1913,300,"Classiques","P"],
+["Orgueil et Préjugés","Jane Austen",1813,450,"Classiques","S"],["Jane Eyre","Charlotte Brontë",1847,620,"Classiques","S"],["Les Hauts de Hurlevent","Emily Brontë",1847,480,"Classiques","P"],
+["Crime et Châtiment","Fiodor Dostoïevski",1866,700,"Classiques","P"],["Anna Karénine","Léon Tolstoï",1877,960,"Classiques","G"],["Gatsby le Magnifique","F. Scott Fitzgerald",1925,210,"Classiques","P"],
+["Des souris et des hommes","John Steinbeck",1937,150,"Classiques","P"],["Les Raisins de la colère","John Steinbeck",1939,640,"Classiques","P"],["Le Vieil Homme et la Mer","Ernest Hemingway",1952,130,"Classiques","P"],
+["L'Écume des jours","Boris Vian",1947,330,"Classiques","P"],["Bonjour tristesse","Françoise Sagan",1954,150,"Classiques","P"],["Voyage au bout de la nuit","Louis-Ferdinand Céline",1932,500,"Classiques","P"],
+["Frankenstein","Mary Shelley",1818,300,"Classiques","P"],["Dracula","Bram Stoker",1897,600,"Classiques","P"],["Le Portrait de Dorian Gray","Oscar Wilde",1890,330,"Classiques","P"],
+["Cent ans de solitude","Gabriel García Márquez",1967,460,"Classiques","S"],["Le Maître et Marguerite","Mikhaïl Boulgakov",1967,520,"Classiques","S"],["L'Attrape-cœurs","J.D. Salinger",1951,250,"Classiques","P"],
+["Sur la route","Jack Kerouac",1957,400,"Classiques","P"],["La Vie devant soi","Romain Gary",1975,270,"Classiques","P"],
+["L'Élégance du hérisson","Muriel Barbery",2006,360,"Contemporain","S","Renée, concierge cultivée, et Paloma, adolescente surdouée, cachent leur intelligence. L'arrivée de M. Ozu les fait se rencontrer."],
+["La Tresse","Laetitia Colombani",2017,220,"Contemporain","S","Smita en Inde, Giulia en Sicile, Sarah au Canada : trois femmes qui se battent, liées sans le savoir par un même fil."],
+["Kafka sur le rivage","Haruki Murakami",2002,640,"Contemporain","S","Un adolescent fugue vers Shikoku tandis que Nakata, vieil homme qui parle aux chats, suit sans le savoir le même chemin."],
+["L'Alchimiste","Paulo Coelho",1988,190,"Contemporain","P","Santiago, jeune berger andalou, traverse le désert jusqu'aux pyramides pour trouver un trésor vu en rêve."],
+["L'Anomalie","Hervé Le Tellier",2020,330,"Contemporain","S","Les passagers d'un vol Paris–New York atterrissent deux fois, à trois mois d'écart, et se retrouvent face à leurs doubles."],
+["Le Liseur","Bernhard Schlink",1995,240,"Contemporain","P","Michael, quinze ans, a une liaison avec Hanna. Des années plus tard, étudiant en droit, il la retrouve sur le banc des accusés d'un procès nazi."],
+["Americanah","Chimamanda Ngozi Adichie",2013,600,"Contemporain","S","Ifemelu quitte le Nigeria pour les États-Unis, y découvre ce que veut dire être noire, puis revient à Lagos retrouver Obinze."],
+["Chanson douce","Leïla Slimani",2016,240,"Contemporain","S"],["Petit Pays","Gaël Faye",2016,220,"Contemporain","S"],["Les Années","Annie Ernaux",2008,250,"Contemporain","P"],
+["Les Bienveillantes","Jonathan Littell",2006,900,"Contemporain","G"],["Réparer les vivants","Maylis de Kerangal",2014,280,"Contemporain","S"],["La Carte et le Territoire","Michel Houellebecq",2010,430,"Contemporain","S"],
+["Au revoir là-haut","Pierre Lemaitre",2013,570,"Contemporain","S"],["Leurs enfants après eux","Nicolas Mathieu",2018,430,"Contemporain","S"],["Ne tirez pas sur l'oiseau moqueur","Harper Lee",1960,330,"Contemporain","P"],
+["Le Monde selon Garp","John Irving",1978,640,"Contemporain","P"],["La Route","Cormac McCarthy",2006,250,"Contemporain","P"],["Normal People","Sally Rooney",2018,300,"Contemporain","S"],
+["Ensemble, c'est tout","Anna Gavalda",2004,600,"Contemporain","P"],["Le Parfum","Patrick Süskind",1985,280,"Contemporain","P"],["L'Amie prodigieuse","Elena Ferrante",2011,430,"Contemporain","S"],
+["Veiller sur elle","Jean-Baptiste Andrea",2023,580,"Contemporain","S"],["Le Mage du Kremlin","Giuliano da Empoli",2022,280,"Contemporain","S"],["Vernon Subutex","Virginie Despentes",2015,400,"Contemporain","S"],
+["Yellowface","R.F. Kuang",2023,380,"Contemporain","S"],["Les Gratitudes","Delphine de Vigan",2019,180,"Contemporain","S"],["Kiffe kiffe demain","Faïza Guène",2004,190,"Contemporain","P"],
+["Dune","Frank Herbert",1965,830,"Science-fiction","S","Paul Atréides survit à la trahison de sa famille sur Arrakis, planète désert de l'Épice, et prend la tête des Fremen."],
+["Fondation","Isaac Asimov",1951,280,"Science-fiction","P","Le mathématicien Hari Seldon prévoit la chute de l'Empire galactique et crée une Fondation pour abréger l'âge sombre qui suivra."],
+["1984","George Orwell",1949,400,"Science-fiction","P","Winston Smith, employé du Parti, tente d'aimer et de penser librement sous l'œil de Big Brother, jusqu'à ce que le régime le brise."],
+["Le Problème à trois corps","Liu Cixin",2008,440,"Science-fiction","S","Une astrophysicienne meurtrie par la Révolution culturelle répond à un signal venu d'une autre étoile, et l'humanité entière en subit les conséquences."],
+["Projet Dernière Chance","Andy Weir",2021,500,"Science-fiction","S","Un professeur se réveille seul et amnésique dans un vaisseau, chargé de sauver le Soleil, et se lie d'amitié avec un ingénieur extraterrestre."],
+["Fahrenheit 451","Ray Bradbury",1953,220,"Science-fiction","P","Montag, pompier chargé de brûler les livres, se met à les lire. Traqué, il rejoint des marginaux qui apprennent les livres par cœur."],
+["Klara et le Soleil","Kazuo Ishiguro",2021,340,"Science-fiction","S","Klara, une « amie artificielle », observe avec dévotion la famille de Josie, l'adolescente malade qu'elle accompagne."],
+["Le Meilleur des mondes","Aldous Huxley",1932,290,"Science-fiction","P"],["Neuromancien","William Gibson",1984,320,"Science-fiction","P"],["Hypérion","Dan Simmons",1989,600,"Science-fiction","P"],
+["La Main gauche de la nuit","Ursula K. Le Guin",1969,340,"Science-fiction","P"],["Les Dépossédés","Ursula K. Le Guin",1974,450,"Science-fiction","P"],["Ubik","Philip K. Dick",1969,270,"Science-fiction","P"],
+["Solaris","Stanisław Lem",1961,250,"Science-fiction","P"],["La Planète des singes","Pierre Boulle",1963,220,"Science-fiction","P"],["Le Guide du voyageur galactique","Douglas Adams",1979,240,"Science-fiction","P"],
+["Seul sur Mars","Andy Weir",2011,410,"Science-fiction","S"],["Ravage","René Barjavel",1943,310,"Science-fiction","P"],["La Nuit des temps","René Barjavel",1968,400,"Science-fiction","P"],
+["Les Fourmis","Bernard Werber",1991,300,"Science-fiction","P"],["Chroniques martiennes","Ray Bradbury",1950,280,"Science-fiction","P"],["La Servante écarlate","Margaret Atwood",1985,510,"Science-fiction","P"],
+["Expiration","Ted Chiang",2019,400,"Science-fiction","S"],["Station Eleven","Emily St. John Mandel",2014,450,"Science-fiction","S"],["Les Robots","Isaac Asimov",1950,300,"Science-fiction","P"],
+["Le Seigneur des anneaux","J.R.R. Tolkien",1954,1200,"Fantasy","G","Frodon traverse la Terre du Milieu avec la Communauté pour détruire l'Anneau unique dans les flammes de la Montagne du Destin."],
+["Le Hobbit","J.R.R. Tolkien",1937,390,"Fantasy","S","Bilbon Sacquet accompagne treize nains pour reprendre leur trésor au dragon Smaug, et trouve en chemin un anneau d'invisibilité."],
+["Le Nom du vent","Patrick Rothfuss",2007,830,"Fantasy","G","Kvothe, devenu un aubergiste anonyme, raconte sa jeunesse : sa troupe massacrée, ses années à la rue, puis son entrée à l'Université."],
+["La Passe-miroir","Christelle Dabos",2013,520,"Fantasy","S","Ophélie, qui lit le passé des objets et traverse les miroirs, est fiancée de force à Thorn et part vivre au Pôle, une arche glaciale pleine d'intrigues."],
+["Harry Potter à l'école des sorciers","J.K. Rowling",1997,310,"Fantasy","S","Harry apprend à onze ans qu'il est sorcier, entre à Poudlard et empêche Voldemort de s'emparer de la pierre philosophale."],
+["Harry Potter et la Chambre des secrets","J.K. Rowling",1998,360,"Fantasy","S"],["Harry Potter et le Prisonnier d'Azkaban","J.K. Rowling",1999,460,"Fantasy","S"],
+["Le Trône de fer","George R.R. Martin",1996,800,"Fantasy","G"],["Le Sorceleur","Andrzej Sapkowski",1993,380,"Fantasy","P"],["Les Annales du Disque-monde","Terry Pratchett",1983,280,"Fantasy","P"],
+["L'Empire ultime","Brandon Sanderson",2006,700,"Fantasy","G"],["Le Monde de Narnia","C.S. Lewis",1950,800,"Fantasy","G"],["À la croisée des mondes","Philip Pullman",1995,450,"Fantasy","S"],
+["Eragon","Christopher Paolini",2002,700,"Fantasy","S"],["Gagner la guerre","Jean-Philippe Jaworski",2009,980,"Fantasy","G"],["La Horde du Contrevent","Alain Damasio",2004,700,"Fantasy","S"],
+["Circé","Madeline Miller",2018,400,"Fantasy","S"],["Le Chant d'Achille","Madeline Miller",2011,400,"Fantasy","S"],["Neverwhere","Neil Gaiman",1996,370,"Fantasy","P"],
+["American Gods","Neil Gaiman",2001,630,"Fantasy","P"],["Jonathan Strange et Mr Norrell","Susanna Clarke",2004,1000,"Fantasy","G"],["Terremer","Ursula K. Le Guin",1968,250,"Fantasy","P"],
+["Millénium","Stieg Larsson",2005,710,"Polars","S","Le journaliste Mikael Blomkvist et la hackeuse Lisbeth Salander enquêtent sur la disparition d'Harriet Vanger, quarante ans plus tôt."],
+["Ils étaient dix","Agatha Christie",1939,250,"Polars","P","Dix inconnus invités sur une île coupée du monde meurent un à un, selon les couplets d'une comptine."],
+["Le Crime de l'Orient-Express","Agatha Christie",1934,250,"Polars","P","Dans un train bloqué par la neige, Hercule Poirot découvre que tous les passagers ont un lien avec la victime."],
+["La Vérité sur l'affaire Harry Quebert","Joël Dicker",2012,670,"Polars","S","Marcus Goldman enquête pour innocenter son mentor, accusé du meurtre de Nola Kellergan, disparue en 1975."],
+["Shining","Stephen King",1977,570,"Polars","P","Jack Torrance devient gardien d'un hôtel isolé pour l'hiver. L'hôtel, hanté, le pousse vers la folie et contre sa famille."],
+["Le Silence des agneaux","Thomas Harris",1988,370,"Polars","P"],["Les Rivières pourpres","Jean-Christophe Grangé",1998,400,"Polars","P"],["Le Chien des Baskerville","Arthur Conan Doyle",1902,250,"Polars","P"],
+["Une étude en rouge","Arthur Conan Doyle",1887,190,"Polars","P"],["Le Meurtre de Roger Ackroyd","Agatha Christie",1926,300,"Polars","P"],["Mort sur le Nil","Agatha Christie",1937,330,"Polars","P"],
+["Les Apparences","Gillian Flynn",2012,600,"Polars","P"],["Le Nom de la rose","Umberto Eco",1980,630,"Polars","P"],["Travail soigné","Pierre Lemaitre",2006,400,"Polars","P"],
+["Alex","Pierre Lemaitre",2011,390,"Polars","P"],["Le Dahlia noir","James Ellroy",1987,450,"Polars","P"],["La Fille du train","Paula Hawkins",2015,450,"Polars","P"],
+["Misery","Stephen King",1987,400,"Polars","P"],["Ça","Stephen King",1986,1100,"Polars","G"],["Le Mystère de la chambre jaune","Gaston Leroux",1907,300,"Polars","P"],
+["Pars vite et reviens tard","Fred Vargas",2001,350,"Polars","P"],["L'Homme à l'envers","Fred Vargas",1999,300,"Polars","P"],["Shutter Island","Dennis Lehane",2003,380,"Polars","P"],
+["Sapiens","Yuval Noah Harari",2011,500,"Essais","G","Une histoire de l'humanité, de la révolution cognitive à la révolution scientifique, en passant par l'agriculture et l'argent."],
+["Homo Deus","Yuval Noah Harari",2015,460,"Essais","G"],["Une brève histoire du temps","Stephen Hawking",1988,240,"Essais","S"],["Le Deuxième Sexe","Simone de Beauvoir",1949,1000,"Essais","G"],
+["Le Mythe de Sisyphe","Albert Camus",1942,190,"Essais","P"],["Factfulness","Hans Rosling",2018,380,"Essais","S"],
+["The Americans","Robert Frank",1958,180,"Beaux livres","B","Un voyage photographique à travers les États-Unis du milieu des années 1950 : routes, bars, juke-box et visages."],
+["Sleeping by the Mississippi","Alec Soth",2004,112,"Beaux livres","B","Portraits, chambres et paysages photographiés en descendant le Mississippi, du Minnesota jusqu'à la Louisiane."],
+["Paris de nuit","Brassaï",1932,64,"Beaux livres","B","Les rues, les ponts et les pavés de Paris photographiés la nuit, au début des années 1930."],
+["Images à la sauvette","Henri Cartier-Bresson",1952,150,"Beaux livres","B"],["La France","Raymond Depardon",2010,180,"Beaux livres","B"],["The Last Resort","Martin Parr",1986,96,"Beaux livres","B"],
+["Street Photographer","Vivian Maier",2011,140,"Beaux livres","B"],["Genesis","Sebastião Salgado",2013,520,"Beaux livres","B"],["Early Color","Saul Leiter",2006,112,"Beaux livres","B"]
 ];
-const PAL=["#22365A","#CDBDA2","#8E2F2A","#2E4D3D","#E6DCCB","#D6A33F","#3A386A","#B9C5C9","#6A4D37","#F0ECE4","#97395A","#262626","#466B7B","#C3653A","#7B8957","#D9CFEE","#0F5257","#E9C9C0"];
-const FMT={P:{h:178,n:"Poche"},S:{h:212,n:"Standard"},G:{h:238,n:"Grand format"},B:{h:288,n:"Beaux livres"}};
-const GORDER=["Classiques","Contemporain","Science-fiction","Fantasy","Polars","Essais","Photo"];
-const lum=h=>{const n=parseInt(h.slice(1),16),r=n>>16&255,g=n>>8&255,b=n&255;return(.299*r+.587*g+.114*b)/255};
-const BOOKS=RAW.map((r,i)=>{const [t,a,y,p,g,f,d,ry,s]=r;const h=FMT[f].h;const w=Math.round(Math.max(15,Math.min(64,f==="B"?p/4.5+12:p/17+6)));
-  const c=PAL[(i*7+3)%PAL.length];return{i,t,a,y,p,g,f,d,ry,s,h,w,c,ink:lum(c)>.58?"#18191B":"#F3F1EC",v:(i*5)%4,last:a.split(" ").pop()}});
+const PAL=["#1B2A4A","#CDBDA2","#9B2B25","#2E4D3D","#E6DCCB","#E0A93A","#33306B","#B9C5C9","#6A4D37","#F2EEE6","#A3365C","#242424","#3F6D80","#D2662F","#7B8957","#D9CFEE","#0F5257","#EAC6BC","#F1D04B","#5C2A3E","#8FB3A2","#2323FF"];
+const FMT={P:{h:178,n:"Poches"},S:{h:212,n:"Standards"},G:{h:240,n:"Grands formats"},B:{h:290,n:"Beaux livres"}};
+const GORDER=["Classiques","Contemporain","Science-fiction","Fantasy","Polars","Essais","Beaux livres"];
+const lum=h=>{const n=parseInt(h.slice(1),16);return(.299*(n>>16&255)+.587*(n>>8&255)+.114*(n&255))/255};
+const BOOKS=RAW.map((r,i)=>{const [t,a,y,p,g,f,s]=r,h=FMT[f].h,w=Math.round(Math.max(14,Math.min(62,f==="B"?p/4.5+14:p/17+6))),c=PAL[(i*7+3)%PAL.length];
+  return{i,t,a,y,p,g,f,s,h,w,c,ink:lum(c)>.58?"#121212":"#F5F3EE",v:(i*5+1)%4,last:a.split(" ").pop(),d:(i*137)%520,ry:2008+(i*7)%17}});
 
 // ---------- Outils ----------
 const $=s=>document.querySelector(s);
@@ -275,85 +318,102 @@ function curve(p,closed){const n=p.length;if(n<2)return"";let d=`M${f1(p[0][0])}
   for(let i=0;i<(closed?n:n-1);i++){const p0=g(i-1),p1=g(i),p2=g(i+1),p3=g(i+2);
     d+=`C${f1(p1[0]+(p2[0]-p0[0])/6)},${f1(p1[1]+(p2[1]-p0[1])/6)} ${f1(p2[0]-(p3[0]-p1[0])/6)},${f1(p2[1]-(p3[1]-p1[1])/6)} ${f1(p2[0])},${f1(p2[1])}`}
   return closed?d+"Z":d}
-// forme organique "dessinée à la main" : un contour irrégulier qui ne se referme pas parfaitement
-function blob(cx,cy,rx,ry,seed,amp=.13,n=9){const R=rnd(seed),pts=[],o=R()*6;for(let i=0;i<=n;i++){const a=o+i/n*Math.PI*2*1.035,k=1+(R()-.5)*2*amp;pts.push([cx+Math.cos(a)*rx*k,cy+Math.sin(a)*ry*k])}return curve(pts,false)}
-function wobbleLine(x0,x1,y,seed){const R=rnd(seed),pts=[];for(let x=x0;x<x1;x+=70)pts.push([x,y+(R()-.5)*3]);pts.push([x1,y+(R()-.5)*3]);return curve(pts,false)}
+// contour "entouré au stylo" : ne se referme pas tout à fait
+function blob(cx,cy,rx,ry,seed,amp=.1,n=9){const R=rnd(seed),pts=[],o=R()*6;for(let i=0;i<=n;i++){const a=o+i/n*Math.PI*2*1.04,k=1+(R()-.5)*2*amp;pts.push([cx+Math.cos(a)*rx*k,cy+Math.sin(a)*ry*k])}return curve(pts,false)}
+function wob(x0,x1,y,seed){const R=rnd(seed),pts=[];for(let x=x0;x<x1;x+=80)pts.push([x,y+(R()-.5)*3.4]);pts.push([x1,y+(R()-.5)*3.4]);return curve(pts,false)}
 
 // ---------- Landing ----------
-(()=>{const sh=$("#lshelf");BOOKS.slice(0,16).forEach((b,k)=>{const e=document.createElement("span");e.className="ls";
-  e.style.cssText=`width:${Math.max(10,b.w*.55)}px;height:${b.h*.62}px;background:${b.c};animation-delay:${k*55}ms;--tilt:${(k%3-1)*4}deg`;sh.appendChild(e)})})();
+$("#lcount").textContent=BOOKS.length+" livres lus";
+(()=>{const sh=$("#lshelf"),R=rnd(4);[...BOOKS].sort(()=>R()-.5).slice(0,90).forEach((b,k)=>{const e=document.createElement("span");
+  e.style.cssText=`width:${b.w*.8}px;height:${b.h*.5}px;background:${b.c};animation-delay:${300+k*18}ms`;sh.appendChild(e)})})();
 
-// ---------- Construction des tranches ----------
+// ---------- Tranches ----------
 const world=$("#world"),marks=$("#marks"),stage=$("#stage");
-$("#count").textContent=BOOKS.length+" livres lus";
-BOOKS.forEach(b=>{const e=document.createElement("button");e.className=`book v${b.v}`+(b.w<22?" thin":"")+(b.d>365?" dusty":"");
-  e.style.cssText=`--w:${b.w}px;--h:${b.h}px;--c:${b.c};--t:${b.ink};--fs:${Math.min(15,Math.max(9,b.w*.42))}px`;
-  e.setAttribute("aria-label",`${b.t}, ${b.a}`);
-  e.innerHTML=`<span class="spine"><span class="txt"><span class="au">${b.last}</span><span class="ti">${b.t}</span><span class="mk"></span></span></span>`;
-  e.dataset.i=b.i;b.el=e;world.appendChild(e)});
+const spineHTML=b=>`<span class="spine"><span class="pg"></span><span class="sf"></span><span class="cov"></span><span class="txt"><span class="au">${b.last}</span><span class="ti">${b.t}</span><span class="mk"></span></span></span>`;
+BOOKS.forEach(b=>{const e=document.createElement("button");e.className=`book v${b.v}`+(b.w<22?" thin":"")+(b.d>390?" dusty":"");
+  e.style.cssText=`--w:${b.w}px;--h:${b.h}px;--c:${b.c};--t:${b.ink};--fs:${Math.min(15,Math.max(8.5,b.w*.42))}px`;
+  e.setAttribute("aria-label",`${b.t}, ${b.a}`);e.innerHTML=spineHTML(b);e.dataset.i=b.i;b.el=e;world.appendChild(e)});
 
 // ---------- Tris ----------
+const state={layout:"etagere",sort:"genre",seed:7,trace:null};
 const SORTS={
-  hasard:{key:null,sort:a=>{const R=rnd(state.seed);return a.map(b=>[R(),b]).sort((x,y)=>x[0]-y[0]).map(x=>x[1])}},
+  genre:{key:b=>b.g,sort:a=>a.sort((x,y)=>GORDER.indexOf(x.g)-GORDER.indexOf(y.g)||x.y-y.y)},
+  auteur:{key:b=>b.last.normalize("NFD")[0].toUpperCase(),sort:a=>a.sort((x,y)=>x.last.localeCompare(y.last,"fr")||x.y-y.y)},
   taille:{key:b=>FMT[b.f].n,sort:a=>a.sort((x,y)=>x.h-y.h||x.w-y.w)},
-  genre:{key:b=>b.g,sort:a=>a.sort((x,y)=>GORDER.indexOf(x.g)-GORDER.indexOf(y.g)||x.ry-y.ry)},
-  auteur:{key:b=>b.last.normalize("NFD")[0].toUpperCase(),sort:a=>a.sort((x,y)=>x.last.localeCompare(y.last,"fr")||x.y-y.y)}
+  hasard:{key:null,sort:a=>{const R=rnd(state.seed);return a.map(b=>[R(),b]).sort((x,y)=>x[0]-y[0]).map(x=>x[1])}}
 };
 function groups(){const s=SORTS[state.sort],arr=s.sort([...BOOKS]);if(!s.key)return[{key:null,items:arr}];
   const out=[];arr.forEach(b=>{const k=s.key(b);if(!out.length||out.at(-1).key!==k)out.push({key:k,items:[]});out.at(-1).items.push(b)});return out}
+const lw=(t,size)=>t.length*size*.5+size*.4;   // largeur approx. d'un titre condensé
 
-// ---------- Dispositions (chaque livre : centre x,y + rotation) ----------
+// ---------- Dispositions ----------
+let tile=null; // pour le cosmos : taille du motif répété à l'infini
 const LAY={
-  etagere(G){const pos={},labels=[],paths=[],ROW=Math.max(760,Math.min(1250,innerWidth*1.05)),RH=360,BASE=300;let x=0,row=0,maxX=0;
-    const wrap=()=>{paths.push({d:wobbleLine(-30,maxX+30,row*RH+BASE+3,row+7),c:"shelf"});row++;x=0;maxX=0};
-    G.forEach((g,gi)=>{if(gi&&g.key)x+=56;const lw=g.key?g.key.length*9+52:0;let gx=null;g.items.forEach((b,k)=>{if(x+b.w>ROW&&x>0)wrap();if(k===0){gx=x;if(g.key)labels.push({t:g.key,x,y:row*RH+BASE-312})}
-      pos[b.i]={x:x+b.w/2,y:row*RH+BASE-b.h/2,r:0};x+=b.w+3;maxX=Math.max(maxX,x)});if(gx!==null&&x-gx<lw)x=gx+lw});
-    paths.push({d:wobbleLine(-30,maxX+30,row*RH+BASE+3,row+7),c:"shelf"});return{pos,labels,paths}},
-  pile(G){const pos={},labels=[],paths=[],COLS=Math.max(3,Math.min(6,Math.round(innerWidth/330)));let si=0;
-    G.forEach((g,gi)=>{let cur=null;g.items.forEach((b,k)=>{if(!cur||cur.n>=8){cur={x:(si%COLS)*340,y:Math.floor(si/COLS)*440,n:0};si++;
-        paths.push({d:wobbleLine(cur.x-160,cur.x+160,cur.y+3,si*5),c:"shelf"});if(k===0&&g.key)labels.push({t:g.key,x:cur.x-50,y:cur.y+22})}
-      const R=rnd(b.i*31+gi);pos[b.i]={x:cur.x+(R()-.5)*26,y:cur.y-b.w/2,r:90+(R()-.5)*5};cur.y-=b.w+1;cur.n++})});
-    return{pos,labels,paths}},
-  epars(G){const pos={},labels=[],paths=[],cols=Math.ceil(Math.sqrt(G.length*1.6));
-    G.forEach((g,gi)=>{const cx=(gi%cols)*760,cy=Math.floor(gi/cols)*640,rad=G.length>1?150+22*Math.sqrt(g.items.length)*6:560;
-      g.items.forEach(b=>{const R=rnd(b.i*97+7),a=R()*Math.PI*2,d=Math.sqrt(R())*rad,lying=R()<.2;
-        pos[b.i]={x:cx+Math.cos(a)*d*1.25,y:cy+Math.sin(a)*d*.8,r:lying?90+(R()-.5)*40:(R()-.5)*70}});
-      if(g.key)labels.push({t:g.key,x:cx-40,y:cy-rad*.8-170})});return{pos,labels,paths}},
-  cosmos(G){const pos={},labels=[],paths=[],one=G.length===1,sp=one?150:118;
-    G.forEach((g,gi)=>{const a=gi*2.39996+.6,dist=one?0:820*Math.sqrt(gi+.35),cx=Math.cos(a)*dist,cy=Math.sin(a)*dist*.75;
-      g.items.forEach((b,k)=>{const R=rnd(b.i*53+3),rr=sp*Math.sqrt(k+.6),aa=k*2.39996;pos[b.i]={x:cx+Math.cos(aa)*rr*1.15,y:cy+Math.sin(aa)*rr,r:(R()-.5)*34}});
-      if(g.key){const rad=sp*Math.sqrt(g.items.length+.6)+150;const bd=blob(cx,cy,rad*1.18,rad,gi*11+5,.1,10)+"Z";paths.push({d:bd,c:"blobfill"},{d:bd,c:"blob draw"},{d:blob(cx+7,cy-5,rad*1.15,rad*.97,gi*11+5,.1,10)+"Z",c:"blob draw"});
-        labels.push({t:g.key,x:cx-90,y:cy-rad-70,z:2.2})}});return{pos,labels,paths}},
+  etagere(G){const pos={},labels=[],paths=[],ROW=Math.max(900,Math.min(1900,innerWidth*1.25)),RH=430,BASE=330,GS=state.sort==="auteur"?60:70;let x=0,row=0,maxX=0;
+    const shelf=()=>paths.push({d:wob(-40,maxX+40,row*RH+BASE+3,row+7)});
+    G.forEach((g,gi)=>{if(gi&&g.key)x+=50;const need=g.key?lw(g.key,GS):0;let gx=null;if(g.key&&x>0&&x+Math.max(need,160)>ROW){shelf();row++;x=0;maxX=0}
+      g.items.forEach((b,k)=>{if(x+b.w>ROW&&x>0){shelf();row++;x=0;maxX=0}if(k===0){gx=x;if(g.key)labels.push({t:g.key,x,y:row*RH+BASE-300,s:GS})}
+        pos[b.i]={x:x+b.w/2,y:row*RH+BASE-b.h/2,r:0};x+=b.w+2;maxX=Math.max(maxX,x)});
+      if(gx!==null&&x-gx<need){x=gx+need;maxX=Math.max(maxX,x)}});
+    shelf();return{pos,labels,paths}},
+  pile(G){const pos={},labels=[],paths=[];let y=0;
+    G.forEach((g,gi)=>{g.items.forEach((b,k)=>{const R=rnd(b.i*31+gi);if(k===0&&g.key)labels.push({t:g.key,x:190,y:y+50,s:64});
+      pos[b.i]={x:(R()-.5)*30,y:y+b.w/2,r:90+(R()-.5)*4};y+=b.w+1})});
+    paths.push({d:wob(-220,220,y+4,3)});return{pos,labels,paths,top:true}},
+  cosmos(G){// mini-étagères disposées en colonnes (façon Pinterest), répétées à l'infini
+    const pos={},labels=[],paths=[],COLW=330,COLS=8,colH=new Array(COLS).fill(80),R=rnd(state.seed*3+state.sort.length);
+    G.forEach(g=>{let k=0;const it=g.items;while(k<it.length){const n=Math.min(it.length-k,3+Math.floor(R()*6)),cl=it.slice(k,k+n);k+=n;
+      const lying=R()<.28&&cl.every(b=>b.h<260),c=colH.indexOf(Math.min(...colH)),cx=c*COLW+COLW/2;let hgt;
+      if(lying){let yy=0;const tot=cl.reduce((s,b)=>s+b.w+1,0);hgt=tot;const base=colH[c]+tot;
+        cl.forEach(b=>{pos[b.i]={x:cx+(R()-.5)*20,y:base-yy-b.w/2,r:90+(R()-.5)*5};yy+=b.w+1});paths.push({d:wob(cx-130,cx+130,base+3,c*31+colH[c])})}
+      else{const tw=cl.reduce((s,b)=>s+b.w+2,0);hgt=Math.max(...cl.map(b=>b.h));const base=colH[c]+hgt;let xx=cx-tw/2;
+        cl.forEach(b=>{pos[b.i]={x:xx+b.w/2,y:base-b.h/2,r:0};xx+=b.w+2});paths.push({d:wob(cx-tw/2-18,cx+tw/2+18,base+3,c*17+colH[c])})}
+      if(k===n&&g.key){labels.push({t:g.key,x:cx-lw(g.key,34)/2,y:colH[c]-8,s:34});hgt+=0}
+      colH[c]+=hgt+(k===n&&g.key?150:110)}});
+    tile={w:COLS*COLW,h:Math.max(...colH)};return{pos,labels,paths,tile:true}},
   trace(G){const pos={},paths=[],P=state.trace;if(!P)return LAY.etagere(G);
-    const seg=[],L=[0];for(let i=1;i<P.length;i++){L.push(L[i-1]+Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]))}const tot=L.at(-1);
-    const at=s=>{let i=1;while(i<L.length-1&&L[i]<s)i++;const t=(s-L[i-1])/((L[i]-L[i-1])||1),x=P[i-1][0]+(P[i][0]-P[i-1][0])*t,y=P[i-1][1]+(P[i][1]-P[i-1][1])*t;return{x,y,a:Math.atan2(P[i][1]-P[i-1][1],P[i][0]-P[i-1][0])}};
-    let s=0,row=0;G.flatMap(g=>g.items).forEach(b=>{if(s+b.w>tot){row++;s=0}const p=at(s+b.w/2),off=b.h/2+3+row*320;
-      pos[b.i]={x:p.x+Math.sin(p.a)*off,y:p.y-Math.cos(p.a)*off,r:p.a*180/Math.PI};s+=b.w+3});
-    paths.push({d:curve(P.filter((_,k)=>k%3===0||k===P.length-1),false),c:"shelf"});return{pos,labels:[],paths}}
+    const L=[0];for(let i=1;i<P.length;i++)L.push(L[i-1]+Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]));const tot=L.at(-1);
+    const at=s=>{let i=1;while(i<L.length-1&&L[i]<s)i++;const t=(s-L[i-1])/((L[i]-L[i-1])||1);return{x:P[i-1][0]+(P[i][0]-P[i-1][0])*t,y:P[i-1][1]+(P[i][1]-P[i-1][1])*t,a:Math.atan2(P[i][1]-P[i-1][1],P[i][0]-P[i-1][0])}};
+    let s=0,row=0;G.flatMap(g=>g.items).forEach(b=>{if(s+b.w>tot){row++;s=0}const p=at(s+b.w/2),off=b.h/2+3+row*330;
+      pos[b.i]={x:p.x+Math.sin(p.a)*off,y:p.y-Math.cos(p.a)*off,r:p.a*180/Math.PI};s+=b.w+2});
+    for(let r=0;r<=row;r++)paths.push({d:curve(P.filter((_,k)=>k%3===0||k===P.length-1).map(([x,y],k,A)=>{const q=A[Math.min(k+1,A.length-1)],o=A[Math.max(k-1,0)],a=Math.atan2(q[1]-o[1],q[0]-o[0]);return[x+Math.sin(a)*r*330,y-Math.cos(a)*r*330]}),false),k:r===0});
+    return{pos,labels:[],paths}}
 };
 
-// ---------- État & rendu ----------
-const state={layout:"etagere",sort:"genre",seed:7,trace:null};
-let bbox=null;
-function render(first){const G=groups(),R=LAY[state.layout](G),order=G.flatMap(g=>g.items);
+// ---------- Rendu ----------
+let bbox=null,clones=null,cur=null;
+function labelHTML(l,k){const w=lw(l.t,l.s);return`<svg viewBox="0 0 ${w} ${l.s}" preserveAspectRatio="none" aria-hidden="true"><path d="${blob(w/2,l.s*.5,w/2,l.s*.55,k*17+state.sort.length,.07,8)}"/></svg><span class="big">${l.t}</span>`}
+function render(first){const G=groups(),R=LAY[state.layout](G),order=G.flatMap(g=>g.items);if(!R.tile)tile=null;
   let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
   order.forEach((b,k)=>{const p=R.pos[b.i],rad=Math.max(b.w,b.h)/2;x0=Math.min(x0,p.x-rad);x1=Math.max(x1,p.x+rad);y0=Math.min(y0,p.y-rad);y1=Math.max(y1,p.y+rad);
-    b.el.style.transitionDelay=first?"0ms":Math.min(k*9,320)+"ms";b.el.style.transform=`translate(${p.x-b.w/2}px,${p.y-b.h/2}px) rotate(${p.r}deg)`});
-  R.labels.forEach(l=>{y0=Math.min(y0,l.y);y1=Math.max(y1,l.y+40)});bbox={x0,y0,x1,y1};
-  marks.innerHTML=R.paths.map(p=>`<path class="${p.c}" pathLength="1" d="${p.d}"/>`).join("");
-  world.querySelectorAll(".glabel").forEach(e=>e.remove());
-  R.labels.forEach((l,k)=>{const e=document.createElement("div");e.className="glabel";e.style.setProperty("--tr",`translate(${l.x}px,${l.y}px) scale(${l.z||1})`);e.style.transformOrigin="0 0";
-    const w=l.t.length*9+40;e.innerHTML=`<svg viewBox="0 0 ${w} 44" preserveAspectRatio="none"><path d="${blob(w/2,22,w/2,20,k*17+state.sort.length,.08,8)}"/></svg><span>${l.t}</span>`;world.appendChild(e)});
-  fit(state.layout==="cosmos"?.42:.22)}
+    b.tf=`translate(${f1(p.x-b.w/2)}px,${f1(p.y-b.h/2)}px) rotate(${f1(p.r)}deg)`;b.el.style.transitionDelay=first?"0ms":Math.min(k*3,420)+"ms";b.el.style.transform=b.tf});
+  R.labels.forEach(l=>{y0=Math.min(y0,l.y-l.s);x1=Math.max(x1,l.x+lw(l.t,l.s))});bbox={x0,y0,x1,y1};
+  const offs=tile?[[0,0],...[-1,0,1].flatMap(a=>[-1,0,1].map(c=>[a,c])).filter(([a,c])=>a||c)]:[[0,0]];
+  marks.innerHTML=offs.map(([a,c])=>`<g transform="translate(${tile?a*tile.w:0},${tile?c*tile.h:0})">${R.paths.map(p=>`<path class="${p.k?"k":""}" d="${p.d}"/>`).join("")}</g>`).join("");
+  world.querySelectorAll(".glabel,.clones").forEach(e=>e.remove());
+  const labs=R.labels.map((l,k)=>{const e=document.createElement("div");e.className="glabel";e.style.cssText=`transform:translate(${l.x}px,${l.y-l.s}px);--gs:${l.s}px`;e.innerHTML=labelHTML(l,k);world.appendChild(e);return e});
+  if(tile){clones=document.createElement("div");clones.className="clones";const html=order.map(b=>b.el.outerHTML.replace(/transition-delay:[^;"]*;?/,"transition:none;")).join("")+labs.map(e=>e.outerHTML).join("");
+    offs.slice(1).forEach(([a,c])=>{const d=document.createElement("div");d.style.cssText=`position:absolute;left:0;top:0;transform:translate(${a*tile.w}px,${c*tile.h}px)`;d.innerHTML=html;clones.appendChild(d)});
+    world.insertBefore(clones,world.firstChild.nextSibling)}else clones=null;
+  fit(R)}
 
-// ---------- Caméra : pan trackpad, pinch, drag, inertie ----------
-const cam={x:0,y:0,s:.6},tgt={x:0,y:0,s:.6};let K=.3,vx=0,vy=0,inert=false;
-function fit(minS){if(!bbox)return;const W=innerWidth,H=innerHeight,bw=bbox.x1-bbox.x0+160,bh=bbox.y1-bbox.y0+260;
-  const s=Math.max(minS,Math.min(1.05,W/bw,H/bh));tgt.s=s;tgt.x=W/2-(bbox.x0+bbox.x1)/2*s;tgt.y=H/2-(bbox.y0+bbox.y1)/2*s+10;K=.07;inert=false}
-function zoomAt(mx,my,f){const ns=Math.max(.15,Math.min(3,tgt.s*f));f=ns/tgt.s;tgt.x=mx-(mx-tgt.x)*f;tgt.y=my-(my-tgt.y)*f;tgt.s=ns}
-(function loop(){if(inert){tgt.x+=vx;tgt.y+=vy;vx*=.93;vy*=.93;if(Math.abs(vx)+Math.abs(vy)<.05)inert=false}
-  const dx=tgt.x-cam.x,dy=tgt.y-cam.y,ds=tgt.s-cam.s;if(Math.abs(dx)+Math.abs(dy)+Math.abs(ds)*500>.02){cam.x+=dx*K;cam.y+=dy*K;cam.s+=ds*K;
-    world.style.transform=`translate3d(${cam.x}px,${cam.y}px,0) scale(${cam.s})`}else if(K<.3)K=.3;requestAnimationFrame(loop)})();
+// ---------- Caméra : trackpad, pincement, glisser, inertie, cosmos sans fin ----------
+const cam={x:0,y:0,s:.5},tgt={x:0,y:0,s:.5};let K=.3,vx=0,vy=0,inert=false;
+const minS=()=>tile?Math.max(innerWidth/tile.w,innerHeight/tile.h)*1.02:.12;
+function fit(R){if(!bbox)return;const W=innerWidth,H=innerHeight;
+  if(R&&R.top){const s=Math.min(1.1,(W-40)/560,H/700);tgt.s=s;tgt.x=W/2-(bbox.x0+bbox.x1)/2*s+(W>700?-60*s:-80*s);tgt.y=110-bbox.y0*s}
+  else if(tile){const s=Math.max(minS(),Math.min(.95,W/1300));tgt.s=s;tgt.x=W/2-tile.w/2*s;tgt.y=H/2-tile.h/2*s}
+  else{const bw=bbox.x1-bbox.x0+120,bh=bbox.y1-bbox.y0+200,s=Math.max(Math.min(.62,W/1500+.1),Math.min(1,W/bw,H/bh));tgt.s=s;
+    tgt.x=bw*s<W?W/2-(bbox.x0+bbox.x1)/2*s:40-bbox.x0*s;tgt.y=bh*s<H?H/2-(bbox.y0+bbox.y1)/2*s+20:90-bbox.y0*s}
+  K=.07;inert=false}
+function zoomAt(mx,my,f){const ns=Math.max(minS(),Math.min(3,tgt.s*f));f=ns/tgt.s;tgt.x=mx-(mx-tgt.x)*f;tgt.y=my-(my-tgt.y)*f;tgt.s=ns}
+function wrap(){if(!tile)return;const cxw=(innerWidth/2-cam.x)/cam.s,cyw=(innerHeight/2-cam.y)/cam.s;
+  if(cxw>tile.w){cam.x+=tile.w*cam.s;tgt.x+=tile.w*tgt.s}else if(cxw<0){cam.x-=tile.w*cam.s;tgt.x-=tile.w*tgt.s}
+  if(cyw>tile.h){cam.y+=tile.h*cam.s;tgt.y+=tile.h*tgt.s}else if(cyw<0){cam.y-=tile.h*cam.s;tgt.y-=tile.h*tgt.s}}
+const apply=()=>world.style.transform=`translate3d(${cam.x}px,${cam.y}px,0) scale(${cam.s})`;
+(function loop(){if(inert){tgt.x+=vx;tgt.y+=vy;vx*=.94;vy*=.94;if(Math.abs(vx)+Math.abs(vy)<.05)inert=false}
+  const dx=tgt.x-cam.x,dy=tgt.y-cam.y,ds=tgt.s-cam.s;if(Math.abs(dx)+Math.abs(dy)+Math.abs(ds)*500>.02){cam.x+=dx*K;cam.y+=dy*K;cam.s+=ds*K;wrap();apply()}else if(K<.3)K=.3;
+  requestAnimationFrame(loop)})();
 stage.addEventListener("wheel",e=>{e.preventDefault();K=.35;inert=false;
   if(e.ctrlKey)zoomAt(e.clientX,e.clientY,Math.exp(-e.deltaY*.012));else{const m=e.deltaMode===1?24:1;tgt.x-=e.deltaX*m;tgt.y-=e.deltaY*m}},{passive:false});
 let gs=1;stage.addEventListener("gesturestart",e=>{e.preventDefault();gs=1});
@@ -361,63 +421,80 @@ stage.addEventListener("gesturechange",e=>{e.preventDefault();zoomAt(e.clientX,e
 
 const ptrs=new Map();let drag=null,pinch=null,ink=null;const inkp=$("#inkp");
 const toWorld=(x,y)=>[(x-cam.x)/cam.s,(y-cam.y)/cam.s];
-stage.addEventListener("pointerdown",e=>{stage.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});inert=false;K=1;tgt.x=cam.x;tgt.y=cam.y;tgt.s=cam.s;
+stage.addEventListener("pointerdown",e=>{closeMenu();stage.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});inert=false;K=1;Object.assign(tgt,cam);
   if(e.pointerType==="pen"||e.shiftKey){ink={pts:[[e.clientX,e.clientY]]};stage.classList.add("drawing");return}
   if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch={d:Math.hypot(a.x-b.x,a.y-b.y)};drag=null;return}
-  drag={x:e.clientX,y:e.clientY,moved:0,t:performance.now(),target:e.target.closest(".book")}});
+  drag={moved:0,target:e.target.closest(".book")}});
 stage.addEventListener("pointermove",e=>{if(!ptrs.has(e.pointerId))return;const prev=ptrs.get(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(ink){ink.pts.push([e.clientX,e.clientY]);inkp.setAttribute("d",curve(ink.pts.filter((_,k)=>k%2===0),false));return}
-  if(pinch&&ptrs.size===2){const [a,b]=[...ptrs.values()],d=Math.hypot(a.x-b.x,a.y-b.y);zoomAt((a.x+b.x)/2,(a.y+b.y)/2,d/pinch.d);pinch.d=d;cam.s=tgt.s;cam.x=tgt.x;cam.y=tgt.y;world.style.transform=`translate3d(${cam.x}px,${cam.y}px,0) scale(${cam.s})`;return}
-  if(drag){const dx=e.clientX-prev.x,dy=e.clientY-prev.y;drag.moved+=Math.abs(dx)+Math.abs(dy);if(drag.moved>6)stage.classList.add("grabbing");
-    tgt.x+=dx;tgt.y+=dy;vx=dx;vy=dy}});
+  if(pinch&&ptrs.size===2){const [a,b]=[...ptrs.values()],d=Math.hypot(a.x-b.x,a.y-b.y);zoomAt((a.x+b.x)/2,(a.y+b.y)/2,d/pinch.d);pinch.d=d;Object.assign(cam,tgt);wrap();apply();return}
+  if(drag){const dx=e.clientX-prev.x,dy=e.clientY-prev.y;drag.moved+=Math.abs(dx)+Math.abs(dy);if(drag.moved>6)stage.classList.add("grabbing");tgt.x+=dx;tgt.y+=dy;vx=dx;vy=dy}});
 function up(e){ptrs.delete(e.pointerId);stage.classList.remove("grabbing","drawing");
   if(ink){const pts=ink.pts;ink=null;inkp.setAttribute("d","");let len=0;for(let i=1;i<pts.length;i++)len+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);
-    if(len>120){state.trace=pts.map(p=>toWorld(p[0],p[1]));$('[data-l="trace"]').disabled=false;setLayout("trace",true)}return}
+    if(len>120){state.trace=pts.map(p=>toWorld(p[0],p[1]));$('[data-l="trace"]').disabled=false;setLayout("trace")}return}
   if(pinch){if(ptrs.size<2)pinch=null;return}
-  if(drag){if(drag.moved<6&&drag.target)openBook(BOOKS[+drag.target.dataset.i]);else if(Math.abs(vx)+Math.abs(vy)>1){inert=true;K=.3}else K=.3;drag=null}}
+  if(drag){if(drag.moved<6&&drag.target)openBook(BOOKS[+drag.target.dataset.i],drag.target);else if(Math.abs(vx)+Math.abs(vy)>1){inert=true;K=.3}else K=.3;drag=null}}
 stage.addEventListener("pointerup",up);stage.addEventListener("pointercancel",up);
-addEventListener("resize",()=>render(true));
+let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(()=>render(true),200)});
+stage.addEventListener("keydown",e=>{const b=e.target.closest(".book");if(b&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openBook(BOOKS[+b.dataset.i],b)}});
 
-// ---------- Barre ----------
+// ---------- Menu ----------
+const fab=$("#fab"),menu=$("#menu");
+function closeMenu(){menu.classList.remove("on");fab.setAttribute("aria-expanded","false")}
+fab.addEventListener("click",()=>{const on=!menu.classList.contains("on");menu.classList.toggle("on",on);fab.setAttribute("aria-expanded",on)});
 function press(sel,attr,val){document.querySelectorAll(sel+" button").forEach(b=>b.setAttribute("aria-pressed",b.dataset[attr]===val))}
-function setLayout(l,keepTrace){state.layout=l;press("#layouts","l",l);render()}
+function setLayout(l){state.layout=l;press("#layouts","l",l);render()}
 $("#layouts").addEventListener("click",e=>{const b=e.target.closest("button");if(b&&!b.disabled)setLayout(b.dataset.l)});
 $("#sorts").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;if(b.dataset.s==="hasard")state.seed++;state.sort=b.dataset.s;press("#sorts","s",state.sort);render()});
-let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),3200)}
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),3400)}
 document.querySelectorAll("[data-soon]").forEach(b=>b.addEventListener("click",()=>toast(b.dataset.soon)));
-stage.addEventListener("keydown",e=>{const b=e.target.closest(".book");if(b&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openBook(BOOKS[+b.dataset.i])}});
 
-// ---------- Fiche : couverture, infos, retournement ----------
-const sheet=$("#sheet");let cur=null;
-function openBook(b){cur=b;const cw=Math.round(300*(b.h/238)**.5),ar=b.f==="B"?"0.82":"0.66",R=rnd(b.i*7+1);
-  const bars=Array.from({length:34},()=>`<span style="--bw:${1+Math.floor(R()*3)}px"></span>`).join("");
-  const seen=b.d>365?`il y a ${Math.round(b.d/30)} mois`:`il y a ${b.d} jours`;
+// ---------- Fiche : la tranche pivote et devient la couverture ----------
+const sheet=$("#sheet");let src=null,startT="",busy=false;
+const restT="rotateY(-24deg) rotateX(4deg)",flipT="rotateY(156deg) rotateX(4deg)";
+function openBook(b,el){if(busy||cur)return;cur=b;src=el;const H=Math.round(Math.min(innerHeight*.62,innerWidth<820?360:500)*(b.f==="B"?1:Math.min(1,.86+b.h/1500))),
+  W=Math.round(H*(b.f==="B"?.8:.66)),D=Math.max(10,Math.round(b.w*H/b.h)),R=rnd(b.i*7+1);
+  const bars=Array.from({length:32},()=>`<span style="--bw:${1+Math.floor(R()*3)}px"></span>`).join("");
+  const seen=b.d>365?`il y a ${Math.round(b.d/30)} mois`:`il y a ${b.d} j`;
   $("#sh").innerHTML=`
-  <div class="b3" style="--cw:${cw}px;--ar:${ar};--c:${b.c};--t:${b.ink}" tabindex="0" role="button" aria-label="Retourner le livre">
-    <div class="b3in">
-      <div class="face front v${b.v}"><div class="ca">${b.a}</div><div class="ct">${b.t}</div>
-        <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="${blob(100+(R()-.5)*30,100+(R()-.5)*30,60+R()*25,55+R()*25,b.i*3+2,.22,7)}Z"/></svg>
+  <div class="b3" tabindex="0" role="button" aria-label="Retourner le livre">
+    <div class="bx v${b.v}" style="--W:${W}px;--H:${H}px;--D:${D}px;--c:${b.c};--t:${b.ink}">
+      <div class="shadow3"></div>
+      <div class="bf front v${b.v}"><div class="ca">${b.a}</div><div class="ct big">${b.t}</div>
+        <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="${blob(100,100,58+R()*25,52+R()*25,b.i*3+2,.2,7)}"/><path d="${blob(104,96,30+R()*20,28+R()*20,b.i*3+9,.25,6)}"/></svg>
         <div class="cy">${b.y}</div></div>
-      <div class="face back"><div class="bk">${b.t}</div><p>${b.s}</p><div class="bars" aria-hidden="true">${bars}</div></div>
+      <div class="bf back"><div class="bk">${b.t}</div><p>${b.s||"Texte de quatrième de couverture récupéré automatiquement (Open Library ou Google Books)."}</p><div class="bars" aria-hidden="true">${bars}</div></div>
+      <div class="bf side bsp v${b.v}" style="--fs:${Math.max(10,D*.42)}px"><span class="txt"><span class="au">${b.last}</span><span class="ti">${b.t}</span><span class="mk"></span></span></div>
+      <div class="bf side bpg"></div><div class="bf btop"></div>
     </div></div>
   <div class="info">
-    <span class="gpill"><svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path d="${blob(50,15,50,14,b.i+9,.07,8)}"/></svg>${b.g}</span>
-    <h2>${b.t}</h2><p class="by">${b.a}</p>
+    <span class="gk big"><svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path d="${blob(50,15,50,15,b.i+9,.06,8)}"/></svg>${b.g}</span>
+    <h2 class="big">${b.t}</h2><p class="by">${b.a}</p>
     <dl><div><dt>Paru</dt><dd>${b.y}</dd></div><div><dt>Pages</dt><dd>${b.p}</dd></div><div><dt>Lu en</dt><dd>${b.ry}</dd></div><div><dt>Revu</dt><dd>${seen}</dd></div></dl>
-    <h3>L'intrigue</h3><p class="sum">${b.s}</p>
-    <p class="note">Dans l'app : résumé complet généré par IA à l'ajout, fin comprise.<br>Infos et couverture récupérées via Open Library / Google Books.</p>
-    <div class="acts"><button class="btn pri" id="flip">Retourner le livre</button></div>
+    ${b.s?`<p class="sum">${b.s}</p>`:`<p class="sum" style="color:var(--ink-soft)">Livre d'exemple sans résumé. Dans l'app, le résumé complet de l'intrigue est généré par l'IA quand tu ajoutes le livre.</p>`}
+    <div class="acts"><button class="btn" id="flip">Retourner</button><button class="btn ghost" id="close">Ranger</button></div>
   </div>`;
-  const b3=$("#sh .b3"),flip=()=>b3.classList.toggle("flip");b3.addEventListener("click",flip);b3.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip()}});$("#flip").addEventListener("click",flip);
-  sheet.classList.add("on");sheet.scrollTop=0;$("#close").focus()}
-function closeBook(){if(!cur)return;sheet.classList.remove("on");const b=cur;cur=null;
-  if(b.d>365){b.d=0;setTimeout(()=>{b.el.classList.remove("dusty");toast(`« ${b.t} » a repris ses couleurs.`)},350)}b.el.focus({preventScroll:true})}
-$("#close").addEventListener("click",closeBook);sheet.addEventListener("click",e=>{if(e.target===sheet||e.target.id==="sh")closeBook()});
-addEventListener("keydown",e=>{if(e.key==="Escape")closeBook()});
+  sheet.scrollTop=0;sheet.classList.add("on");
+  const bx=$("#sh .bx"),r0=bx.getBoundingClientRect(),r1=el.getBoundingClientRect(),k=r1.height/H||.2;
+  startT=`translate(${r1.left+r1.width/2-(r0.left+r0.width/2)}px,${r1.top+r1.height/2-(r0.top+r0.height/2)}px) scale(${Math.max(k,.05)}) rotateY(90deg)`;
+  bx.style.transition="none";bx.style.transform=startT;bx.getBoundingClientRect();el.classList.add("gone");
+  requestAnimationFrame(()=>{bx.style.transition="transform 1.15s cubic-bezier(.3,.8,.2,1)";bx.style.transform=restT;sheet.classList.add("ready")});
+  const b3=$("#sh .b3");let flipped=false;const flip=()=>{flipped=!flipped;bx.style.transition="transform 1s var(--ease)";bx.style.transform=flipped?flipT:restT};
+  b3.addEventListener("click",flip);b3.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip()}});$("#flip").addEventListener("click",flip);$("#close").addEventListener("click",closeBook);
+  setTimeout(()=>$("#close")?.focus({preventScroll:true}),600)}
+function closeBook(){if(!cur||busy)return;busy=true;const b=cur,el=src,bx=$("#sh .bx");sheet.classList.remove("ready");
+  const r1=el.getBoundingClientRect(),r0=(bx.style.transform="none",bx.style.transition="none",bx.getBoundingClientRect());bx.style.transform=restT;bx.getBoundingClientRect();
+  const k=r1.height/parseFloat(getComputedStyle(bx).getPropertyValue("--H"));
+  bx.style.transition="transform .9s cubic-bezier(.5,0,.2,1)";bx.style.transform=`translate(${r1.left+r1.width/2-(r0.left+r0.width/2)}px,${r1.top+r1.height/2-(r0.top+r0.height/2)}px) scale(${Math.max(k,.05)}) rotateY(90deg)`;
+  setTimeout(()=>sheet.classList.remove("on"),450);
+  setTimeout(()=>{el.classList.remove("gone");cur=null;busy=false;$("#sh").innerHTML="";
+    if(b.d>365){b.d=0;document.querySelectorAll(`.book[data-i="${b.i}"]`).forEach(x=>x.classList.remove("dusty"));toast(`« ${b.t} » a repris ses couleurs.`)}},900)}
+sheet.addEventListener("click",e=>{if(e.target===sheet||e.target.id==="sh")closeBook()});
+addEventListener("keydown",e=>{if(e.key==="Escape"){if(cur)closeBook();else closeMenu()}});
 
 // ---------- Entrée ----------
-render(true);cam.x=tgt.x;cam.y=tgt.y+260;cam.s=tgt.s*.9;world.style.transform=`translate3d(${cam.x}px,${cam.y}px,0) scale(${cam.s})`;
-$("#enter").addEventListener("click",()=>{$("#landing").classList.add("out");K=.06;stage.focus?.()});
+render(true);cam.x=tgt.x;cam.y=tgt.y+300;cam.s=tgt.s*.92;apply();
+$("#enter").addEventListener("click",()=>{$("#landing").classList.add("out");K=.05});
 </script>
 </body>
 </html>
