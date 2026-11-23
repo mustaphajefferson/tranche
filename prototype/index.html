@@ -1423,15 +1423,15 @@ function checkEmpty(){let e=$("#empty");if(BOOKS.length){e&&e.remove();return}if
 checkEmpty();
 
 // ---- Compte (Supabase) et réglages ----
-const SUPA={url:"",key:""};// à remplir une fois le projet Supabase créé (clé publique « anon », sans danger côté navigateur)
+const SUPA={url:"https://icndpqapetwuummboxoc.supabase.co",key:"sb_publishable_oDztTdcpP9jK_6lVNj-Swg_2pTLlbhg"};// à remplir une fois le projet Supabase créé (clé publique « anon », sans danger côté navigateur)
 const SYNCK=["tranche-ajouts","tranches-lettrines","tranches-vide","tranches-lecture","tranches-collections"];
 let SB=null,ACU=null,acMsg="",pushT=null,lastSync=null;
 function sbCfg(){let c=SUPA;try{const l=JSON.parse(localStorage.getItem("tranches-supabase")||"null");if(l&&l.url&&l.key)c=l}catch(e){}return c.url&&c.key?c:null}
 function loadSB(){if(SB)return Promise.resolve(SB);const c=sbCfg();if(!c)return Promise.resolve(null);
-  return new Promise(res=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js";
+  return new Promise(res=>{const s=document.createElement("script");let tries=["2.58.0","2.45.4"];s.src=`https://cdn.jsdelivr.net/npm/@supabase/supabase-js@${tries.shift()}/dist/umd/supabase.min.js`;
     s.onload=()=>{try{SB=supabase.createClient(c.url,c.key);SB.auth.onAuthStateChange((ev,ses)=>{ACU=ses?.user||null;acRender();if(ev==="SIGNED_IN")pull()});
       SB.auth.getSession().then(({data})=>{ACU=data.session?.user||null;acRender();if(ACU)pull();res(SB)})}catch(e){acMsg="Adresse ou clé Supabase invalide.";acRender();res(null)}};
-    s.onerror=()=>{acMsg="Impossible de joindre Supabase depuis cet aperçu (il bloque les sites externes). Sur la version en ligne, ça marche.";acRender();res(null)};document.head.appendChild(s)})}
+    s.onerror=()=>{if(tries.length){const s2=document.createElement("script");s2.src=`https://cdn.jsdelivr.net/npm/@supabase/supabase-js@${tries.shift()}/dist/umd/supabase.min.js`;s2.onload=s.onload;s2.onerror=s.onerror;document.head.appendChild(s2);return}acMsg="Impossible de joindre Supabase depuis cet aperçu (il bloque les sites externes). Sur la version en ligne, ça marche.";acRender();res(null)};document.head.appendChild(s)})}
 function snapshot(){const d={};SYNCK.forEach(k=>{const v=localStorage.getItem(k);if(v!==null)d[k]=v});return d}
 async function push(){if(!SB||!ACU)return;const at=new Date().toISOString(),{error}=await SB.from("tranches").upsert({user_id:ACU.id,data:snapshot(),updated_at:at});
   if(error){acMsg="Synchronisation impossible : "+error.message;acRender();return}try{localStorage.setItem("tranches-stamp",at)}catch(e){}lastSync=new Date();acRender()}
