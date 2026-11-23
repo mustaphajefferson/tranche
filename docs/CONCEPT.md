@@ -66,3 +66,16 @@ Déjà dans le prototype :
 - **La Chronique de l'an** : chaque fin d'année, une page façon calendrier enluminé avec les livres lus mois par mois.
 - **Ex-libris au stylet** : tu dessines une fois ta signature ou ton monogramme, l'app en fait un tampon rouge encadré de gothique, apposé à l'intérieur de chaque livre (4e de la fiche), sur les partages et la Chronique.
 - **Les tranches gravées** : une photo de la vraie tranche, passée au même filtre gravure, pour retrouver ton étagère réelle.
+
+
+## v10 : scanner et petits objets
+
+- **Scanner** : à la photo d'une couverture ou d'une tranche, le fond est estimé sur les bords, le livre isolé, ses 4 coins trouvés, puis la photo est redressée (homographie). Coins déplaçables à la main. Sortie en photo fidèle ou en gravure.
+- **Plume** : le curseur sur la bibliothèque est une plume ; un clic dans le vide laisse une tache d'encre qui sèche.
+- **Résumé à l'encre** : le texte apparaît mot à mot, comme écrit à la plume.
+- **Signet** : un ruban rouge pend du livre ouvert et se balance.
+- **Phylactère** : les messages s'affichent sur une banderole rouge à queues fourchues qui se déroule.
+- **Menu « Ranger »** : se déroule de haut en bas comme un rouleau.
+- **Rubriques tracées** : les ellipses des catégories se dessinent à la main à chaque rangement.
+- **Livre ajouté** : il tombe sur l'étagère avec un bruit sourd et un nuage de poussière.
+- **Drôlerie** : après 25 s sans rien toucher, un escargot de marge traverse le bas de l'écran.

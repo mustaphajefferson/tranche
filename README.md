@@ -16,7 +16,8 @@ Ouvre [`prototype/index.html`](prototype/index.html) dans un navigateur (double-
 - Survol : le livre grandit. Clic : la fiche s'ouvre, clic sur la couverture pour la retourner.
 - Bouton rond en bas à droite : vue (étagère, pile) et tri (genre, auteur, taille, hasard).
 - « Ranger » → Vue → Tracé : dessine une ligne (stylet, doigt ou souris), les livres s'y rangent. Sinon le stylet navigue comme le doigt.
-- Bougie en haut à droite : nuit noire, seule la flamme éclaire ; l'orage projette par moments la lumière d'un vitrail sur les livres. Sons dans « Ranger ».
+- Bougie en haut à droite : nuit noire, seule la flamme éclaire, orage au son. Sons dans « Ranger ».
+- Ajouter un livre → photo de la couverture ou de la tranche : les contours sont détectés tout seuls, l'image est redressée comme un scan (coins ajustables, « Photo fidèle » ou « Gravure »).
 - Le logo T ramène à l'accueil.
 - Dans la fiche d'un livre : « Enluminer la lettrine » : on colorie la première lettre du titre dans un cadre au choix (8 cadres, 8 dessins de lettre, fonds et encres). Elle apparaît ensuite sur la tranche et dans la fiche.
 

@@ -1,8 +1,5 @@
 <!doctype html>
 <html lang="fr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Tranches</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -116,8 +113,10 @@ button{font:inherit;color:inherit}
 .menu{position:fixed;z-index:11;right:max(16px,env(safe-area-inset-right,0px));top:calc(70px + env(safe-area-inset-top,0px));width:min(300px,calc(100vw - 32px));
   background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:22px;padding:18px 20px;display:grid;gap:16px;
   border:1px solid color-mix(in srgb,var(--ink) 10%,transparent);box-shadow:0 20px 60px -20px var(--shadow);
-  transform-origin:100% 0;transform:scale(.6) translateY(-20px);opacity:0;pointer-events:none;transition:.4s var(--ease)}
-.menu.on{transform:none;opacity:1;pointer-events:auto}
+  clip-path:inset(0 0 100% 0 round 22px);transform:translateY(-8px);opacity:0;pointer-events:none;transition:clip-path .6s var(--ease),transform .6s var(--ease),opacity .25s}
+.menu.on{clip-path:inset(0 0 0 0 round 22px);transform:none;opacity:1;pointer-events:auto}
+.menu.on>*{animation:mrise .5s var(--ease) both}.menu.on>*:nth-child(2){animation-delay:.06s}.menu.on>*:nth-child(3){animation-delay:.12s}.menu.on>*:nth-child(4){animation-delay:.18s}.menu.on>*:nth-child(5){animation-delay:.24s}
+@keyframes mrise{from{opacity:0;transform:translateY(-10px)}}
 .menu h4{margin:0 0 4px;font-size:11px;font-weight:600;font-stretch:90%;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
 .opts{display:flex;flex-wrap:wrap;gap:2px 14px}
 .opts button{border:0;background:none;padding:2px 0;cursor:pointer;font-size:32px;font-family:var(--f-big);font-weight:800;color:var(--ink);opacity:.32;transition:opacity .25s,color .25s}
@@ -129,8 +128,8 @@ button{font:inherit;color:inherit}
 .menu p{margin:0;font-family:var(--f-text);font-size:12.5px;line-height:1.5;color:var(--ink-soft)}
 .menu p b{color:var(--rub);font-weight:400;font-style:italic}
 
-.toast{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);opacity:0;z-index:60;background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:999px;font-size:13px;font-weight:500;font-stretch:90%;transition:.4s var(--ease);pointer-events:none;max-width:calc(100vw - 110px);text-align:center}
-.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px) scaleX(.06);opacity:0;z-index:60;background:var(--rub);color:#fff;padding:9px 40px 11px;font-family:var(--f-big);font-size:18px;font-weight:600;line-height:1.2;clip-path:polygon(0 0,100% 0,calc(100% - 16px) 50%,100% 100%,0 100%,16px 50%);filter:drop-shadow(0 6px 10px var(--shadow));transition:transform .6s var(--ease),opacity .3s;pointer-events:none;max-width:calc(100vw - 100px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0) scaleX(1)}
 
 /* ---------- Fiche : livre 3D ---------- */
 #sheet{position:fixed;inset:0;z-index:30;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .5s var(--ease);
@@ -459,9 +458,64 @@ button{font:inherit;color:inherit}
 .vols i.cur{height:56px;box-shadow:0 0 0 2px var(--rub)}
 @media (max-width:640px){.ser{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+
+/* ---- v10 : scanner ---- */
+#scan{position:fixed;inset:0;z-index:70;display:grid;place-items:center;background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .4s var(--ease);padding:20px}
+#scan.on{opacity:1;pointer-events:auto}
+.sc-in{display:grid;gap:16px;justify-items:center;max-width:100%}
+.sc-in h3{margin:0;font-family:var(--f-big);font-weight:700;font-size:30px;color:var(--ink)}
+.sc-in h3 b{color:var(--rub);font-weight:700}
+.sc-in p{margin:-8px 0 0;font-size:13px;color:var(--ink-soft);text-align:center;max-width:44ch}
+.sc-wrap{position:relative;line-height:0;box-shadow:0 22px 50px -20px var(--shadow);transform:scale(.94) rotate(-1.2deg);transition:transform .7s var(--ease)}
+#scan.on .sc-wrap{transform:none}
+#sc-cv{max-width:min(86vw,520px);max-height:56vh;width:auto;height:auto;display:block}
+#sc-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;touch-action:none}
+#sc-svg .shade{fill:rgba(0,0,0,.5);fill-rule:evenodd;opacity:0;transition:opacity .5s}
+#sc-svg .q{fill:none;stroke:var(--rub);stroke-width:2.2;stroke-linejoin:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1}
+#sc-svg .h{fill:var(--paper);stroke:var(--rub);stroke-width:2.5;vector-effect:non-scaling-stroke;cursor:grab;transform-box:fill-box;transform-origin:center;transform:scale(0);transition:transform .45s var(--ease)}
+#sc-svg .h:active{cursor:grabbing}
+#scan.found #sc-svg .shade{opacity:1}
+#scan.found #sc-svg .q{animation:trace .9s var(--ease) forwards}
+#scan.found #sc-svg .h{transform:scale(1)}
+#scan.found #sc-svg .h:nth-of-type(2){transition-delay:.12s}#scan.found #sc-svg .h:nth-of-type(3){transition-delay:.24s}#scan.found #sc-svg .h:nth-of-type(4){transition-delay:.36s}
+.sc-line{position:absolute;left:-4%;right:-4%;height:2px;top:0;background:var(--rub);box-shadow:0 0 18px 4px color-mix(in srgb,var(--rub) 60%,transparent);opacity:0}
+#scan.scanning .sc-line{animation:sweep 1s var(--ease) forwards}
+@keyframes sweep{0%{top:0;opacity:0}15%{opacity:1}85%{opacity:1}100%{top:100%;opacity:0}}
+.sc-modes{display:flex;gap:6px}
+.sc-modes button{border:1px solid color-mix(in srgb,var(--ink) 18%,transparent);background:none;color:var(--ink);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer}
+.sc-modes button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.sc-acts{display:flex;gap:10px;align-items:center}
+@keyframes trace{to{stroke-dashoffset:0}}
+/* ---- v10 : objets & animations ---- */
+@media (pointer:fine){#stage{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M3 29 C8 20 14 12 29 3 C24 12 18 20 9 25 Z' fill='%23fff' stroke='%230E0E0E' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M3 29 L14 16' stroke='%23C8201A' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") 2 30,grab}}
+.blot{position:fixed;z-index:9;pointer-events:none;width:0;height:0}
+.blot svg{position:absolute;left:-40px;top:-40px;width:80px;height:80px;fill:var(--ink);animation:blot 1.8s var(--ease) forwards}
+@keyframes blot{0%{transform:scale(0) rotate(-20deg);opacity:.9}18%{transform:scale(1.05);opacity:.85}30%{transform:scale(1)}70%{opacity:.75}100%{transform:scale(1.02);opacity:0}}
+.sum .w{animation:wordin .7s var(--ease) both}
+@keyframes wordin{from{opacity:0;filter:blur(5px)}}
+.ribbon{position:absolute;left:68%;top:calc(100% - 14px);width:13px;height:92px;background:linear-gradient(90deg,color-mix(in srgb,var(--rub) 80%,#000),var(--rub) 40%,color-mix(in srgb,var(--rub) 85%,#fff) 70%,var(--rub));
+  clip-path:polygon(0 0,100% 0,100% 100%,50% 86%,0 100%);transform-origin:50% 0;backface-visibility:hidden;animation:sway 5.5s ease-in-out infinite;pointer-events:none}
+@keyframes sway{0%,100%{transform:translateZ(calc(var(--D)/2 + 1px)) rotate(-4deg)}50%{transform:translateZ(calc(var(--D)/2 + 1px)) rotate(5deg)}}
+.glabel path{stroke-dasharray:1;stroke-dashoffset:1;animation:trace 1.3s var(--ease) .35s forwards}
+.book.pre .spine{opacity:0}
+.book.drop .spine{animation:drop 1s cubic-bezier(.5,0,.75,0) both}
+@keyframes drop{0%{transform:translateY(-120vh) rotate(-9deg);animation-timing-function:cubic-bezier(.5,0,.8,.4)}72%{transform:translateY(0) rotate(1.5deg);animation-timing-function:ease-out}84%{transform:translateY(-16px) rotate(-.5deg);animation-timing-function:ease-in}100%{transform:none}}
+.dust{position:fixed;z-index:9;pointer-events:none;width:7px;height:7px;border-radius:50%;background:var(--ink-soft);opacity:.55;animation:dust 1.1s var(--ease) forwards}
+@keyframes dust{to{transform:translate(var(--dx),var(--dy)) scale(2.4);opacity:0}}
+#snail{position:fixed;z-index:8;bottom:calc(4px + env(safe-area-inset-bottom,0px));left:0;width:86px;height:56px;border:0;background:none;padding:0;cursor:pointer;transform:translateX(-120px);opacity:0;transition:opacity .6s}
+#snail.crawl{opacity:1;animation:crawl 70s linear forwards}
+#snail svg{width:100%;height:100%;overflow:visible}
+#snail .bd{fill:var(--paper);stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+#snail .sh{fill:var(--paper);stroke:var(--rub);stroke-width:1.8;stroke-linecap:round}
+#snail.crawl .bd{animation:inch 1.6s ease-in-out infinite}
+#snail.hide .bd{transform:scaleX(.2);transform-origin:40px 44px;transition:transform .4s}
+#snail.hide{opacity:0;transition:opacity .8s .5s}
+@keyframes crawl{to{transform:translateX(calc(100vw + 20px))}}
+@keyframes inch{50%{transform:scaleX(1.06)}}
+@media (prefers-reduced-motion:reduce){.sum .w,.glabel path,.ribbon,#snail{animation:none!important;stroke-dashoffset:0!important}}
 </style>
-</head>
-<body>
+</head><body>
+
 
 <!-- Landing -->
 <svg id="lframe" aria-hidden="true"></svg>
@@ -506,6 +560,13 @@ button{font:inherit;color:inherit}
 </div>
 
 <div class="toast" id="toast" role="status"></div>
+<div id="scan" role="dialog" aria-modal="true" aria-label="Scanner la photo"><div class="sc-in">
+  <h3>Le <b>scriptorium</b> redresse ta page</h3><p>Les coins sont trouvés tout seuls. Tu peux les déplacer si besoin.</p>
+  <div class="sc-wrap"><canvas id="sc-cv"></canvas><svg id="sc-svg"><path class="shade"/><path class="q" pathLength="1"/><circle class="h" r="1"/><circle class="h" r="1"/><circle class="h" r="1"/><circle class="h" r="1"/></svg><div class="sc-line"></div></div>
+  <div class="sc-modes" id="sc-modes"><button type="button" data-m="photo" aria-pressed="true">Photo fidèle</button><button type="button" data-m="grav" aria-pressed="false">Gravure</button></div>
+  <div class="sc-acts"><button class="btn ghost" type="button" id="sc-cancel">Annuler</button><button class="plate" type="button" id="sc-ok">Redresser ☞</button></div>
+</div></div>
+<button id="snail" type="button" aria-label="Une drôlerie dans la marge"><svg viewBox="0 0 86 56" aria-hidden="true"><g class="bd"><path d="M6 50 C4 44 14 42 24 43 L66 44 C72 44 76 40 77 34 L79 22 M77 34 L72 22"/><circle cx="79" cy="21" r="1.6"/><circle cx="72" cy="21" r="1.6"/><path d="M6 50 L72 50 C76 50 78 47 77 44"/></g><path class="sh" id="snail-sh"/></svg></button>
 
 <section class="panel ms" id="add" aria-label="Ajouter un livre"><div class="pin">
   <div class="phead"><div class="ms-h"><svg class="ms-cap" viewBox="0 0 100 100" aria-hidden="true"><rect class="o" x="3" y="3" width="94" height="94"/><rect class="r" x="11" y="11" width="78" height="78"/><circle cx="3" cy="3" r="4"/><circle cx="97" cy="3" r="4"/><circle cx="3" cy="97" r="4"/><circle cx="97" cy="97" r="4"/><text x="50" y="79" text-anchor="middle">A</text></svg><h2 class="big">jouter un livre</h2></div><button class="pclose" aria-label="Fermer">×</button></div>
@@ -519,8 +580,8 @@ button{font:inherit;color:inherit}
     <p class="msg" id="a-msg"></p>
     <div class="res" id="a-res"></div></div>
   <div class="ms-sec"><h3><b>II</b>Ou une photographie</h3><div class="ph">
-    <label class="ms-file" for="a-photo"><span>La couverture</span><em>Elle devient une gravure</em><input id="a-photo" type="file" accept="image/*"></label>
-    <label class="ms-file" for="a-sp"><span>La tranche</span><em>Facultatif</em><input id="a-sp" type="file" accept="image/*"></label>
+    <label class="ms-file" for="a-photo"><span>La couverture</span><em>Contours détectés, redressée</em><input id="a-photo" type="file" accept="image/*"></label>
+    <label class="ms-file" for="a-sp"><span>La tranche</span><em>Facultatif, scannée aussi</em><input id="a-sp" type="file" accept="image/*"></label>
     <img id="a-prev" alt="Aperçu de la gravure" hidden><img id="a-sprev" alt="Aperçu de la tranche" hidden></div></div>
   <div class="ms-sec"><h3><b>III</b>Le format</h3><div class="fmts" id="fmts"></div></div>
   <div class="ms-sec"><h3><b>IV</b>Les détails</h3><div class="frm">
@@ -738,7 +799,7 @@ const LAY={
 
 // ---------- Rendu ----------
 let bbox=null,clones=null,cur=null;
-function labelHTML(l,k){const w=lw(l.t,l.s);return`<svg viewBox="0 0 ${w} ${l.s}" preserveAspectRatio="none" aria-hidden="true"><path d="${blob(w/2,l.s*.5,w/2,l.s*.55,k*17+state.sort.length,.07,8)}"/></svg><span class="big">${l.t}</span>`}
+function labelHTML(l,k){const w=lw(l.t,l.s);return`<svg viewBox="0 0 ${w} ${l.s}" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="${blob(w/2,l.s*.5,w/2,l.s*.55,k*17+state.sort.length,.07,8)}"/></svg><span class="big">${l.t}</span>`}
 function render(first){const G=groups(),R=LAY[state.layout](G),order=G.flatMap(g=>g.items);if(!R.tile)tile=null;
   let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
   order.forEach((b,k)=>{const p=R.pos[b.i],rad=Math.max(b.w,b.h)/2;x0=Math.min(x0,p.x-rad);x1=Math.max(x1,p.x+rad);y0=Math.min(y0,p.y-rad);y1=Math.max(y1,p.y+rad);
@@ -789,6 +850,7 @@ function up(e){ptrs.delete(e.pointerId);stage.classList.remove("grabbing","drawi
   if(ink){const pts=ink.pts;ink=null;inkp.setAttribute("d","");let len=0;for(let i=1;i<pts.length;i++)len+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);
     if(len>120){state.trace=pts.map(p=>toWorld(p[0],p[1]));drawMode=false;stage.classList.remove("drawmode");setLayout("trace")}return}
   if(pinch){if(ptrs.size<2)pinch=null;return}
+  if(drag&&drag.moved<6&&!drag.target&&e.pointerType==="mouse"&&!drawMode)blot(e.clientX,e.clientY);
   if(drag){const tg=drag.target;if(drag.moved<6&&tg&&(e.pointerType==="mouse"||tg.classList.contains("sel"))){tg.classList.remove("sel");openBook(BOOKS[+tg.dataset.i],tg)}
     else if(drag.moved<6){document.querySelectorAll(".book.sel").forEach(x=>x!==tg&&x.classList.remove("sel"));if(tg){tg.classList.add("sel");SND.rustle()}}
     if(drag.moved<6&&tg){}else if(Math.abs(vx)+Math.abs(vy)>1){inert=true;K=.3}else K=.3;drag=null}}
@@ -823,7 +885,7 @@ function openBook(b,el){if(busy||cur)return;cur=b;src=el;SND.paper();const H=Mat
         <div class="cy">${b.y}</div><img class="real" alt="">${b.lt?`<img class="lcap" src="${b.lt}" alt="">`:""}</div>
       <div class="bf back"><div class="bk">${b.t}</div><p>${b.s?b.s.split(/(?<=[.!?»])\s/).slice(0,2).join(" "):"Texte de quatrième de couverture récupéré automatiquement (Open Library ou Google Books)."}</p><div class="bars" aria-hidden="true">${bars}</div></div>
       <div class="bf side bsp v${b.v}" style="--fs:${Math.max(10,D*.42)}px"><span class="txt"><span class="au">${b.last}</span><span class="ti">${b.t}</span><span class="mk"></span></span></div>
-      <div class="bf side bpg"></div><div class="bf btop"></div>
+      <div class="bf side bpg"></div><div class="bf btop"></div><div class="ribbon"></div>
     </div></div>
   <div class="info">
     <span class="gk big"><svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path d="${blob(50,15,50,15,b.i+9,.06,8)}"/></svg>${b.g}</span>
@@ -832,7 +894,7 @@ function openBook(b,el){if(busy||cur)return;cur=b;src=el;SND.paper();const H=Mat
     <h3>Résumé de l'intrigue</h3>${b.s?`<p class="sum">${b.s}</p>`:`<p class="sum" style="color:var(--ink-soft)">Livre d'exemple sans résumé. Dans l'app, le résumé complet de l'intrigue est généré par l'IA quand tu ajoutes le livre.</p>`}
     <div class="acts"><button class="btn" id="flip">Retourner</button><button class="btn ghost" id="illub">${b.lt?"Refaire la lettrine":"Enluminer la lettrine"}</button><button class="btn ghost" id="close">Ranger</button></div>
   </div>`;
-  sheet.scrollTop=0;sheet.classList.add("on");
+  sheet.scrollTop=0;sheet.classList.add("on");inkWords($("#sh .sum"));
   const bx=$("#sh .bx"),r0=bx.getBoundingClientRect(),r1=el.getBoundingClientRect(),k=r1.height/H||.2;
   startT=`translate(${r1.left+r1.width/2-(r0.left+r0.width/2)}px,${r1.top+r1.height/2-(r0.top+r0.height/2)}px) scale(${Math.max(k,.05)}) rotateY(90deg)`;
   bx.style.transition="none";bx.style.transform=startT;bx.getBoundingClientRect();el.classList.add("gone");
@@ -883,7 +945,7 @@ $("#a-add").addEventListener("click",()=>{const t=(pick?.title||$("#a-t").value)
   SAVED.push(r);try{localStorage.setItem("tranche-ajouts",JSON.stringify(SAVED))}catch(e){}
   if(!GORDER.includes(r[4]))GORDER.push(r[4]);const b=makeBook(r,BOOKS.length);BOOKS.push(b);makeEl(b);$("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.length} livres lus`;seal();
   photo=spPhoto=null;$("#a-prev").hidden=$("#a-sprev").hidden=true;addP.classList.remove("on");$("#a-form").reset();$("#a-res").innerHTML="";$("#a-msg").textContent="";pick=null;
-  state.sort="recent";press("#sorts","s","recent");render();if(!b.img)coverURL(b).then(u=>u&&applyCover(b,u));
+  state.sort="recent";press("#sorts","s","recent");render();b.el.classList.add("pre");setTimeout(()=>dropIn(b),2000);if(!b.img)coverURL(b).then(u=>u&&applyCover(b,u));
   setTimeout(()=>{const p=b.el.getBoundingClientRect();tgt.x+=innerWidth/2-(p.left+p.width/2);tgt.y+=innerHeight/2-(p.top+p.height/2);K=.08;b.el.classList.add("fresh");toast(`« ${t} » est rangé sur l'étagère.`)},1100)});
 
 // Gravure : transforme une photo de couverture en estampe deux tons (couleurs tirées de la couverture)
@@ -909,8 +971,81 @@ function engrave(img,maxW=360){const W=Math.min(maxW,img.naturalWidth||img.width
 
 let photo=null,spPhoto=null;
 function readImg(file,cb){const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>cb(im);im.src=fr.result};fr.readAsDataURL(file)}
-$("#a-photo").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;readImg(f,im=>{photo=engrave(im,320);const p=$("#a-prev");p.src=photo.url;p.hidden=false})});
-$("#a-sp").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;readImg(f,im=>{spPhoto=engrave(im,120);const p=$("#a-sprev");p.src=spPhoto.url;p.hidden=false})});
+$("#a-photo").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(!f)return;readImg(f,im=>openScan(im,"cover",r=>{photo=r;const p=$("#a-prev");p.src=r.url;p.hidden=false}))});
+$("#a-sp").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(!f)return;readImg(f,im=>openScan(im,"spine",r=>{spPhoto=r;const p=$("#a-sprev");p.src=r.url;p.hidden=false}))});
+// ---- Scanner : détecte les contours de la couverture / tranche et redresse la photo ----
+function detectQuad(img){const iw=img.naturalWidth||img.width,ih=img.naturalHeight||img.height,s=Math.min(1,360/Math.max(iw,ih)),W=Math.max(8,Math.round(iw*s)),H=Math.max(8,Math.round(ih*s));
+  const cv=document.createElement("canvas");cv.width=W;cv.height=H;const x=cv.getContext("2d",{willReadFrequently:true});x.drawImage(img,0,0,W,H);const d=x.getImageData(0,0,W,H).data,n=W*H;
+  const bd=Math.max(2,Math.round(Math.min(W,H)*.04)),ch=[[],[],[]];
+  for(let y=0;y<H;y++)for(let xx=0;xx<W;xx++)if(xx<bd||yy(y)||xx>=W-bd){const k=(y*W+xx)*4;ch[0].push(d[k]);ch[1].push(d[k+1]);ch[2].push(d[k+2])}
+  function yy(y){return y<bd||y>=H-bd}
+  const bg=ch.map(a=>a.sort((p,q)=>p-q)[a.length>>1]),dist=new Float32Array(n),hist=new Uint32Array(256);
+  for(let k=0;k<n;k++){const v=Math.hypot(d[k*4]-bg[0],d[k*4+1]-bg[1],d[k*4+2]-bg[2]);dist[k]=v;hist[Math.min(255,v*.58|0)]++}
+  // seuil d'Otsu sur la distance au fond
+  let sum=0;for(let i=0;i<256;i++)sum+=i*hist[i];let sB=0,wB=0,best=0,thr=40;for(let i=0;i<256;i++){wB+=hist[i];if(!wB)continue;const wF=n-wB;if(!wF)break;sB+=i*hist[i];const mB=sB/wB,mF=(sum-sB)/wF,b=wB*wF*(mB-mF)**2;if(b>best){best=b;thr=i}}
+  thr=Math.max(thr,14)/.58;const m=new Uint8Array(n);for(let k=0;k<n;k++)m[k]=dist[k]>thr?1:0;
+  // plus grande composante connexe
+  const lab=new Int32Array(n),st=new Int32Array(n);let bl=0,bs=0,L=0;
+  for(let k0=0;k0<n;k0++){if(!m[k0]||lab[k0])continue;L++;let sp=0,c=0;st[sp++]=k0;lab[k0]=L;while(sp){const k=st[--sp];c++;const xx=k%W,y=(k/W)|0;
+      if(xx>0&&m[k-1]&&!lab[k-1]){lab[k-1]=L;st[sp++]=k-1}if(xx<W-1&&m[k+1]&&!lab[k+1]){lab[k+1]=L;st[sp++]=k+1}
+      if(y>0&&m[k-W]&&!lab[k-W]){lab[k-W]=L;st[sp++]=k-W}if(y<H-1&&m[k+W]&&!lab[k+W]){lab[k+W]=L;st[sp++]=k+W}}
+    if(c>bs){bs=c;bl=L}}
+  const fr=bs/n;if(fr<.08||fr>.97){const i=.06;return{W,H,found:false,q:[[i,i],[1-i,i],[1-i,1-i],[i,1-i]]}}
+  let tl=[0,0,1e9],tr=[0,0,-1e9],br=[0,0,-1e9],bl2=[0,0,-1e9];
+  for(let k=0;k<n;k++)if(lab[k]===bl){const xx=k%W+.5,y=((k/W)|0)+.5;if(xx+y<tl[2])tl=[xx,y,xx+y];if(xx-y>tr[2])tr=[xx,y,xx-y];if(xx+y>br[2])br=[xx,y,xx+y];if(y-xx>bl2[2])bl2=[xx,y,y-xx]}
+  return{W,H,found:true,q:[tl,tr,br,bl2].map(p=>[p[0]/W,p[1]/H])}}
+function homog(D,S){const A=[],B=[];for(let i=0;i<4;i++){const[u,v]=D[i],[x,y]=S[i];A.push([u,v,1,0,0,0,-u*x,-v*x]);B.push(x);A.push([0,0,0,u,v,1,-u*y,-v*y]);B.push(y)}
+  for(let c=0;c<8;c++){let p=c;for(let r=c+1;r<8;r++)if(Math.abs(A[r][c])>Math.abs(A[p][c]))p=r;[A[c],A[p]]=[A[p],A[c]];[B[c],B[p]]=[B[p],B[c]];
+    for(let r=0;r<8;r++)if(r!==c){const f=A[r][c]/A[c][c];for(let k=c;k<8;k++)A[r][k]-=f*A[c][k];B[r]-=f*B[c]}}
+  return B.map((b,i)=>b/A[i][i])}
+function warpQuad(img,q,maxS){const iw=img.naturalWidth||img.width,ih=img.naturalHeight||img.height,k=Math.min(1,1600/Math.max(iw,ih)),SW=Math.round(iw*k),SH=Math.round(ih*k);
+  const sc=document.createElement("canvas");sc.width=SW;sc.height=SH;const sx=sc.getContext("2d",{willReadFrequently:true});sx.drawImage(img,0,0,SW,SH);const sd=sx.getImageData(0,0,SW,SH).data;
+  const P=q.map(([a,b])=>[a*SW,b*SH]),dd=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);let w=(dd(P[0],P[1])+dd(P[3],P[2]))/2,h=(dd(P[0],P[3])+dd(P[1],P[2]))/2;
+  const f=Math.min(1,maxS/Math.max(w,h));w=Math.max(4,Math.round(w*f));h=Math.max(4,Math.round(h*f));
+  const T=homog([[0,0],[w,0],[w,h],[0,h]],P),out=document.createElement("canvas");out.width=w;out.height=h;const ox=out.getContext("2d"),od=ox.createImageData(w,h),o=od.data;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const u=x+.5,v=y+.5,z=T[6]*u+T[7]*v+1,X=Math.min(SW-1.001,Math.max(0,(T[0]*u+T[1]*v+T[2])/z-.5)),Y=Math.min(SH-1.001,Math.max(0,(T[3]*u+T[4]*v+T[5])/z-.5));
+    const x0=X|0,y0=Y|0,fx=X-x0,fy=Y-y0,i0=(y0*SW+x0)*4,i1=i0+4,i2=i0+SW*4,i3=i2+4,j=(y*w+x)*4;
+    for(let c=0;c<3;c++)o[j+c]=(sd[i0+c]*(1-fx)+sd[i1+c]*fx)*(1-fy)+(sd[i2+c]*(1-fx)+sd[i3+c]*fx)*fy;o[j+3]=255}
+  ox.putImageData(od,0,0);return out}
+function photoOut(cv){const x=cv.getContext("2d"),sw=Math.max(2,Math.round(cv.width*.06)),d=x.getImageData(0,0,sw,cv.height).data;let r=0,g=0,b=0,c=0;for(let k=0;k<d.length;k+=16){r+=d[k];g+=d[k+1];b+=d[k+2];c++}
+  const p=[r/c,g/c,b/c],hex="#"+p.map(v=>Math.round(v).toString(16).padStart(2,"0")).join(""),l=(.299*p[0]+.587*p[1]+.114*p[2])/255;
+  return{url:cv.toDataURL("image/jpeg",.86),paper:hex,ink:l>.58?"#121212":"#F5F3EE"}}
+const SCN={img:null,q:null,W:0,H:0,cb:null,kind:"cover",mode:"photo"};
+function scDraw(){const{W,H,q}=SCN,P=q.map(([a,b])=>[a*W,b*H]),pts=P.map(p=>p.map(v=>v.toFixed(1)).join(" ")).join(" L"),sv=$("#sc-svg");
+  sv.querySelector(".shade").setAttribute("d",`M0 0H${W}V${H}H0Z M${pts}Z`);sv.querySelector(".q").setAttribute("d",`M${pts}Z`);
+  const r=10*W/Math.max(1,sv.getBoundingClientRect().width);sv.querySelectorAll(".h").forEach((c,i)=>{c.setAttribute("cx",P[i][0]);c.setAttribute("cy",P[i][1]);c.setAttribute("r",r)})}
+function openScan(img,kind,cb){const det=detectQuad(img),sc=$("#scan"),cv=$("#sc-cv"),iw=img.naturalWidth||img.width,ih=img.naturalHeight||img.height,k=Math.min(1,1000/Math.max(iw,ih));
+  Object.assign(SCN,{img,kind,cb,q:det.q,W:Math.round(iw*k),H:Math.round(ih*k)});cv.width=SCN.W;cv.height=SCN.H;cv.getContext("2d").drawImage(img,0,0,SCN.W,SCN.H);
+  const sv=$("#sc-svg");sv.setAttribute("viewBox",`0 0 ${SCN.W} ${SCN.H}`);sv.setAttribute("preserveAspectRatio","none");
+  sc.classList.remove("found","scanning");sc.classList.add("on");void sc.offsetWidth;sc.classList.add("scanning");requestAnimationFrame(scDraw);SND.rustle();
+  setTimeout(()=>{scDraw();sc.classList.add("found");SND.paper();if(!det.found)toast("Pas de contour net : place les coins à la main.")},950)}
+function closeScan(){$("#scan").classList.remove("on","scanning","found");SCN.cb=null}
+(function(){const sv=$("#sc-svg");let hi=-1;
+  sv.addEventListener("pointerdown",e=>{const c=e.target.closest(".h");if(!c)return;hi=[...sv.querySelectorAll(".h")].indexOf(c);sv.setPointerCapture(e.pointerId);e.preventDefault()});
+  sv.addEventListener("pointermove",e=>{if(hi<0)return;const r=sv.getBoundingClientRect();SCN.q[hi]=[Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)),Math.min(1,Math.max(0,(e.clientY-r.top)/r.height))];scDraw()});
+  const end=()=>{hi=-1};sv.addEventListener("pointerup",end);sv.addEventListener("pointercancel",end);
+  $("#sc-modes").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;SCN.mode=b.dataset.m;$("#sc-modes").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+  $("#sc-cancel").addEventListener("click",closeScan);addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#scan").classList.contains("on"))closeScan()});
+  $("#sc-ok").addEventListener("click",()=>{const cv=warpQuad(SCN.img,SCN.q,SCN.mode==="photo"?700:900),r=SCN.mode==="photo"?photoOut(cv):engrave(cv,SCN.kind==="cover"?320:120);
+    const cb=SCN.cb;closeScan();SND.seal();cb&&cb(r)})})();
+
+// ---- Objets & animations v10 ----
+function inkWords(el){if(!el||matchMedia("(prefers-reduced-motion:reduce)").matches)return;const ws=el.textContent.split(/(\s+)/),n=Math.max(1,ws.length/2),st=Math.min(.03,2.8/n);let i=0;
+  el.innerHTML=ws.map(w=>/^\s*$/.test(w)?w:`<span class="w" style="animation-delay:${(.55+i++*st).toFixed(3)}s">${w.replace(/&/g,"&amp;").replace(/</g,"&lt;")}</span>`).join("")}
+function blot(x,y){const d=document.createElement("div");d.className="blot";d.style.left=x+"px";d.style.top=y+"px";let drops="";
+  for(let k=0;k<5;k++){const a=Math.random()*6.28,r=17+Math.random()*16;drops+=`<circle cx="${(40+Math.cos(a)*r).toFixed(1)}" cy="${(40+Math.sin(a)*r).toFixed(1)}" r="${(1.2+Math.random()*2.6).toFixed(1)}"/>`}
+  d.innerHTML=`<svg viewBox="0 0 80 80"><path d="${blob(40,40,10+Math.random()*5,9+Math.random()*5,Math.random()*999|0,.3,9)}"/>${drops}</svg>`;document.body.appendChild(d);setTimeout(()=>d.remove(),1900)}
+function puff(el){const r=el.getBoundingClientRect(),y=r.bottom-4;for(let k=0;k<18;k++){const d=document.createElement("i"),sd=k%2?1:-1;d.className="dust";
+  d.style.left=(r.left+r.width/2+sd*(r.width/2)*Math.random())+"px";d.style.top=y+"px";d.style.setProperty("--dx",sd*(20+Math.random()*55)+"px");d.style.setProperty("--dy",-(4+Math.random()*28)+"px");d.style.animationDelay=(Math.random()*.08)+"s";document.body.appendChild(d);setTimeout(()=>d.remove(),1300)}}
+function dropIn(b){const el=b.el;if(!el)return;el.classList.remove("pre");el.classList.add("drop");setTimeout(()=>{SND.thump(1.2);puff(el)},720);setTimeout(()=>el.classList.remove("drop"),1100)}
+(function(){const sn=$("#snail"),cx=36,cy=24,R=20,sp=[];for(let a=0;a<5.2*Math.PI;a+=.18){const r=1+a*R/(5.2*Math.PI);sp.push(`${(cx+Math.cos(a)*r).toFixed(1)} ${(cy+Math.sin(a)*r).toFixed(1)}`)}
+  $("#snail-sh").setAttribute("d",`M${cx+R} ${cy}A${R} ${R} 0 1 0 ${cx-R} ${cy}A${R} ${R} 0 1 0 ${cx+R} ${cy}M${sp.join(" L")}`);
+  let t;const idle=()=>{clearTimeout(t);if(sn.classList.contains("crawl"))return;t=setTimeout(go,25000)};
+  function go(){if(!land.classList.contains("out")||cur||document.querySelector(".panel.on,#scan.on")){idle();return}sn.classList.remove("hide");void sn.offsetWidth;sn.classList.add("crawl")}
+  sn.addEventListener("animationend",e=>{if(e.animationName==="crawl"){sn.classList.remove("crawl");idle()}});
+  sn.addEventListener("click",()=>{toast("Une drôlerie de marge : les moines en cachaient partout.");sn.classList.add("hide");SND.rustle();setTimeout(()=>{sn.classList.remove("crawl","hide");idle()},1500)});
+  ["pointerdown","wheel","keydown"].forEach(ev=>addEventListener(ev,idle,{passive:true}));idle()})();
+
 // ---------- Sons (synthétisés, aucun fichier) ----------
 let AC=null,soundOn=true;try{soundOn=localStorage.getItem("tranches-sons")!=="0"}catch(e){}
 const ac=()=>{if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==="suspended")AC.resume();return AC};
@@ -1142,5 +1277,4 @@ $("#enter").addEventListener("click",()=>{SND.paper();land.classList.add("leavin
 coverQueue();
 </script>
 
-</body>
-</html>
+</body></html>
