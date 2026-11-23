@@ -683,6 +683,8 @@ button{font:inherit;color:inherit}
   #empty>div{padding:24px}
   #snail{display:none}
 }
+#add.editing .ms-mode{display:none}
+#a-del{align-self:center}
 </style>
 </head><body>
 
@@ -761,7 +763,7 @@ button{font:inherit;color:inherit}
     <label class="ms-fld sm" for="a-g"><span>Catégorie</span><select id="a-g"></select></label>
     <label class="ms-fld sm" for="a-y"><span>Lu en</span><input id="a-y" type="number" min="1950" max="2100"></label>
   </div></div>
-  <div class="acts ms-end one"><button class="plate big-plate" id="a-add" type="button">Ranger sur l'étagère <i>☞</i></button></div>
+  <div class="acts ms-end one"><button class="plate big-plate" id="a-add" type="button">Ranger sur l'étagère <i>☞</i></button><button class="btn ghost" id="a-del" type="button" hidden>Retirer de l'étagère</button></div>
   <p class="msg one">Ensuite, le résumé complet de l'intrigue est écrit par l'IA, et tu peux enluminer sa première lettre.</p>
   <div class="many">
     <p class="ms-intro">Pour le premier jour : colle ta liste, un livre par ligne, ou importe ton export Goodreads ou Babelio. Ensuite, tu les ajouteras un par un, à chaque livre fini.</p>
@@ -911,7 +913,7 @@ const GORDER=["Classiques","Contemporain","Science-fiction","Fantasy","Polars","
 const lum=h=>{const n=parseInt(h.slice(1),16);return(.299*(n>>16&255)+.587*(n>>8&255)+.114*(n&255))/255};
 // hauteur = taille réelle (1 cm = 10 px), épaisseur = pages (papier plus épais pour les beaux livres et artbooks)
 function makeBook(r,i){const [t,a,y,p,g,f,s,x={}]=r,h=x.cm?Math.round(x.cm*10):FMT[f].h,thick=f==="B"||f==="A",w=Math.round(Math.max(14,Math.min(64,thick?p/4.5+14:p/17+6))),c=x.c||PAL[(i*7+3)%PAL.length],ry=x.ry||2008+(i*7)%17,rm=x.rm||(i*5)%12+1;
-  return{i,t,a,y,p,g,f,s,h,w,c,ink:x.t||(lum(c)>.58?"#121212":"#F5F3EE"),v:x.img?2:(i*5+1)%4,last:a.split(" ").pop(),d:x.added||x.img?0:(i*137)%520,ry,rm,cid:x.cid,cm:x.cm,img:x.img,spimg:x.spine}}
+  return{r,i,t,a,y,p,g,f,s,h,w,c,ink:x.t||(lum(c)>.58?"#121212":"#F5F3EE"),v:x.img?2:(i*5+1)%4,last:a.split(" ").pop(),d:x.added||x.img?0:(i*137)%520,ry,rm,cid:x.cid,cm:x.cm,img:x.img,spimg:x.spine}}
 const roman=n=>{let r="";[[1000,"M"],[900,"CM"],[500,"D"],[400,"CD"],[100,"C"],[90,"XC"],[50,"L"],[40,"XL"],[10,"X"],[9,"IX"],[5,"V"],[4,"IV"],[1,"I"]].forEach(([v,l])=>{while(n>=v){r+=l;n-=v}});return r};
 const MOIS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 let SAVED=[];try{SAVED=JSON.parse(localStorage.getItem("tranche-ajouts")||"[]")}catch(e){}
@@ -1142,7 +1144,7 @@ $("#a-add").addEventListener("click",()=>{const t=(pick?.title||$("#a-t").value)
   SAVED.push(r);try{localStorage.setItem("tranche-ajouts",JSON.stringify(SAVED))}catch(e){}
   if(!GORDER.includes(r[4]))GORDER.push(r[4]);const b=makeBook(r,BOOKS.length);BOOKS.push(b);makeEl(b);$("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.length} livres lus`;seal();
   photo=spPhoto=null;$("#a-prev").hidden=$("#a-sprev").hidden=true;addP.classList.remove("on");$("#a-form").reset();$("#a-res").innerHTML="";$("#a-msg").textContent="";pick=null;
-  state.sort="recent";press("#sorts","s","recent");render();b.el.classList.add("pre");setTimeout(()=>dropIn(b),2000);if(!b.img)coverURL(b).then(u=>u&&applyCover(b,u));
+  state.sort="recent";press("#sorts","s","recent");render();b.el.classList.add("pre");setTimeout(()=>dropIn(b),2000);if(!b.img)coverURL(b).then(u=>u&&applyCover(b,u));setTimeout(()=>enrichBook(BOOKS[b.i]).catch(()=>{}),3300);
   setTimeout(()=>{const p=b.el.getBoundingClientRect();tgt.x+=innerWidth/2-(p.left+p.width/2);tgt.y+=innerHeight/2-(p.top+p.height/2);K=.08;b.el.classList.add("fresh");toast(`« ${t} » est rangé sur l'étagère.`)},1100)});
 
 // Gravure : transforme une photo de couverture en estampe deux tons (couleurs tirées de la couverture)
@@ -1511,7 +1513,7 @@ $("#b-add").addEventListener("click",()=>{const rows=BULK.filter(r=>r.on);if(!ro
   $("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.length} livres lus`;BULK=[];$("#b-list").value="";bulkDraw();addP.classList.remove("on");checkEmpty();
   render();nb.forEach(b=>b.el.classList.add("pre"));const st=Math.min(110,2600/nb.length);nb.forEach((b,k)=>setTimeout(()=>dropIn(b,k%3!==0),700+k*st));
   setTimeout(()=>toast(`${nb.length} livres rangés d'un coup. Les suivants, un par un, à chaque livre fini.`),900);
-  const q=nb.slice();(function nx(){const b=q.shift();if(!b)return;coverURL(b).then(u=>u&&applyCover(b,u)).catch(()=>{}).finally(()=>setTimeout(nx,300))})()});
+  nb.forEach(b=>coverURL(b).then(u=>u&&applyCover(b,u)).catch(()=>{}));verifyQueue(nb,3500)});
 function checkEmpty(){let e=$("#empty");if(BOOKS.length){e&&e.remove();return}if(e)return;e=document.createElement("div");e.id="empty";
   e.innerHTML=`<div><h3>L'étagère est vide.</h3><p>Commence par ranger d'un coup tous les livres que tu as déjà lus : une liste à coller, ou ton export Goodreads ou Babelio.</p><button class="plate" type="button">Tout ranger d'un coup ☞</button></div>`;
   e.querySelector("button").onclick=()=>{openAdd();addMode("many")};document.body.appendChild(e)}
@@ -1660,6 +1662,72 @@ const goSide=s=>{const fwd=(s==="l")===RD.rtl;fwd?next():prev();hint(s)};
   addEventListener("keydown",e=>{if(!rdEl.classList.contains("on"))return;if(e.key==="Escape"){e.stopImmediatePropagation();closeTome();return}
     if(e.key==="ArrowLeft")goSide("l");else if(e.key==="ArrowRight")goSide("r");else if(e.key===" "){e.preventDefault();next()}else return;e.preventDefault()},true)})();
 buildReader();ensureDemoCover();
+
+// ================= v13 : modifier un livre, vérifier l'auteur, récupérer le résumé =================
+const norm=s=>String(s||"").toLowerCase().replace(/ø/g,"o").replace(/æ/g,"ae").replace(/œ/g,"oe").replace(/ß/g,"ss").replace(/ł/g,"l").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9 ]+/g," ").replace(/\s+/g," ").trim();
+function lev(a,b){if(a===b)return 0;const m=a.length,n=b.length;if(!m||!n)return m||n;let p=Array.from({length:n+1},(_,j)=>j);for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
+const near=(a,b)=>{a=norm(a);b=norm(b);if(!a||!b)return false;return a===b||a.startsWith(b)||b.startsWith(a)||1-lev(a,b)/Math.max(a.length,b.length)>=.72};
+const stripHTML=s=>{const d=document.createElement("div");d.innerHTML=String(s||"").replace(/<br\s*\/?>/gi,"\n");return d.textContent.trim()};
+// Cherche le livre (Google Books en français d'abord, puis Open Library) : auteur bien orthographié, année, pages, couverture, résumé
+async function lookup(t,a){const out={};
+  try{const q=`intitle:${t}`+(a?` inauthor:${a.split(" ").pop()}`:"");const j=await (await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}&maxResults=10&printType=books&langRestrict=fr`)).json();online=true;
+    const its=(j.items||[]).map(x=>x.volumeInfo).filter(v=>near(v.title,t)&&(!a||(v.authors||[]).some(x=>near(x,a)||near(x.split(" ").pop(),a.split(" ").pop()))));
+    const best=its.find(v=>v.description&&v.description.length>200)||its.find(v=>v.description)||its[0];
+    if(best){out.a=(best.authors||[])[0];out.s=stripHTML(best.description||"");out.p=best.pageCount;out.gimg=best.imageLinks?.thumbnail?.replace("http:","https:").replace("&edge=curl","");}}catch(e){}
+  try{const j=await (await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(t)}&author=${encodeURIComponent(a||"")}&limit=5&fields=key,title,author_name,first_publish_year,number_of_pages_median,cover_i`)).json();online=true;
+    const d=(j.docs||[]).find(d=>!a||(d.author_name||[]).some(x=>near(x,a)))||(j.docs||[])[0];
+    if(d&&(!a||(d.author_name||[]).some(x=>near(x,a)))){out.y=d.first_publish_year;out.cid=d.cover_i;out.p=out.p||d.number_of_pages_median;if(!out.a)out.a=(d.author_name||[]).find(x=>near(x,a))||d.author_name?.[0];
+      if(!out.s&&d.key){try{const w=await (await fetch(`https://openlibrary.org${d.key}.json`)).json();const ds=typeof w.description==="string"?w.description:w.description?.value;if(ds)out.s=ds.replace(/\(\[source\].*$/s,"").replace(/-{3,}[\s\S]*$/,"").trim()}catch(e){}}}}catch(e){}
+  return out}
+const isSaved=b=>b&&b.r&&SAVED.includes(b.r);
+const saveSaved=()=>{try{localStorage.setItem("tranche-ajouts",JSON.stringify(SAVED))}catch(e){}};
+function moveLettrine(oldK,newK){if(oldK!==newK&&LTS[oldK]){LTS[newK]=LTS[oldK];delete LTS[oldK];try{localStorage.setItem("tranches-lettrines",JSON.stringify(LTS))}catch(e){}}}
+function rebuildBook(i){const old=BOOKS[i],b=makeBook(old.r,i);old.el?.remove();delete covers[i];const s=LTS[b.t+"|"+b.a];if(s)b.lt=s.img;BOOKS[i]=b;makeEl(b);if(!b.img)coverURL(b).then(u=>u&&applyCover(b,u));return b}
+// enrichit un livre ajouté : corrige l'auteur, complète année/pages/couverture/résumé ; ne touche jamais à ce que tu as choisi toi-même
+async function enrichBook(b,{redraw=true}={}){const r=b.r;if(!r)return false;const x=r[7]=r[7]||{};const L=await lookup(r[0],r[1]==="Auteur inconnu"?"":r[1]);if(online===false)return false;
+  let vis=false;const oldK=r[0]+"|"+r[1];
+  if(L.a&&L.a!==r[1]&&(r[1]==="Auteur inconnu"||near(L.a,r[1]))){r[1]=L.a;vis=true}
+  if(L.s&&(!r[6]||x.auto)){r[6]=L.s;x.auto=1}
+  if(L.p&&(!x.pman)&&(r[3]===250||!r[3])){r[3]=L.p;vis=true}
+  if(L.y&&!x.yman)r[2]=L.y;
+  if(!x.img&&!x.cid&&L.cid){x.cid=L.cid;vis=true}else if(!x.img&&!x.cid&&L.gimg){x.gimg=L.gimg}
+  x.chk=1;moveLettrine(oldK,r[0]+"|"+r[1]);if(isSaved(b))saveSaved();
+  if(vis&&redraw){rebuildBook(b.i);render()}else{b.s=r[6];b.a=r[1];b.y=r[2]}return true}
+// rattrape les livres déjà rangés qui n'ont jamais été vérifiés (ceux de la liste, par exemple)
+function verifyQueue(list,delay){const q=list.slice();if(!q.length)return;let ch=0;
+  const nx=async()=>{const b0=q.shift();if(!b0){if(ch){render();toast(`${ch} livre${ch>1?"s":""} vérifié${ch>1?"s":""} : auteurs, couvertures et résumés complétés.`)}return}
+    const b=BOOKS[b0.i];const before=JSON.stringify(b.r);let ok=false;try{ok=await enrichBook(b,{redraw:false})}catch(e){}if(!ok)return;if(JSON.stringify(b.r)!==before){rebuildBook(b.i);ch++}setTimeout(nx,450)};
+  setTimeout(nx,delay)}
+verifyQueue(BOOKS.filter(b=>isSaved(b)&&!(b.r[7]||{}).chk),4000);
+// ---- Fiche : bouton Modifier → le panneau d'ajout, prérempli ----
+let EDIT=null;const addHead={cap:$("#add .ms-cap text").textContent,h2:$("#add .ms-h h2").textContent};
+function openEdit(b){EDIT=b;const r=b.r,x=r[7]||{};closeBook();setTimeout(()=>{openAdd();addMode("one");addP.classList.add("editing");
+  $("#add .ms-cap text").textContent="M";$("#add .ms-h h2").textContent="odifier le livre";$("#a-t").value=r[0];$("#a-a").value=r[1]==="Auteur inconnu"?"":r[1];
+  $("#a-p").value=r[3]||"";$("#a-cm").value=x.cm||"";$("#a-g").value=r[4];$("#a-y").value=x.ry||"";fmt=r[5];document.querySelectorAll("#fmts .fm").forEach(f=>f.setAttribute("aria-pressed",f.dataset.f===fmt));
+  $("#a-add").innerHTML="Enregistrer <i>☞</i>";$("#a-del").hidden=false;$("#a-msg").textContent="Touche « Chercher » pour revoir l'auteur, choisir une autre couverture et reprendre le résumé.";$("#a-res").innerHTML="";pick=null;
+  if(x.img&&!x.gimg){$("#a-prev").src=x.img;$("#a-prev").hidden=false}setTimeout(()=>addP.scrollTo({top:0}),360)},closeT())}
+const closeT=()=>cur?950:0;
+function endEdit(){EDIT=null;addP.classList.remove("editing");$("#add .ms-cap text").textContent=addHead.cap;$("#add .ms-h h2").textContent=addHead.h2;$("#a-add").innerHTML="Ranger sur l'étagère <i>☞</i>";$("#a-del").hidden=true;
+  photo=spPhoto=null;$("#a-prev").hidden=$("#a-sprev").hidden=true;$("#a-form").reset();$("#a-res").innerHTML="";$("#a-msg").textContent="";pick=null}
+$("#add .pclose").addEventListener("click",()=>EDIT&&endEdit());
+async function saveEdit(){const b=EDIT,r=b.r,x=r[7]=r[7]||{},oldK=r[0]+"|"+r[1],oldT=r[0],oldA=r[1];
+  r[0]=(pick?.title||$("#a-t").value).trim()||r[0];r[1]=(pick?.author_name?.[0]||$("#a-a").value).trim()||"Auteur inconnu";
+  const p=+$("#a-p").value;if(p&&p!==r[3]){r[3]=p;x.pman=1}if(pick?.first_publish_year){r[2]=pick.first_publish_year}
+  r[4]=$("#a-g").value;r[5]=fmt;x.cm=+$("#a-cm").value||FMT[fmt].cm;const ry=+$("#a-y").value;if(ry)x.ry=ry;
+  if(pick?.cover_i){x.cid=pick.cover_i;delete x.img;delete x.gimg;delete x.c;delete x.t}
+  if(photo){x.img=photo.url;x.c=photo.paper;x.t=photo.ink;delete x.cid}if(spPhoto)x.spine=spPhoto.url;
+  if(!GORDER.includes(r[4]))GORDER.push(r[4]);moveLettrine(oldK,r[0]+"|"+r[1]);
+  const changedId=norm(oldT)!==norm(r[0])||norm(oldA)!==norm(r[1]);if(changedId){x.chk=0;if(x.auto)r[6]=null}
+  saveSaved();addP.classList.remove("on");const i=b.i;endEdit();const nb=rebuildBook(i);render();SND.seal();
+  setTimeout(()=>{const q=nb.el.getBoundingClientRect();tgt.x+=innerWidth/2-(q.left+q.width/2);tgt.y+=innerHeight/2-(q.top+q.height/2);K=.08;nb.el.classList.add("fresh");toast(`« ${r[0]} » est corrigé.`)},700);
+  if(!r[6]||changedId){const ok=await enrichBook(nb);if(ok&&BOOKS[i].s)toast(`Résumé de « ${r[0]} » récupéré.`)}}
+$("#a-add").addEventListener("click",e=>{if(!EDIT)return;e.stopImmediatePropagation();saveEdit()},true);
+let delArm=null;$("#a-del").addEventListener("click",e=>{const btn=e.currentTarget;if(!EDIT)return;if(!delArm){btn.classList.add("armed");btn.textContent="Sûr ? Le retirer";delArm=setTimeout(()=>{delArm=null;btn.classList.remove("armed");btn.textContent="Retirer de l'étagère"},4000);return}
+  clearTimeout(delArm);delArm=null;const k=SAVED.indexOf(EDIT.r);if(k>=0)SAVED.splice(k,1);saveSaved();sessionStorage.setItem("tranches-msg",`« ${EDIT.r[0]} » a quitté l'étagère.`);location.reload()});
+// le bouton Modifier apparaît dans la fiche des livres que tu as rangés
+new MutationObserver(()=>{const acts=$("#sh .acts");if(!acts||acts.querySelector("#editb")||!cur||!isSaved(cur))return;const bt=document.createElement("button");bt.className="btn ghost";bt.id="editb";bt.textContent="Modifier";const b=cur;bt.onclick=()=>openEdit(b);acts.insertBefore(bt,$("#close"))}).observe($("#sh"),{childList:true});
+// couverture Google Books en secours quand Open Library n'en a pas
+const _cov=coverURL;coverURL=async b=>{const u=await _cov(b);if(u)return u;const g=b.r?.[7]?.gimg;return g?covers[b.i]=g.replace("zoom=1","zoom=2"):null};
 </script>
 
 </body></html>

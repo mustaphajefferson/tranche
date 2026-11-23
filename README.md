@@ -19,6 +19,7 @@ Ouvre [`prototype/index.html`](prototype/index.html) dans un navigateur (double-
 - Bougie en haut à droite : nuit noire, seule la flamme éclaire, ambiance sonore de cave (bourdon, gouttes sous la voûte). Sons dans « Ranger ».
 - Ajouter un livre → photo de la couverture ou de la tranche : les contours sont détectés tout seuls, l'image est redressée comme un scan (coins ajustables avec une loupe, « Photo fidèle » ou « Gravure »).
 - Ajouter → « Plusieurs d'un coup » : coller une liste ou importer un export Goodreads / Babelio (.csv) pour le premier remplissage.
+- Fiche d'un livre que tu as rangé → « Modifier » : titre, auteur, couverture (recherche ou photo), format, détails, ou le retirer. Les livres ajoutés sont vérifiés tout seuls (orthographe de l'auteur, année, pages, couverture, résumé via Google Books et Open Library).
 - Reader : importer des .cbz (série et tome lus dans le nom du fichier), En cours / Collections / Terminés, liseuse sens manga ou BD, double page, zoom. Un tome d'exemple, « Le Copiste », est inclus.
 - Bouton rond en haut à droite : compte (Supabase, voir `docs/supabase.sql`) et réglages : sauvegarde, restauration, livres d'exemple, réinitialiser la collection.
 - Le logo T ramène à l'accueil.
