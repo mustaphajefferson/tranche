@@ -1,10 +1,10 @@
-# Tranche : le concept
+# Tranches : le concept
 
 ## L'idée en une phrase
 
-**Tranche, c'est ta bibliothèque de livres lus, vue de dos, et la mémoire de ce qu'il y avait dedans.**
+**Tranches, c'est ta bibliothèque de livres lus, vue de dos, et la mémoire de ce qu'il y avait dedans.**
 
-Une étagère, on la reconnaît à ses tranches. On ne lit pas les couvertures, on reconnaît une couleur, une typo, une épaisseur, et le souvenir revient. Tranche part de là : l'écran principal ne montre que des dos de livres, lisibles, et chaque livre garde un résumé de son intrigue pour quand le souvenir ne revient pas.
+Une étagère, on la reconnaît à ses tranches. On ne lit pas les couvertures, on reconnaît une couleur, une typo, une épaisseur, et le souvenir revient. Tranches part de là : l'écran principal ne montre que des dos de livres, lisibles, et chaque livre garde un résumé de son intrigue pour quand le souvenir ne revient pas.
 
 Le nom joue sur deux sens : la tranche du livre, et une « tranche de vie », celle où tu l'as lu.
 
@@ -12,7 +12,7 @@ Le nom joue sur deux sens : la tranche du livre, et une « tranche de vie », ce
 
 1. **Rien que des livres déjà lus.** Pas de progression, pas d'objectifs, pas de stats à remplir. C'est une mémoire, pas un tableau de bord.
 2. **Le dos comme interface.** Chaque tranche est générée à partir du vrai livre : la hauteur vient du format (poche, standard, grand format, beau livre), l'épaisseur vient du nombre de pages, la couleur vient de la couverture. Ta bibliothèque a donc la même silhouette qu'en vrai.
-3. **La poussière du souvenir.** Un livre que tu n'as pas ouvert dans l'app depuis plus d'un an perd peu à peu ses couleurs. Le rouvrir (relire son résumé) le ravive. L'étagère montre ainsi, sans un mot, ce que tu es en train d'oublier. C'est l'idée forte du projet.
+3. **Une ambiance de scriptorium.** Mode chandelle (la page s'assombrit, une lueur chaude suit le curseur ou le doigt) et sons discrets synthétisés : papier qui tourne, livre qu'on pose, sceau de cire.
 4. **Tu ranges comme tu veux.** Tri par genre, auteur, taille ou au hasard, et vue en étagère, en grande pile.
 5. **Le stylet dessine l'étagère.** Sur iPad, on trace une ligne et les livres viennent s'y poser. Voir [STYLET.md](STYLET.md).
 
@@ -36,9 +36,9 @@ Le nom joue sur deux sens : la tranche du livre, et une « tranche de vie », ce
 
 | Écran | Ce qu'on y fait |
 |---|---|
-| **Landing** | « TRANCHE » en très gros, « CHE » entouré au stylo bleu qui se dessine, une rangée de tranches qui monte. Un bouton pour entrer. |
+| **Landing** | « Tranches » en très gros, « ches » en rouge et entouré au stylo, une rangée de tranches qui monte. Un bouton pour entrer. |
 | **Bibliothèque** | Le canvas de tranches. Glisser à deux doigts pour naviguer, pincer pour zoomer. Survol = le livre grandit un peu. Un seul bouton rond pour la vue et le tri. |
-| **Fiche livre** | Clic sur une tranche : elle pivote en 3D et devient la couverture, les infos à côté (genre, année, pages, lu en, dernière visite) et le résumé de l'intrigue. Clic sur la couverture : le livre se retourne et montre la 4e. |
+| **Fiche livre** | Clic sur une tranche : elle pivote en 3D et devient la couverture, les infos à côté (genre, année, pages, lu en) et le résumé de l'intrigue. Clic sur la couverture : le livre se retourne et montre la 4e. |
 | **Wish list** | Même logique de tranches, mais en « fantômes » (contour seulement) : les livres que tu n'as pas encore. Pratique pour les idées cadeaux. |
 | **Reader** | Bouton présent, désactivé. Lecteur .cbz (mangas) et .epub (romans) beaucoup plus tard. |
 | **Ajouter un livre** | Tu tapes titre + auteur, l'app trouve couverture, date, pages, ISBN, description (Open Library, puis Google Books), puis génère le résumé de l'intrigue avec l'IA. |
@@ -49,7 +49,7 @@ Les livres photo, beaux livres et autres objets ont leur propre genre et un form
 
 ## Le Scriptorium : pousser le gothique plus loin
 
-Tranche se pense comme **un manuscrit enluminé de tes lectures**. Chaque livre lu y est recopié (le résumé), enluminé (sa couverture en gravure) et rubriqué (sa catégorie en rouge). La poussière qui gagne les livres oubliés devient celle d'un vieux codex.
+Tranches se pense comme **un manuscrit enluminé de tes lectures**. Chaque livre lu y est recopié (le résumé), enluminé (sa couverture en gravure) et rubriqué (sa catégorie en rouge).
 
 Déjà dans le prototype :
 - **Lettrines** : le résumé commence par une grande initiale gothique rouge, comme dans les manuscrits.
@@ -58,10 +58,10 @@ Déjà dans le prototype :
 - **Sceau** : quand on range un nouveau livre, un sceau de cire rouge au « T » s'imprime à l'écran.
 - **Manicules** : la petite main ☞ des marges médiévales signale les messages.
 - **Chiffres romains** : le compteur de livres lus sur la page d'accueil.
+- **Le chargement** : une lettrine « T » qui se dessine trait par trait au lieu d'un spinner.
+- **Chandelle et sons** : voir plus haut.
 
 À faire ensuite :
 - **La Chronique de l'an** : chaque fin d'année, une page façon calendrier enluminé avec les livres lus mois par mois.
-- **Ex-libris** : ton monogramme gothique imprimé dans la 4e de chaque livre.
-- **Marginalia** : tes notes au stylet dans les marges de la fiche, gardées comme des annotations de moine copiste.
-- **Le chargement** : une lettrine qui se dessine trait par trait au lieu d'un spinner.
+- **Ex-libris au stylet** : tu dessines une fois ta signature ou ton monogramme, l'app en fait un tampon rouge encadré de gothique, apposé à l'intérieur de chaque livre (4e de la fiche), sur les partages et la Chronique.
 - **Les tranches gravées** : une photo de la vraie tranche, passée au même filtre gravure, pour retrouver ton étagère réelle.

@@ -1,4 +1,4 @@
-# Tranche
+# Tranches
 
 **Ta bibliothèque de livres lus, vue de dos. Et de quoi t'en souvenir.**
 
@@ -16,9 +16,9 @@ Ouvre [`prototype/index.html`](prototype/index.html) dans un navigateur (double-
 - Survol : le livre grandit. Clic : la fiche s'ouvre, clic sur la couverture pour la retourner.
 - Bouton rond en bas à droite : vue (étagère, pile) et tri (genre, auteur, taille, hasard).
 - Maj + glisser (ou stylet sur iPad) : dessine une ligne, les livres s'y rangent.
-- Les tranches pâles sont des livres pas revus depuis plus d'un an : ouvre-les pour les raviver.
+- « Ranger » → Ambiance : mode Chandelle (la lumière suit le curseur) et Sons (papier, livre posé, sceau).
 
-Les 150 livres sont des exemples (une trentaine ont un résumé complet). Ouvert en local, le prototype va chercher la vraie couverture sur Open Library..
+Les 150 livres sont des exemples (une trentaine ont un résumé complet). Ouvert en local, le prototype va chercher la vraie couverture sur Open Library.
 
 ## Feuille de route
 

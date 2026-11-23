@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Tranche</title>
+<title>Tranches</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,21 +45,21 @@ button{font:inherit;color:inherit}
 .l-title{margin:0;font-size:min(25vw,40vh);font-family:var(--f-goth);font-weight:400;letter-spacing:0;color:var(--ink);white-space:nowrap;margin-left:-.04em}
 .l-title .k{color:var(--rub)}
 .l-tw{position:relative;display:inline-block}
-.l-scrib{position:absolute;left:47%;top:-10%;width:56%;height:120%;overflow:visible;pointer-events:none}
-.l-scrib path{fill:none;stroke:var(--rub);stroke-width:4;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.6s 1s var(--ease) forwards}
+.l-scrib{position:absolute;left:44%;top:-10%;width:60%;height:120%;overflow:visible;pointer-events:none}
+.l-scrib path{fill:none;stroke:var(--rub);stroke-width:4;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.6s 2.8s var(--ease) forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
 .l-row{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-top:18px}
 .l-tag{font-family:var(--f-text);font-style:italic;font-size:clamp(18px,2.2vw,26px);margin:0;max-width:26ch;line-height:1.3}
 .l-cta{border:0;background:var(--rub);color:#fff;padding:18px 30px;border-radius:999px;font-weight:700;font-stretch:90%;font-size:16px;cursor:pointer;transition:transform .35s var(--ease)}
 .l-cta:hover{transform:scale(1.06) rotate(-2deg)}
 .l-shelf{height:160px;margin:0 -16px;overflow:hidden;border-bottom:2px solid var(--ink)}
-.l-track{display:flex;align-items:flex-end;gap:2px;height:100%;width:max-content;animation:drift 90s linear 2.2s infinite}
+.l-track{display:flex;align-items:flex-end;gap:2px;height:100%;width:max-content;animation:drift 90s linear 4s infinite}
 .l-track span{flex:none;border-radius:2px 2px 0 0;animation:rise 1s var(--ease) both;transition:transform .35s var(--ease)}
 .l-track span:hover{transform:translateY(-14px)}
 @keyframes drift{to{transform:translateX(-50%)}}
 .l-title .ch{display:inline-block;animation:letter 1.1s var(--ease) both}
 @keyframes letter{from{opacity:0;transform:translateY(.35em) rotate(-8deg);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
-.l-tag,.l-cta{animation:fadein .9s 1.4s both}
+.l-tag,.l-cta{animation:fadein .9s 3.1s both}
 @keyframes rise{from{transform:translateY(105%)}to{transform:none}}
 
 /* ---------- Scène ---------- */
@@ -89,7 +89,6 @@ button{font:inherit;color:inherit}
 .cov.img{background-size:cover;background-position:center}
 .book:hover .cov,.book:hover .pg,.book:focus-visible .cov{visibility:visible}
 .book:hover .spine,.book:focus-visible .spine{transform:perspective(900px) translateY(-12px) translateZ(40px) rotateY(-34deg)}
-.book.dusty .spine{filter:saturate(.1) contrast(.75) brightness(1.08)}
 .book.gone{visibility:hidden}
 .txt{position:absolute;inset:0;writing-mode:vertical-rl;transform:rotate(180deg);display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;overflow:hidden}
 .txt .ti{flex:1;min-height:0;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--fs);line-height:1}
@@ -195,6 +194,26 @@ button{font:inherit;color:inherit}
   .sh{flex-direction:column;align-items:stretch;gap:40px}
   .b3{align-self:center}
 }
+/* ---------- Lettrine de chargement ---------- */
+#loader{position:fixed;inset:0;z-index:90;background:var(--paper);display:grid;place-items:center;transition:opacity .7s var(--ease)}
+#loader.out{opacity:0;pointer-events:none}
+.lettrine{width:min(220px,40vw);height:auto;overflow:visible}
+.lettrine text{font-family:var(--f-goth);font-size:200px;fill:transparent;stroke:var(--rub);stroke-width:2;stroke-dasharray:1400;stroke-dashoffset:1400;animation:trace 1.8s var(--ease) forwards,ink .6s 1.4s forwards}
+.lettrine rect{fill:none;stroke:var(--ink);stroke-width:1.5;stroke-dasharray:900;stroke-dashoffset:900;animation:trace 1.4s .2s var(--ease) forwards}
+@keyframes trace{to{stroke-dashoffset:0}}
+@keyframes ink{to{fill:var(--rub)}}
+.mini{display:inline-block;width:28px;vertical-align:middle;margin-right:8px}
+.mini text{font-size:200px;stroke-width:6;animation:trace 1.2s var(--ease) infinite alternate}
+/* ---------- Ambiance chandelle ---------- */
+:root[data-candle]{--paper:#0d0a08;--paper-2:#1a1410;--ink:#efe2cb;--ink-soft:#a8957a;--rub:#e0482f;--glass:rgba(20,14,10,.7);--shadow:rgba(0,0,0,.7);color-scheme:dark}
+#candle{position:fixed;inset:0;z-index:6;pointer-events:none;opacity:0;transition:opacity 1.2s ease;
+  background:radial-gradient(circle var(--cr,420px) at var(--mx,50%) var(--my,50%),rgba(255,170,80,.16) 0,rgba(255,140,60,.06) 30%,rgba(8,5,3,.55) 62%,rgba(5,3,2,.93) 100%)}
+:root[data-candle] #candle{opacity:1}
+:root[data-candle] .book .sf{filter:sepia(.25) saturate(.9)}
+.sw{display:flex;gap:8px;flex-wrap:wrap}
+.sw button{border:1px solid color-mix(in srgb,var(--ink) 18%,transparent);background:none;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer}
+.sw button[aria-pressed="true"]{background:var(--rub);border-color:var(--rub);color:#fff}
+
 /* ---------- Panneaux (ajout, reader) ---------- */
 .panel{position:fixed;inset:0;z-index:40;background:var(--paper);overflow-y:auto;opacity:0;pointer-events:none;transform:translateY(24px);transition:.5s var(--ease);
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:calc(24px + env(safe-area-inset-top,0px)) 80px}
@@ -243,10 +262,12 @@ button{font:inherit;color:inherit}
 <body>
 
 <!-- Landing -->
+<div id="loader" aria-hidden="true"><svg class="lettrine" viewBox="0 0 220 240"><rect x="6" y="6" width="208" height="228" rx="4"/><text x="110" y="185" text-anchor="middle" pathLength="1">T</text></svg></div>
+<div id="candle" aria-hidden="true"></div>
 <section id="landing" aria-label="Accueil">
   <div class="l-top"><span>Bibliothèque personnelle</span><span id="lcount"></span></div>
   <div class="l-mid">
-    <div class="l-tw"><h1 class="l-title">Tran<span class="k">che</span></h1>
+    <div class="l-tw"><h1 class="l-title">Tranches</h1>
     <svg class="l-scrib" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M30,8 C62,-4 98,8 99,48 C100,88 60,99 30,94 C4,90 -2,52 6,30 C12,14 26,8 44,6"/></svg></div>
     <div class="l-row">
       <p class="l-tag">Tout ce que tu as lu, vu de dos. Et de quoi t'en souvenir.</p>
@@ -276,7 +297,8 @@ button{font:inherit;color:inherit}
     <button data-s="recent" aria-pressed="false">Dernier lu</button>
     <button data-s="hasard" aria-pressed="false">Hasard</button>
   </div></div>
-  <p>Deux doigts pour naviguer, pincer pour zoomer. <b>Maj + glisser</b> (ou le stylet) dessine une étagère. Les livres pâles prennent la poussière : ouvre-les.</p>
+  <p>Deux doigts pour naviguer, pincer pour zoomer. <b>Maj + glisser</b> (ou le stylet) dessine une étagère.</p>
+  <div><h4>Ambiance</h4><div class="sw"><button id="t-candle" aria-pressed="false">Chandelle</button><button id="t-sound" aria-pressed="true">Sons</button></div></div>
   <div class="soon">
     <button data-soon="La wish list arrive bientôt : les livres que tu veux, pour les idées cadeaux.">Wish list</button>
   </div>
@@ -428,13 +450,13 @@ function wob(x0,x1,y,seed){const R=rnd(seed),pts=[];for(let x=x0;x<x1;x+=80)pts.
 // ---------- Landing ----------
 $("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.length} livres lus`;
 (()=>{const tr=document.createElement("div");tr.className="l-track";$("#lshelf").appendChild(tr);const R=rnd(4),pick=[...BOOKS].sort(()=>R()-.5).slice(0,70);
-  [...pick,...pick].forEach((b,k)=>{const e=document.createElement("span");e.style.cssText=`width:${b.w*.8}px;height:${b.h*.5}px;background:${b.c};animation-delay:${200+(k%70)*22}ms`;tr.appendChild(e)});
-  const h=$(".l-title");h.innerHTML=[...h.textContent].map((c,k)=>`<span class="ch${k>3?" k":""}" style="animation-delay:${150+k*90}ms">${c}</span>`).join("")})();
+  [...pick,...pick].forEach((b,k)=>{const e=document.createElement("span");e.style.cssText=`width:${b.w*.8}px;height:${b.h*.5}px;background:${b.c};animation-delay:${1900+(k%70)*22}ms`;tr.appendChild(e)});
+  const h=$(".l-title");h.innerHTML=[...h.textContent].map((c,k)=>`<span class="ch${k>3?" k":""}" style="animation-delay:${2000+k*90}ms">${c}</span>`).join("")})();
 
 // ---------- Tranches ----------
 const world=$("#world"),marks=$("#marks"),stage=$("#stage");
 const spineHTML=b=>`<span class="spine"><span class="sf"></span><span class="cov"></span><span class="txt"><span class="au">${b.last}</span><span class="ti">${b.t}</span><span class="mk"></span></span></span>`;
-function makeEl(b){const e=document.createElement("button");e.className=`book v${b.v}`+(b.w<22?" thin":"")+(b.d>390?" dusty":"");
+function makeEl(b){const e=document.createElement("button");e.className=`book v${b.v}`+(b.w<22?" thin":"");
   e.style.cssText=`--w:${b.w}px;--h:${b.h}px;--c:${b.c};--t:${b.ink};--fs:${Math.min(15,Math.max(8.5,b.w*.42))}px`;
   e.setAttribute("aria-label",`${b.t}, ${b.a}`);e.innerHTML=spineHTML(b);e.dataset.i=b.i;b.el=e;world.appendChild(e);
   if(b.img){const c=e.querySelector(".cov");c.classList.add("img");c.style.backgroundImage=`url("${b.img}")`}
@@ -540,7 +562,7 @@ const fab=$("#fab"),menu=$("#menu");
 function closeMenu(){menu.classList.remove("on");$("#openMenu").setAttribute("aria-expanded","false")}
 const mb=$("#openMenu");mb.addEventListener("click",()=>{const on=!menu.classList.contains("on");menu.classList.toggle("on",on);mb.setAttribute("aria-expanded",on)});
 function press(sel,attr,val){document.querySelectorAll(sel+" button").forEach(b=>b.setAttribute("aria-pressed",b.dataset[attr]===val))}
-function setLayout(l){state.layout=l;press("#layouts","l",l);render()}
+function setLayout(l){state.layout=l;press("#layouts","l",l);render();SND.thump(.6)}
 $("#layouts").addEventListener("click",e=>{const b=e.target.closest("button");if(b&&!b.disabled)setLayout(b.dataset.l)});
 $("#sorts").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;if(b.dataset.s==="hasard")state.seed++;state.sort=b.dataset.s;press("#sorts","s",state.sort);render()});
 let tt;function toast(m){const t=$("#toast");t.textContent="☞ "+m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),3400)}
@@ -549,10 +571,9 @@ document.querySelectorAll("[data-soon]").forEach(b=>b.addEventListener("click",(
 // ---------- Fiche : la tranche pivote et devient la couverture ----------
 const sheet=$("#sheet");let src=null,startT="",busy=false;
 const restT="rotateY(-24deg)",flipT="rotateY(156deg)";
-function openBook(b,el){if(busy||cur)return;cur=b;src=el;const H=Math.round(Math.min(innerHeight*.62,innerWidth<820?360:500)*(b.f==="B"?1:Math.min(1,.86+b.h/1500))),
+function openBook(b,el){if(busy||cur)return;cur=b;src=el;SND.paper();const H=Math.round(Math.min(innerHeight*.62,innerWidth<820?360:500)*(b.f==="B"?1:Math.min(1,.86+b.h/1500))),
   W=Math.round(H*(b.f==="B"?.8:.66)),D=Math.max(10,Math.round(b.w*H/b.h)),R=rnd(b.i*7+1);
   const bars=Array.from({length:32},()=>`<span style="--bw:${1+Math.floor(R()*3)}px"></span>`).join("");
-  const seen=b.d>365?`il y a ${Math.round(b.d/30)} mois`:`il y a ${b.d} j`;
   $("#sh").innerHTML=`
   <div class="b3" tabindex="0" role="button" aria-label="Retourner le livre">
     <div class="bx v${b.v}" style="--W:${W}px;--H:${H}px;--D:${D}px;--c:${b.c};--t:${b.ink}">
@@ -567,7 +588,7 @@ function openBook(b,el){if(busy||cur)return;cur=b;src=el;const H=Math.round(Math
   <div class="info">
     <span class="gk big"><svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path d="${blob(50,15,50,15,b.i+9,.06,8)}"/></svg>${b.g}</span>
     <h2 class="big">${b.t}</h2><p class="by">${b.a}</p>
-    <dl><div><dt>Paru</dt><dd>${b.y}</dd></div><div><dt>Pages</dt><dd>${b.p}</dd></div><div><dt>Lu en</dt><dd>${MOIS[b.rm-1]} ${b.ry}</dd></div><div><dt>Revu</dt><dd>${seen}</dd></div></dl>
+    <dl><div><dt>Paru</dt><dd>${b.y}</dd></div><div><dt>Pages</dt><dd>${b.p}</dd></div><div><dt>Lu en</dt><dd>${MOIS[b.rm-1]} ${b.ry}</dd></div></dl>
     <h3>Résumé de l'intrigue</h3>${b.s?`<p class="sum">${b.s}</p>`:`<p class="sum" style="color:var(--ink-soft)">Livre d'exemple sans résumé. Dans l'app, le résumé complet de l'intrigue est généré par l'IA quand tu ajoutes le livre.</p>`}
     <div class="acts"><button class="btn" id="flip">Retourner</button><button class="btn ghost" id="close">Ranger</button></div>
   </div>`;
@@ -576,18 +597,17 @@ function openBook(b,el){if(busy||cur)return;cur=b;src=el;const H=Math.round(Math
   startT=`translate(${r1.left+r1.width/2-(r0.left+r0.width/2)}px,${r1.top+r1.height/2-(r0.top+r0.height/2)}px) scale(${Math.max(k,.05)}) rotateY(90deg)`;
   bx.style.transition="none";bx.style.transform=startT;bx.getBoundingClientRect();el.classList.add("gone");
   requestAnimationFrame(()=>{bx.style.transition="transform 1.15s cubic-bezier(.3,.8,.2,1)";bx.style.transform=restT;sheet.classList.add("ready")});
-  const b3=$("#sh .b3");let flipped=false;const flip=()=>{if(sheet.scrollTop>40&&innerWidth<820)sheet.scrollTo({top:0,behavior:"smooth"});flipped=!flipped;bx.style.transition="transform 1s var(--ease)";bx.style.transform=flipped?flipT:restT};
+  const b3=$("#sh .b3");let flipped=false;const flip=()=>{SND.paper(.8);if(sheet.scrollTop>40&&innerWidth<820)sheet.scrollTo({top:0,behavior:"smooth"});flipped=!flipped;bx.style.transition="transform 1s var(--ease)";bx.style.transform=flipped?flipT:restT};
   b3.addEventListener("click",flip);b3.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip()}});$("#flip").addEventListener("click",flip);$("#close").addEventListener("click",closeBook);
   setTimeout(()=>$("#close")?.focus({preventScroll:true}),600);realCover(b,$("#sh .real"))}
 // Vraie couverture via Open Library (marche en local ou en ligne ; bloqué dans l'aperçu Claude, on garde alors la couverture générée)
 async function realCover(b,img){const u=b.img||await coverURL(b);if(u&&img){img.onload=()=>img.classList.add("on");img.src=u}}
-function closeBook(){if(!cur||busy)return;busy=true;const b=cur,el=src,bx=$("#sh .bx");sheet.classList.remove("ready");
+function closeBook(){if(!cur||busy)return;busy=true;setTimeout(()=>SND.thump(),780);const b=cur,el=src,bx=$("#sh .bx");sheet.classList.remove("ready");
   const r1=el.getBoundingClientRect(),r0=(bx.style.transform="none",bx.style.transition="none",bx.getBoundingClientRect());bx.style.transform=restT;bx.getBoundingClientRect();
   const k=r1.height/parseFloat(getComputedStyle(bx).getPropertyValue("--H"));
   bx.style.transition="transform .9s cubic-bezier(.5,0,.2,1)";bx.style.transform=`translate(${r1.left+r1.width/2-(r0.left+r0.width/2)}px,${r1.top+r1.height/2-(r0.top+r0.height/2)}px) scale(${Math.max(k,.05)}) rotateY(90deg)`;
   setTimeout(()=>sheet.classList.remove("on"),450);
-  setTimeout(()=>{el.classList.remove("gone");cur=null;busy=false;$("#sh").innerHTML="";
-    if(b.d>365){b.d=0;document.querySelectorAll(`.book[data-i="${b.i}"]`).forEach(x=>x.classList.remove("dusty"));toast(`« ${b.t} » a repris ses couleurs.`)}},900)}
+  setTimeout(()=>{el.classList.remove("gone");cur=null;busy=false;$("#sh").innerHTML="";},900)}
 sheet.addEventListener("click",e=>{if(e.target===sheet||e.target.id==="sh")closeBook()});
 addEventListener("keydown",e=>{if(e.key==="Escape"){if(cur)closeBook();else{closeMenu();document.querySelectorAll(".panel.on").forEach(p=>p.classList.remove("on"))}}});
 
@@ -605,14 +625,14 @@ async function coverQueue(){const q=BOOKS.filter(b=>!b.img);const worker=async()
 
 // ---------- Ajouter un livre ----------
 const addP=$("#add");let pick=null,fmt="S";
-function openAdd(){closeMenu();addP.classList.add("on");setTimeout(()=>$("#a-t").focus(),300)}
+function openAdd(){closeMenu();SND.paper(.7);addP.classList.add("on");setTimeout(()=>$("#a-t").focus(),300)}
 $("#fab").addEventListener("click",openAdd);$("#add .pclose").addEventListener("click",()=>addP.classList.remove("on"));
 $("#a-g").innerHTML=GORDER.map(g=>`<option>${g}</option>`).join("")+"<option>Mangas</option><option>Autres</option>";
 $("#fmts").innerHTML=Object.entries(FMT).map(([k,v])=>`<button type="button" class="fm" data-f="${k}" aria-pressed="${k===fmt}" style="--fh:${v.h/5}px"><i></i>${{P:"Poche",S:"Standard",G:"Grand format",B:"Beau livre",A:"Artbook"}[k]}<br>${String(v.cm).replace(".",",")} cm</button>`).join("");
 $("#fmts").addEventListener("click",e=>{const b=e.target.closest(".fm");if(!b)return;fmt=b.dataset.f;$("#a-cm").value=FMT[fmt].cm;document.querySelectorAll(".fm").forEach(x=>x.setAttribute("aria-pressed",x===b))});
 $("#a-cm").value=FMT[fmt].cm;$("#a-y").value=new Date().getFullYear();
 $("#a-form").addEventListener("submit",async e=>{e.preventDefault();const t=$("#a-t").value.trim(),a=$("#a-a").value.trim();if(!t)return;const res=$("#a-res"),msg=$("#a-msg");pick=null;
-  msg.textContent="Recherche sur Open Library…";res.innerHTML="";
+  msg.innerHTML=`<svg class="lettrine mini" viewBox="0 0 220 240" aria-hidden="true"><text x="110" y="185" text-anchor="middle">T</text></svg>Recherche sur Open Library…`;res.innerHTML="";
   try{const r=await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(t)}&author=${encodeURIComponent(a)}&limit=8&fields=title,author_name,first_publish_year,number_of_pages_median,cover_i`);
     const docs=(await r.json()).docs||[];if(!docs.length){msg.textContent="Aucun résultat. Tu peux quand même l'ajouter avec les infos tapées.";return}
     msg.textContent="Choisis la bonne édition :";res.innerHTML=docs.map((d,k)=>`<button type="button" class="rc" data-k="${k}" aria-pressed="false"><span class="im" style="${d.cover_i?`background-image:url(https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg)`:""}"></span><b>${d.title}</b><span>${(d.author_name||[""])[0]} · ${d.first_publish_year||"?"}${d.number_of_pages_median?` · ${d.number_of_pages_median} p.`:""}</span></button>`).join("");
@@ -651,7 +671,28 @@ let photo=null,spPhoto=null;
 function readImg(file,cb){const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>cb(im);im.src=fr.result};fr.readAsDataURL(file)}
 $("#a-photo").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;readImg(f,im=>{photo=engrave(im,320);const p=$("#a-prev");p.src=photo.url;p.hidden=false})});
 $("#a-sp").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;readImg(f,im=>{spPhoto=engrave(im,120);const p=$("#a-sprev");p.src=spPhoto.url;p.hidden=false})});
-function seal(){const s=document.createElement("div");s.className="seal";s.textContent="T";document.body.appendChild(s);setTimeout(()=>s.remove(),1700)}
+// ---------- Sons (synthétisés, aucun fichier) ----------
+let AC=null,soundOn=true;try{soundOn=localStorage.getItem("tranches-sons")!=="0"}catch(e){}
+const ac=()=>{if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==="suspended")AC.resume();return AC};
+function noise(a,dur){const b=a.createBuffer(1,Math.ceil(a.sampleRate*dur),a.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const s=a.createBufferSource();s.buffer=b;return s}
+function env(a,node,t0,peak,att,dec){const g=a.createGain();g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(peak,t0+att);g.gain.exponentialRampToValueAtTime(.0001,t0+att+dec);node.connect(g);g.connect(a.destination);return g}
+const SND={
+  paper(v=1){const a=ac();if(!a||!soundOn)return;const t=a.currentTime,n=noise(a,.35),f=a.createBiquadFilter();f.type="bandpass";f.frequency.setValueAtTime(2400,t);f.frequency.linearRampToValueAtTime(5200,t+.25);f.Q.value=.8;n.connect(f);env(a,f,t,.11*v,.04,.25);n.start(t)},
+  rustle(){const a=ac();if(!a||!soundOn)return;const t=a.currentTime,n=noise(a,.08),f=a.createBiquadFilter();f.type="highpass";f.frequency.value=3500;n.connect(f);env(a,f,t,.025,.005,.06);n.start(t)},
+  thump(v=1){const a=ac();if(!a||!soundOn)return;const t=a.currentTime,o=a.createOscillator();o.type="sine";o.frequency.setValueAtTime(140,t);o.frequency.exponentialRampToValueAtTime(55,t+.18);env(a,o,t,.35*v,.005,.22);o.start(t);o.stop(t+.3);
+    const n=noise(a,.12),f=a.createBiquadFilter();f.type="lowpass";f.frequency.value=900;n.connect(f);env(a,f,t,.12*v,.003,.09);n.start(t)},
+  seal(){const a=ac();if(!a||!soundOn)return;SND.thump(1.3);const t=a.currentTime+.05,n=noise(a,.05),f=a.createBiquadFilter();f.type="bandpass";f.frequency.value=1800;f.Q.value=2;n.connect(f);env(a,f,t,.12,.002,.04);n.start(t)}
+};
+let lastRustle=0;world.addEventListener("pointerover",e=>{if(e.pointerType==="mouse"&&e.target.closest(".book")&&performance.now()-lastRustle>70){lastRustle=performance.now();SND.rustle()}});
+$("#t-sound").setAttribute("aria-pressed",soundOn);$("#t-sound").addEventListener("click",e=>{soundOn=!soundOn;e.currentTarget.setAttribute("aria-pressed",soundOn);try{localStorage.setItem("tranches-sons",soundOn?"1":"0")}catch(_){};if(soundOn)SND.paper()});
+// ---------- Chandelle : la lumière suit le curseur (ou le doigt), avec un léger vacillement ----------
+const candle=$("#candle");let cx=innerWidth/2,cy=innerHeight/2,tx=cx,ty=cy;
+addEventListener("pointermove",e=>{tx=e.clientX;ty=e.clientY});
+(function flame(t){cx+=(tx-cx)*.12;cy+=(ty-cy)*.12;if(document.documentElement.dataset.candle!==undefined){const r=400+Math.sin(t/170)*14+Math.sin(t/53)*8+Math.sin(t/31)*4;
+  candle.style.setProperty("--mx",cx+"px");candle.style.setProperty("--my",cy+"px");candle.style.setProperty("--cr",r+"px")}requestAnimationFrame(flame)})(0);
+$("#t-candle").addEventListener("click",e=>{const on=document.documentElement.dataset.candle===undefined;if(on)document.documentElement.dataset.candle="";else delete document.documentElement.dataset.candle;
+  e.currentTarget.setAttribute("aria-pressed",on);SND.paper(.6);render(true)});
+function seal(){SND.seal();const s=document.createElement("div");s.className="seal";s.textContent="T";document.body.appendChild(s);setTimeout(()=>s.remove(),1700)}
 
 // ---------- Reader (aperçu) ----------
 const SERIES=[// [série, auteur, tomes parus, tomes lus, tome en cours, page, pages du tome, couleur, collection]
@@ -664,12 +705,16 @@ function buildReader(){const cur=SERIES.filter(s=>s[4]),done=SERIES.filter(s=>!s
   $("#r-done").innerHTML=done.map(s=>`<div class="cc"><h4>${s[0]}</h4><div class="meta">${s[1]} · ${s[2]} tomes, tous lus</div></div>`).join("");
   $("#reader").querySelectorAll("[data-soon]").forEach(b=>b.addEventListener("click",()=>toast(b.dataset.soon)))}
 buildReader();
-$("#openReader").addEventListener("click",()=>{closeMenu();$("#reader").classList.add("on")});$("#reader .pclose").addEventListener("click",()=>$("#reader").classList.remove("on"));
+$("#openReader").addEventListener("click",()=>{closeMenu();SND.paper(.7);$("#reader").classList.add("on")});$("#reader .pclose").addEventListener("click",()=>$("#reader").classList.remove("on"));
+
+// ---------- Chargement ----------
+Promise.all([document.fonts?document.fonts.ready:0,new Promise(r=>setTimeout(r,1900))]).then(()=>{$("#loader").classList.add("out");setTimeout(()=>$("#loader").remove(),800)});
 
 // ---------- Entrée ----------
 render(true);cam.x=tgt.x;cam.y=tgt.y+300;cam.s=tgt.s*.92;apply();
 $("#enter").addEventListener("click",()=>{$("#landing").classList.add("out");K=.05;setTimeout(seal,700);setTimeout(()=>toast("Clique sur une tranche pour l'ouvrir. Le + range un nouveau livre."),2300)});
 coverQueue();
 </script>
+
 </body>
 </html>
