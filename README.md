@@ -16,7 +16,8 @@ Ouvre [`prototype/index.html`](prototype/index.html) dans un navigateur (double-
 - Survol : le livre grandit. Clic : la fiche s'ouvre, clic sur la couverture pour la retourner.
 - Bouton rond en bas à droite : vue (étagère, pile) et tri (genre, auteur, taille, hasard).
 - Maj + glisser (ou stylet sur iPad) : dessine une ligne, les livres s'y rangent.
-- « Ranger » → Ambiance : mode Chandelle (la lumière suit le curseur) et Sons (papier, livre posé, sceau).
+- Bougie en haut à droite : nuit d'orage à la chandelle (pluie, vent, éclairs, tonnerre). Sons dans « Ranger ».
+- Dans la fiche d'un livre : « Relier à la main » ouvre l'atelier de reliure (stylet sur iPad, souris sur ordi).
 
 Les 150 livres sont des exemples (une trentaine ont un résumé complet). Ouvert en local, le prototype va chercher la vraie couverture sur Open Library.
 
