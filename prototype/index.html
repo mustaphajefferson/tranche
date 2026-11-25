@@ -688,6 +688,28 @@ button{font:inherit;color:inherit}
 #add.editing .ms-mode{display:none}
 #a-del{align-self:center}
 .rc{position:relative}.srcb{position:absolute;top:6px;left:6px;font-style:normal;font-size:10px;font-weight:600;letter-spacing:.04em;background:var(--paper);color:var(--ink-soft);padding:2px 6px;border-radius:999px}
+/* v17 : sélection de plusieurs livres */
+.book.pk .spine{transform:perspective(900px) translateY(-16px)}
+.book.pk .sf{box-shadow:0 12px 18px -8px var(--shadow),0 0 0 3px var(--rub)}
+.book.pk::after{content:"✓";position:absolute;left:50%;top:-30px;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;background:var(--rub);color:#fff;font:700 13px/22px Inter,system-ui,sans-serif;text-align:center;pointer-events:none}
+body.picking .fab{opacity:0;pointer-events:none}
+body.picking .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+@media (max-width:640px){body.picking .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}}
+#pickbar{position:fixed;z-index:30;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translate(-50%,140%);opacity:0;transition:transform .45s var(--ease),opacity .3s;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;max-width:calc(100vw - 32px);width:max-content;padding:8px;border-radius:18px;background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 14px 40px -14px var(--shadow);font:500 14px/1.2 Inter,system-ui,sans-serif;color:var(--ink);pointer-events:none}
+#pickbar.on{transform:translate(-50%,0);opacity:1;pointer-events:auto}
+#pickbar .pb-n{padding:0 10px;font-weight:600;white-space:nowrap}
+#pickbar button,#pickbar select{min-height:40px;border:0;border-radius:12px;padding:0 13px;background:var(--paper);color:var(--ink);font:inherit;cursor:pointer}
+#pickbar select{appearance:none;-webkit-appearance:none;padding-right:13px;max-width:170px}
+#pickbar button:disabled,#pickbar select:disabled{opacity:.35;cursor:default}
+#pickbar .pb-del.armed{background:var(--rub);color:#fff}
+#pickbar .pb-end{background:var(--ink);color:var(--paper);font-weight:600}
+@media (max-width:640px){#pickbar{bottom:calc(10px + env(safe-area-inset-bottom,0px));border-radius:16px}#pickbar .pb-n{width:100%;text-align:center;padding:4px 0 2px}#pickbar button,#pickbar select{min-height:44px}}
+#add .rc .ck{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:var(--paper);box-shadow:0 0 0 1.5px var(--ink-soft) inset;transition:background .2s,box-shadow .2s}
+#add .rc[aria-pressed="true"] .ck{background:var(--rub);box-shadow:none}
+#add .rc[aria-pressed="true"] .ck::after{content:"✓";display:block;color:#fff;font:700 14px/24px Inter,system-ui,sans-serif;text-align:center}
+#add .rc .own{position:absolute;left:6px;top:calc(6px + 22px);font-style:normal;font-size:10px;font-weight:600;background:var(--ink);color:var(--paper);padding:2px 6px;border-radius:999px}
+#add .rc.has .im{opacity:.55}
+#a-msg .lnk{border:0;background:none;padding:0 0 0 6px;color:var(--rub);font:inherit;font-weight:600;text-decoration:underline;cursor:pointer}
 </style>
 </head><body>
 
@@ -729,6 +751,7 @@ button{font:inherit;color:inherit}
     <button data-s="hasard" aria-pressed="false">Hasard</button>
   </div></div>
   <p>Deux doigts (ou le stylet) pour naviguer, pincer pour zoomer. <b>Tracé</b> : dessine une étagère au stylet, au doigt ou à la souris.</p>
+  <div><h4>Plusieurs livres</h4><div class="sw"><button id="t-pick" aria-pressed="false">Sélectionner</button></div></div>
   <div><h4>Ambiance</h4><div class="sw"><button id="t-sound" aria-pressed="true">Sons</button></div></div>
   <div class="soon">
     <button data-soon="La wish list arrive bientôt : les livres que tu veux, pour les idées cadeaux.">Wish list</button>
@@ -736,6 +759,7 @@ button{font:inherit;color:inherit}
 </div>
 
 <div class="toast" id="toast" role="status"></div>
+<div id="pickbar" role="toolbar" aria-label="Livres choisis"><span class="pb-n" id="pb-n">Touche des livres</span><button type="button" data-a="auteur">+ même auteur</button><button type="button" data-a="lu">Lus</button><button type="button" data-a="alire">À lire</button><label class="pb-g"><select id="pb-g" aria-label="Changer la catégorie"></select></label><button type="button" data-a="retirer" class="pb-del">Retirer</button><button type="button" data-a="fin" class="pb-end">Terminé</button></div>
 <div id="scan" role="dialog" aria-modal="true" aria-label="Scanner la photo"><div class="sc-in">
   <h3>Le <b>scriptorium</b> redresse ta page</h3><p>Les coins sont trouvés tout seuls. Tu peux les déplacer si besoin.</p>
   <div class="sc-wrap"><canvas id="sc-cv"></canvas><svg id="sc-svg"><path class="shade"/><path class="q" pathLength="1"/><circle class="h" r="1"/><circle class="h" r="1"/><circle class="h" r="1"/><circle class="h" r="1"/></svg><div class="sc-line"></div></div>
@@ -747,10 +771,10 @@ button{font:inherit;color:inherit}
 <section class="panel ms" id="add" aria-label="Ajouter un livre"><div class="pin">
   <div class="phead"><div class="ms-h"><svg class="ms-cap" viewBox="0 0 100 100" aria-hidden="true"><rect class="o" x="3" y="3" width="94" height="94"/><rect class="r" x="11" y="11" width="78" height="78"/><circle cx="3" cy="3" r="4"/><circle cx="97" cy="3" r="4"/><circle cx="3" cy="97" r="4"/><circle cx="97" cy="97" r="4"/><text x="50" y="79" text-anchor="middle">A</text></svg><h2 class="big">jouter un livre</h2></div><button class="pclose" aria-label="Fermer">×</button></div>
   <div class="ms-mode" id="a-mode"><button type="button" data-m="one" aria-pressed="true">Un livre</button><button type="button" data-m="many" aria-pressed="false">Plusieurs d'un coup</button></div>
-  <p class="ms-intro one">Écris son titre et son auteur. Tranches cherche la couverture, l'année et le nombre de pages, puis le range à sa vraie taille.</p>
+  <p class="ms-intro one">Écris son titre et son auteur. Tranches cherche la couverture, l'année et le nombre de pages, puis le range à sa vraie taille. Sans titre, il montre tous les livres de l'auteur : coche ceux que tu as.</p>
   <div class="ms-sec one"><h3><b>I</b>Le livre</h3>
     <form id="a-form" class="ms-form" autocomplete="off">
-      <label class="ms-fld" for="a-t"><span>Titre</span><input id="a-t" placeholder="L'Étranger" required></label>
+      <label class="ms-fld" for="a-t"><span>Titre</span><input id="a-t" placeholder="L'Étranger"></label>
       <label class="ms-fld" for="a-a"><span>Auteur</span><input id="a-a" placeholder="Albert Camus" list="dl-auteurs" autocomplete="off"><datalist id="dl-auteurs"></datalist><datalist id="dl-ed"></datalist></label>
       <button class="plate" type="submit">Chercher <i>☞</i></button>
     </form>
@@ -943,8 +967,9 @@ function curve(p,closed){const n=p.length;if(n<2)return"";let d=`M${f1(p[0][0])}
 function blob(cx,cy,rx,ry,seed,amp=.1,n=9){const R=rnd(seed),pts=[],o=R()*6;for(let i=0;i<=n;i++){const a=o+i/n*Math.PI*2*1.04,k=1+(R()-.5)*2*amp;pts.push([cx+Math.cos(a)*rx*k,cy+Math.sin(a)*ry*k])}return curve(pts,false)}
 function wob(x0,x1,y,seed){const R=rnd(seed),pts=[];for(let x=x0;x<x1;x+=80)pts.push([x,y+(R()-.5)*3.4]);pts.push([x1,y+(R()-.5)*3.4]);return curve(pts,false)}
 
+function updCount(){const L=BOOKS.filter(b=>!b.gone),u=L.filter(b=>b.unread).length;$("#lcount").textContent=`${roman(L.length)} · ${L.length-u} livres lus${u?` · ${u} à lire`:""}`}
 // ---------- Landing ----------
-$("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.filter(b=>!b.unread).length} livres lus${BOOKS.some(b=>b.unread)?` · ${BOOKS.filter(b=>b.unread).length} à lire`:""}`;
+updCount();
 (()=>{const sh=$("#lshelf"),tr=document.createElement("div");tr.className="l-track";sh.appendChild(tr);const R=rnd(4),pick=[...BOOKS].sort(()=>R()-.5).slice(0,60),items=[];
   pick.forEach((b,k)=>{items.push(b);if(k%19===9)items.push("candle");if(k%23===15)items.push("stack")});
   const one=(it,k)=>{const d=`animation-delay:${250+(k%items.length)*20}ms`;
@@ -976,7 +1001,7 @@ const SORTS={
   recent:{key:b=>String(b.ry),sort:a=>a.sort((x,y)=>(y.ry*12+y.rm)-(x.ry*12+x.rm))},
   hasard:{key:null,sort:a=>{const R=rnd(state.seed);return a.map(b=>[R(),b]).sort((x,y)=>x[0]-y[0]).map(x=>x[1])}}
 };
-function groups(){const s=SORTS[state.sort],arr=s.sort([...BOOKS]);if(!s.key)return[{key:null,items:arr}];
+function groups(){const s=SORTS[state.sort],arr=s.sort(BOOKS.filter(b=>!b.gone));if(!s.key)return[{key:null,items:arr}];
   const out=[];arr.forEach(b=>{const k=s.key(b);if(!out.length||out.at(-1).key!==k)out.push({key:k,items:[]});out.at(-1).items.push(b)});return out}
 const lw=(t,size)=>t.length*size*.5+size*.4;   // largeur approx. d'un titre condensé
 
@@ -1006,7 +1031,7 @@ const LAY={
 // ---------- Rendu ----------
 let bbox=null,clones=null,cur=null;
 function labelHTML(l,k){const w=lw(l.t,l.s);return`<svg viewBox="0 0 ${w} ${l.s}" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="${blob(w/2,l.s*.5,w/2,l.s*.55,k*17+state.sort.length,.07,8)}"/></svg><span class="big">${l.t}</span>`}
-function render(first){const G=groups(),R=LAY[state.layout](G),order=G.flatMap(g=>g.items);if(!R.tile)tile=null;
+function render(first,keep){const G=groups(),R=LAY[state.layout](G),order=G.flatMap(g=>g.items);if(!R.tile)tile=null;
   let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
   order.forEach((b,k)=>{const p=R.pos[b.i],rad=Math.max(b.w,b.h)/2;x0=Math.min(x0,p.x-rad);x1=Math.max(x1,p.x+rad);y0=Math.min(y0,p.y-rad);y1=Math.max(y1,p.y+rad);
     b.tf=`translate(${f1(p.x-b.w/2)}px,${f1(p.y-b.h/2)}px) rotate(${f1(p.r)}deg)`;b.el.style.transitionDelay=first?"0ms":Math.min(k*3,420)+"ms";b.el.style.transform=b.tf});
@@ -1018,7 +1043,7 @@ function render(first){const G=groups(),R=LAY[state.layout](G),order=G.flatMap(g
   if(tile){clones=document.createElement("div");clones.className="clones";const html=order.map(b=>b.el.outerHTML.replace(/transition-delay:[^;"]*;?/,"transition:none;")).join("")+labs.map(e=>e.outerHTML).join("");
     offs.slice(1).forEach(([a,c])=>{const d=document.createElement("div");d.style.cssText=`position:absolute;left:0;top:0;transform:translate(${a*tile.w}px,${c*tile.h}px)`;d.innerHTML=html;clones.appendChild(d)});
     world.insertBefore(clones,world.firstChild.nextSibling)}else clones=null;
-  fit(R)}
+  if(!keep)fit(R)}
 
 // ---------- Caméra : trackpad, pincement, glisser, inertie, cosmos sans fin ----------
 const cam={x:0,y:0,s:.5},tgt={x:0,y:0,s:.5};let K=.3,vx=0,vy=0,inert=false;
@@ -1048,7 +1073,9 @@ const toWorld=(x,y)=>[(x-cam.x)/cam.s,(y-cam.y)/cam.s];
 stage.addEventListener("pointerdown",e=>{closeMenu();stage.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});inert=false;K=1;Object.assign(tgt,cam);
   if(drawMode||e.shiftKey){ink={pts:[[e.clientX,e.clientY]]};stage.classList.add("drawing");return}
   if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch={d:Math.hypot(a.x-b.x,a.y-b.y)};drag=null;return}
-  drag={moved:0,target:e.target.closest(".book")}});
+  drag={moved:0,target:e.target.closest(".book")};const d=drag;
+  if(d.target&&(e.metaKey||e.ctrlKey)){d.done=1;pickOn(true);pickToggle(d.target)}
+  else if(d.target&&e.pointerType!=="mouse"&&!PICK.on)setTimeout(()=>{if(drag===d&&d.moved<6&&ptrs.size===1){d.done=1;d.target.classList.remove("sel");pickOn(true);pickToggle(d.target);navigator.vibrate?.(12)}},520)});
 stage.addEventListener("pointermove",e=>{if(!ptrs.has(e.pointerId))return;const prev=ptrs.get(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(ink){ink.pts.push([e.clientX,e.clientY]);inkp.setAttribute("d",curve(ink.pts.filter((_,k)=>k%2===0),false));return}
   if(pinch&&ptrs.size===2){const [a,b]=[...ptrs.values()],d=Math.hypot(a.x-b.x,a.y-b.y);zoomAt((a.x+b.x)/2,(a.y+b.y)/2,d/pinch.d);pinch.d=d;Object.assign(cam,tgt);wrap();apply();return}
@@ -1058,12 +1085,13 @@ function up(e){ptrs.delete(e.pointerId);stage.classList.remove("grabbing","drawi
     if(len>120){state.trace=pts.map(p=>toWorld(p[0],p[1]));drawMode=false;stage.classList.remove("drawmode");setLayout("trace")}return}
   if(pinch){if(ptrs.size<2)pinch=null;return}
   if(drag&&drag.moved<6&&!drag.target&&e.pointerType==="mouse"&&!drawMode)blot(e.clientX,e.clientY);
+  if(drag&&(drag.done||(PICK.on&&drag.moved<6&&drag.target))){if(!drag.done)pickToggle(drag.target);drag=null;K=.3;return}
   if(drag){const tg=drag.target;if(drag.moved<6&&tg&&(e.pointerType==="mouse"||tg.classList.contains("sel"))){tg.classList.remove("sel");openBook(BOOKS[+tg.dataset.i],tg)}
     else if(drag.moved<6){document.querySelectorAll(".book.sel").forEach(x=>x!==tg&&x.classList.remove("sel"));if(tg){tg.classList.add("sel");SND.rustle()}}
     if(drag.moved<6&&tg){}else if(Math.abs(vx)+Math.abs(vy)>1){inert=true;K=.3}else K=.3;drag=null}}
 stage.addEventListener("pointerup",up);stage.addEventListener("pointercancel",up);
 let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(()=>render(true),200)});
-stage.addEventListener("keydown",e=>{const b=e.target.closest(".book");if(b&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openBook(BOOKS[+b.dataset.i],b)}});
+stage.addEventListener("keydown",e=>{const b=e.target.closest(".book");if(b&&(e.key==="Enter"||e.key===" ")){e.preventDefault();if(PICK.on){pickToggle(b);return}openBook(BOOKS[+b.dataset.i],b)}});
 
 // ---------- Menu ----------
 const fab=$("#fab"),menu=$("#menu");
@@ -1118,7 +1146,7 @@ function closeBook(){if(!cur||busy)return;busy=true;setTimeout(()=>SND.thump(),7
   setTimeout(()=>sheet.classList.remove("on"),450);
   setTimeout(()=>{el.classList.remove("gone");cur=null;busy=false;$("#sh").innerHTML="";},900)}
 sheet.addEventListener("click",e=>{if(e.target===sheet||e.target.id==="sh")closeBook()});
-addEventListener("keydown",e=>{if(e.key==="Escape"){if(cur)closeBook();else{closeMenu();document.querySelectorAll(".panel.on").forEach(p=>p.classList.remove("on"))}}});
+addEventListener("keydown",e=>{if(e.key==="Escape"){if(PICK.on&&!cur&&!document.querySelector(".panel.on")){pickOn(false);return}if(cur)closeBook();else{closeMenu();document.querySelectorAll(".panel.on").forEach(p=>p.classList.remove("on"))}}});
 
 // ---------- Vraies couvertures : cherchées sur Open Library, la tranche prend la couleur du bord de la couverture ----------
 let online=null;
@@ -1151,7 +1179,7 @@ $("#a-add").addEventListener("click",()=>{const t=(pick?.title||$("#a-t").value)
   const r=[t,a,+$("#a-py").value||pick?.first_publish_year||new Date().getFullYear(),+$("#a-p").value||pick?.number_of_pages_median||250,$("#a-g").value,fmt,null,{cm:+$("#a-cm").value||FMT[fmt].cm,cid:pick?.cover_i,img:photo?.url,c:photo?.paper,t:photo?.ink,spine:spPhoto?.url,rm:new Date().getMonth()+1,ry:+$("#a-y").value,added:1,ed:$("#a-ed").value.trim()||pick?.publisher||undefined,curl:pick?.cover_i?undefined:pick?.cover_url,yman:+$("#a-py").value?1:undefined,isbn:pick?.isbn,unread:UNR?1:undefined,gq:GSET?undefined:1}];
   if(pick?.desc){r[6]=pick.desc;r[7].auto=1}
   SAVED.push(r);try{localStorage.setItem("tranche-ajouts",JSON.stringify(SAVED))}catch(e){}
-  if(!GORDER.includes(r[4]))GORDER.push(r[4]);const b=makeBook(r,BOOKS.length);BOOKS.push(b);makeEl(b);$("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.filter(b=>!b.unread).length} livres lus${BOOKS.some(b=>b.unread)?` · ${BOOKS.filter(b=>b.unread).length} à lire`:""}`;seal();
+  if(!GORDER.includes(r[4]))GORDER.push(r[4]);const b=makeBook(r,BOOKS.length);BOOKS.push(b);makeEl(b);updCount();seal();
   photo=spPhoto=null;$("#a-prev").hidden=$("#a-sprev").hidden=true;addP.classList.remove("on");$("#a-form").reset();$("#a-res").innerHTML="";$("#a-msg").textContent="";pick=null;
   state.sort="recent";press("#sorts","s","recent");render();b.el.classList.add("pre");setTimeout(()=>dropIn(b),2000);if(!b.img)coverURL(b).then(u=>u&&applyCover(b,u));setTimeout(()=>enrichBook(BOOKS[b.i]).catch(()=>{}),3300);
   setTimeout(()=>{const p=b.el.getBoundingClientRect();tgt.x+=innerWidth/2-(p.left+p.width/2);tgt.y+=innerHeight/2-(p.top+p.height/2);K=.08;b.el.classList.add("fresh");toast(`« ${t} » est rangé sur l'étagère.`)},1100)});
@@ -1519,11 +1547,11 @@ $("#b-g").addEventListener("change",e=>{BULK.forEach(r=>{if(!r.gman)r.g=authorGe
 $("#b-add").addEventListener("click",()=>{const rows=BULK.filter(r=>r.on);if(!rows.length)return;const ry=+$("#b-y").value||new Date().getFullYear(),nb=[];
   rows.forEach(r=>{const ag=r.gman?null:authorGenre(r.a),rr=[r.t,r.a||"Auteur inconnu",r.y||ry,r.p||250,ag||r.g,"S",null,{cm:FMT.S.cm,rm:new Date().getMonth()+1,ry:r.ry||ry,added:1,unread:BUNR?1:undefined,gq:r.gman||ag?undefined:1}];SAVED.push(rr);if(!GORDER.includes(rr[4]))GORDER.push(rr[4]);const b=makeBook(rr,BOOKS.length);BOOKS.push(b);makeEl(b);nb.push(b)});
   try{localStorage.setItem("tranche-ajouts",JSON.stringify(SAVED))}catch(e){}
-  $("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.filter(b=>!b.unread).length} livres lus${BOOKS.some(b=>b.unread)?` · ${BOOKS.filter(b=>b.unread).length} à lire`:""}`;BULK=[];$("#b-list").value="";bulkDraw();addP.classList.remove("on");checkEmpty();
+  updCount();BULK=[];$("#b-list").value="";bulkDraw();addP.classList.remove("on");checkEmpty();
   render();nb.forEach(b=>b.el.classList.add("pre"));const st=Math.min(110,2600/nb.length);nb.forEach((b,k)=>setTimeout(()=>dropIn(b,k%3!==0),700+k*st));
   setTimeout(()=>toast(`${nb.length} livres rangés d'un coup. Les suivants, un par un, à chaque livre fini.`),900);
   nb.forEach(b=>coverURL(b).then(u=>u&&applyCover(b,u)).catch(()=>{}));verifyQueue(nb,3500)});
-function checkEmpty(){let e=$("#empty");if(BOOKS.length){e&&e.remove();return}if(e)return;e=document.createElement("div");e.id="empty";
+function checkEmpty(){let e=$("#empty");if(BOOKS.some(b=>!b.gone)){e&&e.remove();return}if(e)return;e=document.createElement("div");e.id="empty";
   e.innerHTML=`<div><h3>L'étagère est vide.</h3><p>Commence par ranger d'un coup tous les livres que tu as déjà lus : une liste à coller, ou ton export Goodreads ou Babelio.</p><button class="plate" type="button">Tout ranger d'un coup ☞</button></div>`;
   e.querySelector("button").onclick=()=>{openAdd();addMode("many")};document.body.appendChild(e)}
 checkEmpty();
@@ -1691,7 +1719,7 @@ async function lookup(t,a){const out={};
 const isSaved=b=>b&&b.r&&SAVED.includes(b.r);
 const saveSaved=()=>{try{localStorage.setItem("tranche-ajouts",JSON.stringify(SAVED))}catch(e){}};
 function moveLettrine(oldK,newK){if(oldK!==newK&&LTS[oldK]){LTS[newK]=LTS[oldK];delete LTS[oldK];try{localStorage.setItem("tranches-lettrines",JSON.stringify(LTS))}catch(e){}}}
-function rebuildBook(i){const old=BOOKS[i],b=makeBook(old.r,i);old.el?.remove();delete covers[i];const s=LTS[b.t+"|"+b.a];if(s)b.lt=s.img;BOOKS[i]=b;makeEl(b);if(!b.img)coverURL(b).then(u=>u&&applyCover(b,u));return b}
+function rebuildBook(i){const old=BOOKS[i];if(old.gone)return old;const b=makeBook(old.r,i);old.el?.remove();delete covers[i];const s=LTS[b.t+"|"+b.a];if(s)b.lt=s.img;BOOKS[i]=b;makeEl(b);if(!b.img)coverURL(b).then(u=>u&&applyCover(b,u));return b}
 // enrichit un livre ajouté : corrige l'auteur, complète année/pages/couverture/résumé ; ne touche jamais à ce que tu as choisi toi-même
 async function enrichBook(b,{redraw=true}={}){const r=b.r;if(!r)return false;const x=r[7]=r[7]||{};const L=await lookup(r[0],r[1]==="Auteur inconnu"?"":r[1]);if(online===false)return false;
   let vis=false;const oldK=r[0]+"|"+r[1];
@@ -1702,10 +1730,10 @@ async function enrichBook(b,{redraw=true}={}){const r=b.r;if(!r)return false;con
   if(!x.img&&!x.cid&&L.cid){x.cid=L.cid;vis=true}else if(!x.img&&!x.cid&&L.gimg){x.gimg=L.gimg}
   if(x.gq){const g=authorGenre(r[1],b)||genreFrom(L.cats,r[0]);if(g&&g!==r[4]){r[4]=g;if(!GORDER.includes(g))GORDER.push(g);vis=true}if(L.cats||g)delete x.gq}
   x.chk=1;moveLettrine(oldK,r[0]+"|"+r[1]);if(isSaved(b))saveSaved();
-  if(vis&&redraw){rebuildBook(b.i);render()}else{b.s=r[6];b.a=r[1];b.y=r[2]}return true}
+  if(vis&&redraw){rebuildBook(b.i);render(false,true)}else{b.s=r[6];b.a=r[1];b.y=r[2]}return true}
 // rattrape les livres déjà rangés qui n'ont jamais été vérifiés (ceux de la liste, par exemple)
 function verifyQueue(list,delay){const q=list.slice();if(!q.length)return;let ch=0;
-  const nx=async()=>{const b0=q.shift();if(!b0){if(ch){render();toast(`${ch} livre${ch>1?"s":""} vérifié${ch>1?"s":""} : auteurs, couvertures et résumés complétés.`)}return}
+  const nx=async()=>{const b0=q.shift();if(!b0){if(ch){render(false,true);toast(`${ch} livre${ch>1?"s":""} vérifié${ch>1?"s":""} : auteurs, couvertures et résumés complétés.`)}return}
     const b=BOOKS[b0.i];const before=JSON.stringify(b.r);let ok=false;try{ok=await enrichBook(b,{redraw:false})}catch(e){}if(!ok)return;if(JSON.stringify(b.r)!==before){rebuildBook(b.i);ch++}setTimeout(nx,450)};
   setTimeout(nx,delay)}
 verifyQueue(BOOKS.filter(b=>isSaved(b)&&!(b.r[7]||{}).chk),4000);
@@ -1729,12 +1757,14 @@ async function saveEdit(){const b=EDIT,r=b.r,x=r[7]=r[7]||{},oldK=r[0]+"|"+r[1],
   {const ed=$("#a-ed").value.trim(),py=+$("#a-py").value;x.ed=ed||pick?.publisher||x.ed;if(py){r[2]=py;x.yman=1}if(pick?.cover_url&&!pick.cover_i){x.curl=pick.cover_url;delete x.cid;delete x.img}if(pick?.desc&&(!r[6]||x.auto)){r[6]=pick.desc;x.auto=1}if(pick?.isbn)x.isbn=pick.isbn;if(x.unread&&!UNR){x.ry=+$("#a-y").value||new Date().getFullYear();x.rm=new Date().getMonth()+1}if(UNR)x.unread=1;else delete x.unread;if(GSET)delete x.gq}
   if(!GORDER.includes(r[4]))GORDER.push(r[4]);moveLettrine(oldK,r[0]+"|"+r[1]);
   const changedId=norm(oldT)!==norm(r[0])||norm(oldA)!==norm(r[1]);if(changedId){x.chk=0;if(x.auto)r[6]=null}
-  saveSaved();addP.classList.remove("on");const i=b.i;endEdit();const nb=rebuildBook(i);render();SND.seal();
+  saveSaved();addP.classList.remove("on");const i=b.i;endEdit();const nb=rebuildBook(i);render(false,true);SND.seal();
   setTimeout(()=>{const q=nb.el.getBoundingClientRect();tgt.x+=innerWidth/2-(q.left+q.width/2);tgt.y+=innerHeight/2-(q.top+q.height/2);K=.08;nb.el.classList.add("fresh");toast(`« ${r[0]} » est corrigé.`)},700);
   if(!r[6]||changedId){const ok=await enrichBook(nb);if(ok&&BOOKS[i].s)toast(`Résumé de « ${r[0]} » récupéré.`)}}
 $("#a-add").addEventListener("click",e=>{if(!EDIT)return;e.stopImmediatePropagation();saveEdit()},true);
 let delArm=null;$("#a-del").addEventListener("click",e=>{const btn=e.currentTarget;if(!EDIT)return;if(!delArm){btn.classList.add("armed");btn.textContent="Sûr ? Le retirer";delArm=setTimeout(()=>{delArm=null;btn.classList.remove("armed");btn.textContent="Retirer de l'étagère"},4000);return}
-  clearTimeout(delArm);delArm=null;const k=SAVED.indexOf(EDIT.r);if(k>=0)SAVED.splice(k,1);saveSaved();sessionStorage.setItem("tranches-msg",`« ${EDIT.r[0]} » a quitté l'étagère.`);location.reload()});
+  clearTimeout(delArm);delArm=null;btn.classList.remove("armed");btn.textContent="Retirer de l'étagère";const b=EDIT,t=b.r[0];removeBooks([b]);addP.classList.remove("on");endEdit();render(false,true);updCount();SND.thump(.8);toast(`« ${t} » a quitté l'étagère.`)});
+// retire des livres sans recharger la page : la vue reste où elle est
+function removeBooks(list){list.forEach(b=>{const k=SAVED.indexOf(b.r);if(k>=0)SAVED.splice(k,1);b.gone=1;b.el?.remove()});saveSaved();checkEmpty()}
 // le bouton Modifier apparaît dans la fiche des livres que tu as rangés
 new MutationObserver(()=>{const acts=$("#sh .acts");if(!acts||acts.querySelector("#editb")||!cur||!isSaved(cur))return;const bt=document.createElement("button");bt.className="btn ghost";bt.id="editb";bt.textContent="Modifier";const b=cur;bt.onclick=()=>openEdit(b);acts.insertBefore(bt,$("#close"))}).observe($("#sh"),{childList:true});
 // couverture Google Books en secours quand Open Library n'en a pas
@@ -1767,23 +1797,24 @@ const EDITEURS=["Gallimard","Folio","Folio Policier","Série Noire","Le Livre de
 function fillLists(){const au=[...new Set(BOOKS.map(b=>b.a).filter(a=>a&&a!=="Auteur inconnu"))].sort((a,b)=>a.localeCompare(b,"fr")),ed=[...new Set([...BOOKS.map(b=>b.ed).filter(Boolean),...EDITEURS])].sort((a,b)=>a.localeCompare(b,"fr"));
   $("#dl-auteurs").innerHTML=au.map(a=>`<option value="${esc(a)}">`).join("");$("#dl-ed").innerHTML=ed.map(a=>`<option value="${esc(a)}">`).join("")}
 $("#fab").addEventListener("click",fillLists);$("#a-a").addEventListener("focus",fillLists,{once:false});
-async function srcGoogle(t,a){const q=`intitle:${t}`+(a?` inauthor:${a.split(" ").pop()}`:"");const j=await (await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}&maxResults=12&printType=books&langRestrict=fr`)).json();
+async function srcGoogle(t,a){const q=t?`intitle:${t}`+(a?` inauthor:${a.split(" ").pop()}`:""):`inauthor:"${a}"`;const j=await (await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}&maxResults=${t?12:40}&printType=books&langRestrict=fr`)).json();
   return (j.items||[]).map(x=>x.volumeInfo).map(v=>({src:"Google Books",title:v.title+(v.subtitle&&v.subtitle.length<40?` : ${v.subtitle}`:""),author_name:v.authors||[],first_publish_year:+(v.publishedDate||"").slice(0,4)||null,number_of_pages_median:v.pageCount||null,
     publisher:v.publisher,cover_url:v.imageLinks?.thumbnail?.replace("http:","https:").replace("&edge=curl","").replace("zoom=1","zoom=2"),isbn:(v.industryIdentifiers||[]).find(i=>i.type==="ISBN_13")?.identifier,desc:stripHTML(v.description||""),cats:v.categories||[]}))}
-async function srcOL(t,a){const j=await (await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(t)}&author=${encodeURIComponent(a)}&limit=8&fields=title,author_name,first_publish_year,number_of_pages_median,cover_i,publisher,subject,isbn`)).json();
+async function srcOL(t,a){const j=await (await fetch(`https://openlibrary.org/search.json?${t?`title=${encodeURIComponent(t)}&`:""}author=${encodeURIComponent(a)}&limit=${t?8:80}&fields=title,author_name,first_publish_year,number_of_pages_median,cover_i,publisher,subject,isbn`)).json();
   return (j.docs||[]).map(d=>({src:"Open Library",...d,publisher:(d.publisher||[])[0],cats:(d.subject||[]).slice(0,40),isbn:(d.isbn||[]).find(i=>i.length===13)}))}
-async function srcBnF(t,a){if(!ACU||!SB)return[];const{data}=await SB.functions.invoke("resume",{body:{op:"bnf",t,a}});return (data?.records||[]).map(d=>({src:"BnF",...d,cats:d.subject||[],cover_url:d.isbn?`https://covers.openlibrary.org/b/isbn/${d.isbn}-M.jpg?default=false`:null}))}
-$("#a-form").addEventListener("submit",async e=>{e.preventDefault();e.stopImmediatePropagation();const t=$("#a-t").value.trim(),a=$("#a-a").value.trim();if(!t)return;const res=$("#a-res"),msg=$("#a-msg");pick=null;
+async function srcBnF(t,a){if(!ACU||!SB||!t)return[];const{data}=await SB.functions.invoke("resume",{body:{op:"bnf",t,a}});return (data?.records||[]).map(d=>({src:"BnF",...d,cats:d.subject||[],cover_url:d.isbn?`https://covers.openlibrary.org/b/isbn/${d.isbn}-M.jpg?default=false`:null}))}
+$("#a-form").addEventListener("submit",async e=>{e.preventDefault();e.stopImmediatePropagation();const t=$("#a-t").value.trim(),a=$("#a-a").value.trim();if(!t&&!a){$("#a-t").focus();return}const res=$("#a-res"),msg=$("#a-msg");pick=null;multiReset();
   msg.innerHTML=`<svg class="lettrine mini" viewBox="0 0 220 240" aria-hidden="true"><text x="110" y="185" text-anchor="middle">T</text></svg>Recherche sur Google Books, la BnF et Open Library…`;res.innerHTML="";
   const all=await Promise.allSettled([srcGoogle(t,a),srcBnF(t,a),srcOL(t,a)]);const ok=all.filter(r=>r.status==="fulfilled");
   if(!ok.length||ok.every(r=>!r.value)){msg.textContent="Les bases de livres ne sont pas joignables d'ici. Remplis l'auteur, l'éditeur et l'année plus bas : il sera rangé quand même.";return}
   const seen=new Set(),docs=[];ok.flatMap(r=>r.value||[]).filter(d=>d.title&&(!a||!(d.author_name||[]).length||(d.author_name||[]).some(x=>near(x,a)||near(x.split(" ").pop(),a.split(" ").pop()))))
-    .forEach(d=>{const k=norm(d.title)+"|"+(d.first_publish_year||"")+"|"+norm(d.publisher||"");if(!seen.has(k)){seen.add(k);docs.push(d)}});
-  docs.sort((x,y)=>(near(y.title,t)-near(x.title,t))||((y.cover_url||y.cover_i?1:0)-(x.cover_url||x.cover_i?1:0)));docs.splice(16);
+    .forEach(d=>{const k=t?norm(d.title)+"|"+(d.first_publish_year||"")+"|"+norm(d.publisher||""):norm(d.title.split(" : ")[0]);const j=docs.findIndex(x=>x._k===k);d._k=k;
+      if(j<0)docs.push(d);else if(!t&&(d.cover_url||d.cover_i)&&!(docs[j].cover_url||docs[j].cover_i))docs[j]={...d,desc:d.desc||docs[j].desc,first_publish_year:Math.min(d.first_publish_year||9999,docs[j].first_publish_year||9999)%9999||null}});
+  docs.sort((x,y)=>t?(near(y.title,t)-near(x.title,t))||((y.cover_url||y.cover_i?1:0)-(x.cover_url||x.cover_i?1:0)):(owned(x)-owned(y))||(x.first_publish_year||9999)-(y.first_publish_year||9999));docs.splice(t?16:60);
   if(!docs.length){msg.textContent="Aucune édition trouvée. Remplis l'auteur, l'éditeur et l'année plus bas, ajoute une photo de la couverture si tu veux : il sera rangé quand même.";$("#a-ed").focus({preventScroll:true});return}
-  msg.textContent=`${docs.length} édition${docs.length>1?"s":""} trouvée${docs.length>1?"s":""}. Choisis la tienne :`;
-  res.innerHTML=docs.map((d,k)=>{const cv=d.cover_i?`https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg`:d.cover_url;return`<button type="button" class="rc" data-k="${k}" aria-pressed="false"><span class="im" style="${cv?`background-image:url(${cv})`:""}"></span><b>${esc(d.title)}</b><span>${esc((d.author_name||[""])[0])}${d.publisher?` · ${esc(d.publisher)}`:""} · ${d.first_publish_year||"?"}${d.number_of_pages_median?` · ${d.number_of_pages_median} p.`:""}</span><i class="srcb">${d.src}</i></button>`}).join("");
-  res.onclick=ev=>{const c=ev.target.closest(".rc");if(!c)return;pick=docs[+c.dataset.k];res.querySelectorAll(".rc").forEach(x=>x.setAttribute("aria-pressed",x===c));
+  msg.innerHTML=EDIT?`${docs.length} édition${docs.length>1?"s":""} trouvée${docs.length>1?"s":""}. Choisis la tienne :`:t?`${docs.length} édition${docs.length>1?"s":""} trouvée${docs.length>1?"s":""}. Touche la tienne, ou plusieurs livres pour les ranger d'un coup.`:`${docs.length} livre${docs.length>1?"s":""} de ${esc(a)}. Touche ceux que tu as, puis range-les d'un coup. <button type="button" class="lnk" id="a-all">Tout cocher</button>`;
+  res.innerHTML=docs.map((d,k)=>{const cv=d.cover_i?`https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg`:d.cover_url;return`<button type="button" class="rc" data-k="${k}" aria-pressed="false"><span class="im" style="${cv?`background-image:url(${cv})`:""}"></span><b>${esc(d.title)}</b><span>${esc((d.author_name||[""])[0])}${d.publisher?` · ${esc(d.publisher)}`:""} · ${d.first_publish_year||"?"}${d.number_of_pages_median?` · ${d.number_of_pages_median} p.`:""}</span><i class="srcb">${d.src}</i>${!EDIT?`<i class="ck" aria-hidden="true"></i>`:""}${owned(d)?`<i class="own">déjà rangé</i>`:""}</button>`}).join("");MDOCS=docs;multiDraw();
+  res.onclick=ev=>{if(ev.target.id==="a-all")return;const c=ev.target.closest(".rc");if(!c)return;if(!EDIT){multiToggle(c);return}pick=docs[+c.dataset.k];res.querySelectorAll(".rc").forEach(x=>x.setAttribute("aria-pressed",x===c));
     if(pick.number_of_pages_median)$("#a-p").value=pick.number_of_pages_median;if(pick.publisher)$("#a-ed").value=pick.publisher;if(pick.first_publish_year)$("#a-py").value=pick.first_publish_year;if((pick.author_name||[])[0])$("#a-a").value=pick.author_name[0];autoGenre(pick);SND.rustle()}},true);
 // couverture choisie (Google Books ou BnF) prioritaire
 const _cov2=coverURL;coverURL=async b=>{const c=b.r?.[7]?.curl;if(c)return covers[b.i]=c;return _cov2(b)};
@@ -1806,7 +1837,7 @@ SORTS.lu={key:b=>b.unread?"À lire":"Lus",sort:a=>a.sort((x,y)=>(y.unread-x.unre
 // dans la fiche d'un livre pas encore lu : « Je l'ai lu »
 new MutationObserver(()=>{const acts=$("#sh .acts");if(!acts||acts.querySelector("#readb")||!cur||!cur.unread||!isSaved(cur))return;const b=cur,bt=document.createElement("button");bt.className="btn";bt.id="readb";bt.textContent="Je l'ai lu";
   bt.onclick=()=>{const r=b.r,x=r[7]=r[7]||{},d=new Date();delete x.unread;x.ry=d.getFullYear();x.rm=d.getMonth()+1;saveSaved();closeBook();
-    setTimeout(()=>{const nb=rebuildBook(b.i);render();SND.seal();const u=BOOKS.filter(b=>b.unread).length;$("#lcount").textContent=`${roman(BOOKS.length)} · ${BOOKS.length-u} livres lus${u?` · ${u} à lire`:""}`;toast(`« ${r[0]} » rejoint les livres lus.`);if(state.sort==="lu"||state.sort==="recent")setTimeout(()=>nb.el.classList.add("fresh"),900)},closeT())};acts.prepend(bt)}).observe($("#sh"),{childList:true});
+    setTimeout(()=>{const nb=rebuildBook(b.i);render(false,true);SND.seal();updCount();toast(`« ${r[0]} » rejoint les livres lus.`);if(state.sort==="lu"||state.sort==="recent")setTimeout(()=>nb.el.classList.add("fresh"),900)},closeT())};acts.prepend(bt)}).observe($("#sh"),{childList:true});
 
 // --- catégorie : d'abord tes autres livres du même auteur, sinon les bases ---
 function authorGenre(a,except){if(!a||a==="Auteur inconnu")return null;const n=norm(a),last=n.split(" ").pop(),c={};
@@ -1846,6 +1877,56 @@ coverURL=async b=>{if(b.i in covers)return covers[b.i];const x=b.r?.[7]||{},c=[]
   return covers[b.i]=null};
 // les livres rangés sans couverture retentent une fois au chargement
 setTimeout(()=>{const q=BOOKS.filter(b=>isSaved(b)&&!b.img&&!covers[b.i]);q.forEach(b=>delete covers[b.i]);(async()=>{for(const b of q){const u=await coverURL(b);if(u)applyCover(b,u)}})()},6000);
+// ================= v17 : plusieurs livres à la fois (bibliothèque et recherche) =================
+// --- dans la bibliothèque : mode sélection (menu, appui long, Ctrl/Cmd-clic) ---
+const PICK={on:false,set:new Set()};
+const pbar=$("#pickbar");
+function pickDraw(){const n=PICK.set.size;$("#pb-n").textContent=n?`${n} livre${n>1?"s":""} choisi${n>1?"s":""}`:"Touche des livres";
+  pbar.querySelectorAll("button[data-a]:not([data-a=fin])").forEach(b=>b.disabled=!n);$("#pb-g").disabled=!n;
+  const d=pbar.querySelector(".pb-del");if(!d.classList.contains("armed"))d.textContent="Retirer";
+  $("#pb-g").innerHTML=`<option value="">Catégorie…</option>`+[...new Set([...GORDER,"Mangas","Autres"])].map(g=>`<option>${esc(g)}</option>`).join("")}
+function pickOn(on){if(PICK.on===on)return;PICK.on=on;document.body.classList.toggle("picking",on);$("#t-pick").setAttribute("aria-pressed",on);pbar.classList.toggle("on",on);
+  if(!on){PICK.set.forEach(i=>BOOKS[i]?.el?.classList.remove("pk"));PICK.set.clear()}else{closeMenu();document.querySelectorAll(".book.sel").forEach(x=>x.classList.remove("sel"))}pickDraw()}
+function pickToggle(el){const b=BOOKS[+el.dataset.i];if(!b)return;if(!isSaved(b)){toast("Les livres d'exemple ne se modifient pas.");return}
+  if(PICK.set.has(b.i)){PICK.set.delete(b.i);el.classList.remove("pk")}else{PICK.set.add(b.i);el.classList.add("pk")}SND.rustle();pickDraw()}
+const picked=()=>[...PICK.set].map(i=>BOOKS[i]).filter(b=>b&&!b.gone&&isSaved(b));
+function pickApply(fn,msg){const list=picked();if(!list.length)return;list.forEach(b=>{const r=b.r;r[7]=r[7]||{};fn(r,r[7])});saveSaved();
+  list.forEach(b=>{const nb=rebuildBook(b.i);nb.el.classList.add("pk")});render(false,true);updCount();SND.seal();toast(msg(list.length))}
+$("#t-pick").addEventListener("click",()=>{pickOn(!PICK.on);if(PICK.on)toast("Touche les livres à changer. Sur iPad ou téléphone, un appui long en choisit un directement.")});
+$("#pb-g").addEventListener("change",e=>{const g=e.target.value;if(!g)return;if(!GORDER.includes(g))GORDER.push(g);
+  pickApply((r,x)=>{r[4]=g;delete x.gq},n=>`${n} livre${n>1?"s":""} rangé${n>1?"s":""} en ${g}.`);e.target.value=""});
+let pbDel=null;
+pbar.addEventListener("click",e=>{const bt=e.target.closest("button[data-a]");if(!bt||bt.disabled)return;const a=bt.dataset.a,d=new Date();
+  if(a==="fin")return pickOn(false);
+  if(a==="lu")return pickApply((r,x)=>{if(x.unread){delete x.unread;x.ry=d.getFullYear();x.rm=d.getMonth()+1}},n=>`${n} livre${n>1?"s":""} marqué${n>1?"s":""} comme lu${n>1?"s":""}.`);
+  if(a==="alire")return pickApply((r,x)=>{x.unread=1},n=>`${n} livre${n>1?"s":""} à lire.`);
+  if(a==="auteur"){const au=new Set(picked().map(b=>norm(b.a)));let k=0;BOOKS.forEach(b=>{if(!b.gone&&isSaved(b)&&au.has(norm(b.a))&&!PICK.set.has(b.i)){PICK.set.add(b.i);b.el.classList.add("pk");k++}});SND.rustle();pickDraw();toast(k?`${k} autre${k>1?"s":""} livre${k>1?"s":""} du même auteur ajouté${k>1?"s":""}.`:"Pas d'autre livre de cet auteur.");return}
+  if(a==="retirer"){const list=picked();if(!pbDel){bt.classList.add("armed");bt.textContent=`Sûr ? Retirer ${list.length}`;pbDel=setTimeout(()=>{pbDel=null;bt.classList.remove("armed");pickDraw()},4000);return}
+    clearTimeout(pbDel);pbDel=null;bt.classList.remove("armed");removeBooks(list);PICK.set.clear();render(false,true);updCount();pickDraw();SND.thump(1);toast(`${list.length} livre${list.length>1?"s":""} retiré${list.length>1?"s":""} de l'étagère.`)}});
+pickDraw();
+// --- dans la recherche : cocher plusieurs résultats et les ranger d'un coup ---
+let MDOCS=[];const MULTI=new Set();
+const owned=d=>{const t=norm((d.title||"").split(" : ")[0]),a=norm((d.author_name||[])[0]||"");return BOOKS.some(b=>!b.gone&&near(b.t.split(" : ")[0],t)&&(!a||near(b.a,a)||norm(b.last)===a.split(" ").pop()))?1:0};
+function multiReset(){MULTI.clear();multiDraw()}
+function multiDraw(){const n=MULTI.size;if(EDIT)return;$("#a-add").innerHTML=n>1?`Ranger ces ${n} livres <i>☞</i>`:"Ranger sur l'étagère <i>☞</i>";
+  document.querySelectorAll("#a-res .rc").forEach(c=>{c.setAttribute("aria-pressed",MULTI.has(+c.dataset.k));c.classList.toggle("has",!!c.querySelector(".own"))})}
+function multiToggle(c){const k=+c.dataset.k;MULTI.has(k)?MULTI.delete(k):MULTI.add(k);SND.rustle();
+  if(MULTI.size===1){pick=MDOCS[[...MULTI][0]];if(pick.number_of_pages_median)$("#a-p").value=pick.number_of_pages_median;if(pick.publisher)$("#a-ed").value=pick.publisher;if(pick.first_publish_year)$("#a-py").value=pick.first_publish_year;if((pick.author_name||[])[0])$("#a-a").value=pick.author_name[0];const m=$("#a-msg").innerHTML;autoGenre(pick);$("#a-msg").innerHTML=m}
+  else pick=null;multiDraw()}
+$("#a-msg").addEventListener("click",e=>{if(e.target.id!=="a-all")return;const all=MDOCS.map((d,k)=>k).filter(k=>!owned(MDOCS[k]));const on=all.some(k=>!MULTI.has(k));MULTI.clear();if(on)all.forEach(k=>MULTI.add(k));pick=MULTI.size===1?MDOCS[[...MULTI][0]]:null;e.target.textContent=on?"Tout décocher":"Tout cocher";SND.rustle();multiDraw()});
+$("#a-add").addEventListener("click",e=>{if(EDIT||MULTI.size<2)return;e.stopImmediatePropagation();
+  const docs=[...MULTI].sort((x,y)=>x-y).map(k=>MDOCS[k]),d0=new Date(),ry=+$("#a-y").value||d0.getFullYear(),manG=$("#a-g").dataset.man?$("#a-g").value:null,typedA=$("#a-a").value.trim(),nb=[];
+  docs.forEach(d=>{const a=(d.author_name||[])[0]||typedA||"Auteur inconnu",ag=manG||authorGenre(a)||genreFrom(d.cats,d.title),
+    r=[d.title,a,d.first_publish_year||d0.getFullYear(),d.number_of_pages_median||250,ag||$("#a-g").value,fmt,d.desc||null,{cm:+$("#a-cm").value||FMT[fmt].cm,cid:d.cover_i,curl:d.cover_i?undefined:d.cover_url,ed:d.publisher||undefined,isbn:d.isbn,rm:d0.getMonth()+1,ry,added:1,unread:UNR?1:undefined,gq:ag?undefined:1,auto:d.desc?1:undefined}];
+    SAVED.push(r);if(!GORDER.includes(r[4]))GORDER.push(r[4]);const b=makeBook(r,BOOKS.length);BOOKS.push(b);makeEl(b);nb.push(b)});
+  saveSaved();updCount();checkEmpty();
+  photo=spPhoto=null;$("#a-prev").hidden=$("#a-sprev").hidden=true;addP.classList.remove("on");$("#a-form").reset();$("#a-res").innerHTML="";$("#a-msg").textContent="";pick=null;multiReset();
+  clearEdFields();resetAddExtras();delete $("#a-g").dataset.man;$("#a-y").value=d0.getFullYear();$("#a-cm").value=FMT[fmt].cm;
+  state.sort="recent";press("#sorts","s","recent");render();nb.forEach(b=>b.el.classList.add("pre"));const st=Math.min(140,2400/nb.length);nb.forEach((b,k)=>setTimeout(()=>dropIn(b,k%3!==0),900+k*st));
+  setTimeout(()=>{const p=nb[0].el.getBoundingClientRect();tgt.x+=innerWidth/2-(p.left+p.width/2);tgt.y+=innerHeight/2-(p.top+p.height/2);K=.08;toast(`${nb.length} livres rangés sur l'étagère.`)},1100);
+  nb.forEach(b=>coverURL(b).then(u=>u&&applyCover(b,u)).catch(()=>{}));verifyQueue(nb,3500)},true);
+{const _oe=openEdit;openEdit=b=>{multiReset();pickOn(false);_oe(b)}}
+$("#fab").addEventListener("click",()=>pickOn(false));
 </script>
 
 </body></html>
