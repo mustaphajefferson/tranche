@@ -689,12 +689,13 @@ button{font:inherit;color:inherit}
 #a-del{align-self:center}
 .rc{position:relative}.srcb{position:absolute;top:6px;left:6px;font-style:normal;font-size:10px;font-weight:600;letter-spacing:.04em;background:var(--paper);color:var(--ink-soft);padding:2px 6px;border-radius:999px}
 /* v17 : sélection de plusieurs livres */
+#stage,#stage *,#pickbar,#pickbar *,#add .rc,#add .rc *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
 .book.pk .spine{transform:perspective(900px) translateY(-16px)}
 .book.pk .sf{box-shadow:0 12px 18px -8px var(--shadow),0 0 0 3px var(--rub)}
 .book.pk::after{content:"✓";position:absolute;left:50%;top:-30px;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;background:var(--rub);color:#fff;font:700 13px/22px Inter,system-ui,sans-serif;text-align:center;pointer-events:none}
 body.picking .fab{opacity:0;pointer-events:none}
 body.picking .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
-@media (max-width:640px){body.picking .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}}
+@media (max-width:640px){body.picking .toast{bottom:calc(200px + env(safe-area-inset-bottom,0px))}}
 #pickbar{position:fixed;z-index:30;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translate(-50%,140%);opacity:0;transition:transform .45s var(--ease),opacity .3s;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;max-width:calc(100vw - 32px);width:max-content;padding:8px;border-radius:18px;background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 14px 40px -14px var(--shadow);font:500 14px/1.2 Inter,system-ui,sans-serif;color:var(--ink);pointer-events:none}
 #pickbar.on{transform:translate(-50%,0);opacity:1;pointer-events:auto}
 #pickbar .pb-n{padding:0 10px;font-weight:600;white-space:nowrap}
@@ -709,6 +710,7 @@ body.picking .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 #add .rc[aria-pressed="true"] .ck::after{content:"✓";display:block;color:#fff;font:700 14px/24px Inter,system-ui,sans-serif;text-align:center}
 #add .rc .own{position:absolute;left:6px;top:calc(6px + 22px);font-style:normal;font-size:10px;font-weight:600;background:var(--ink);color:var(--paper);padding:2px 6px;border-radius:999px}
 #add .rc.has .im{opacity:.55}
+#a-multi{position:sticky;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:5;justify-self:center;font-size:22px;padding:16px 28px 18px}
 #a-msg .lnk{border:0;background:none;padding:0 0 0 6px;color:var(--rub);font:inherit;font-weight:600;text-decoration:underline;cursor:pointer}
 </style>
 </head><body>
@@ -794,6 +796,7 @@ body.picking .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
     <div class="ms-fld sm"><span>Statut</span><div class="opts seg" id="a-st"><button type="button" data-u="0" aria-pressed="true">Lu</button><button type="button" data-u="1" aria-pressed="false">Pas encore lu</button></div></div>
     <label class="ms-fld sm" for="a-y" id="a-yl"><span>Lu en</span><input id="a-y" type="number" min="1950" max="2100"></label>
   </div></div>
+  <button type="button" class="plate" id="a-multi" hidden></button>
   <div class="acts ms-end one"><button class="plate big-plate" id="a-add" type="button">Ranger sur l'étagère <i>☞</i></button><button class="btn ghost" id="a-del" type="button" hidden>Retirer de l'étagère</button></div>
   <p class="msg one">Ensuite, le résumé complet de l'intrigue est écrit par l'IA, et tu peux enluminer sa première lettre.</p>
   <div class="many">
@@ -1073,9 +1076,9 @@ const toWorld=(x,y)=>[(x-cam.x)/cam.s,(y-cam.y)/cam.s];
 stage.addEventListener("pointerdown",e=>{closeMenu();stage.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});inert=false;K=1;Object.assign(tgt,cam);
   if(drawMode||e.shiftKey){ink={pts:[[e.clientX,e.clientY]]};stage.classList.add("drawing");return}
   if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch={d:Math.hypot(a.x-b.x,a.y-b.y)};drag=null;return}
-  drag={moved:0,target:e.target.closest(".book")};const d=drag;
+  drag={moved:0,target:e.target.closest(".book"),x0:e.clientX,y0:e.clientY,id:e.pointerId};const d=drag;
   if(d.target&&(e.metaKey||e.ctrlKey)){d.done=1;pickOn(true);pickToggle(d.target)}
-  else if(d.target&&e.pointerType!=="mouse"&&!PICK.on)setTimeout(()=>{if(drag===d&&d.moved<6&&ptrs.size===1){d.done=1;d.target.classList.remove("sel");pickOn(true);pickToggle(d.target);navigator.vibrate?.(12)}},520)});
+  else if(d.target&&e.pointerType!=="mouse"&&!PICK.on)setTimeout(()=>{const p=ptrs.get(d.id);if(drag===d&&p&&Math.hypot(p.x-d.x0,p.y-d.y0)<12&&ptrs.size===1){d.done=1;d.target.classList.remove("sel");pickOn(true);pickToggle(d.target);navigator.vibrate?.(12)}},520)});
 stage.addEventListener("pointermove",e=>{if(!ptrs.has(e.pointerId))return;const prev=ptrs.get(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(ink){ink.pts.push([e.clientX,e.clientY]);inkp.setAttribute("d",curve(ink.pts.filter((_,k)=>k%2===0),false));return}
   if(pinch&&ptrs.size===2){const [a,b]=[...ptrs.values()],d=Math.hypot(a.x-b.x,a.y-b.y);zoomAt((a.x+b.x)/2,(a.y+b.y)/2,d/pinch.d);pinch.d=d;Object.assign(cam,tgt);wrap();apply();return}
@@ -1085,7 +1088,7 @@ function up(e){ptrs.delete(e.pointerId);stage.classList.remove("grabbing","drawi
     if(len>120){state.trace=pts.map(p=>toWorld(p[0],p[1]));drawMode=false;stage.classList.remove("drawmode");setLayout("trace")}return}
   if(pinch){if(ptrs.size<2)pinch=null;return}
   if(drag&&drag.moved<6&&!drag.target&&e.pointerType==="mouse"&&!drawMode)blot(e.clientX,e.clientY);
-  if(drag&&(drag.done||(PICK.on&&drag.moved<6&&drag.target))){if(!drag.done)pickToggle(drag.target);drag=null;K=.3;return}
+  if(drag&&(drag.done||(PICK.on&&drag.target&&Math.hypot(e.clientX-drag.x0,e.clientY-drag.y0)<12))){if(!drag.done)pickToggle(drag.target);drag=null;K=.3;return}
   if(drag){const tg=drag.target;if(drag.moved<6&&tg&&(e.pointerType==="mouse"||tg.classList.contains("sel"))){tg.classList.remove("sel");openBook(BOOKS[+tg.dataset.i],tg)}
     else if(drag.moved<6){document.querySelectorAll(".book.sel").forEach(x=>x!==tg&&x.classList.remove("sel"));if(tg){tg.classList.add("sel");SND.rustle()}}
     if(drag.moved<6&&tg){}else if(Math.abs(vx)+Math.abs(vy)>1){inert=true;K=.3}else K=.3;drag=null}}
@@ -1168,14 +1171,7 @@ $("#a-g").innerHTML=GORDER.map(g=>`<option>${g}</option>`).join("")+"<option>Man
 $("#fmts").innerHTML=Object.entries(FMT).map(([k,v])=>`<button type="button" class="fm" data-f="${k}" aria-pressed="${k===fmt}" style="--fh:${v.h/5}px"><i></i>${{P:"Poche",S:"Standard",G:"Grand format",B:"Beau livre",A:"Artbook"}[k]}<br>${String(v.cm).replace(".",",")} cm</button>`).join("");
 $("#fmts").addEventListener("click",e=>{const b=e.target.closest(".fm");if(!b)return;fmt=b.dataset.f;$("#a-cm").value=FMT[fmt].cm;document.querySelectorAll(".fm").forEach(x=>x.setAttribute("aria-pressed",x===b))});
 $("#a-cm").value=FMT[fmt].cm;$("#a-y").value=new Date().getFullYear();
-$("#a-form").addEventListener("submit",async e=>{e.preventDefault();const t=$("#a-t").value.trim(),a=$("#a-a").value.trim();if(!t)return;const res=$("#a-res"),msg=$("#a-msg");pick=null;
-  msg.innerHTML=`<svg class="lettrine mini" viewBox="0 0 220 240" aria-hidden="true"><text x="110" y="185" text-anchor="middle">T</text></svg>Recherche sur Open Library…`;res.innerHTML="";
-  try{const r=await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(t)}&author=${encodeURIComponent(a)}&limit=8&fields=title,author_name,first_publish_year,number_of_pages_median,cover_i`);
-    const docs=(await r.json()).docs||[];if(!docs.length){msg.textContent="Aucun résultat. Tu peux quand même l'ajouter avec les infos tapées.";return}
-    msg.textContent="Choisis la bonne édition :";res.innerHTML=docs.map((d,k)=>`<button type="button" class="rc" data-k="${k}" aria-pressed="false"><span class="im" style="${d.cover_i?`background-image:url(https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg)`:""}"></span><b>${d.title}</b><span>${(d.author_name||[""])[0]} · ${d.first_publish_year||"?"}${d.number_of_pages_median?` · ${d.number_of_pages_median} p.`:""}</span></button>`).join("");
-    res.onclick=ev=>{const c=ev.target.closest(".rc");if(!c)return;pick=docs[+c.dataset.k];res.querySelectorAll(".rc").forEach(x=>x.setAttribute("aria-pressed",x===c));if(pick.number_of_pages_median)$("#a-p").value=pick.number_of_pages_median}}
-  catch(err){msg.textContent="Open Library n'est pas joignable depuis cet aperçu (il bloque les sites externes). Sur la version en ligne, la recherche marche. Tu peux quand même ajouter le livre à la main."}});
-$("#a-add").addEventListener("click",()=>{const t=(pick?.title||$("#a-t").value).trim(),a=(pick?.author_name?.[0]||$("#a-a").value||"Auteur inconnu").trim();if(!t){$("#a-t").focus();return}
+$("#a-add").addEventListener("click",()=>{if(!EDIT&&MULTI.size>1)return;const t=(pick?.title||$("#a-t").value).trim(),a=(pick?.author_name?.[0]||$("#a-a").value||"Auteur inconnu").trim();if(!t){if($("#a-a").value.trim())$("#a-form").requestSubmit();else $("#a-t").focus();return}
   const r=[t,a,+$("#a-py").value||pick?.first_publish_year||new Date().getFullYear(),+$("#a-p").value||pick?.number_of_pages_median||250,$("#a-g").value,fmt,null,{cm:+$("#a-cm").value||FMT[fmt].cm,cid:pick?.cover_i,img:photo?.url,c:photo?.paper,t:photo?.ink,spine:spPhoto?.url,rm:new Date().getMonth()+1,ry:+$("#a-y").value,added:1,ed:$("#a-ed").value.trim()||pick?.publisher||undefined,curl:pick?.cover_i?undefined:pick?.cover_url,yman:+$("#a-py").value?1:undefined,isbn:pick?.isbn,unread:UNR?1:undefined,gq:GSET?undefined:1}];
   if(pick?.desc){r[6]=pick.desc;r[7].auto=1}
   SAVED.push(r);try{localStorage.setItem("tranche-ajouts",JSON.stringify(SAVED))}catch(e){}
@@ -1908,7 +1904,7 @@ pickDraw();
 let MDOCS=[];const MULTI=new Set();
 const owned=d=>{const t=norm((d.title||"").split(" : ")[0]),a=norm((d.author_name||[])[0]||"");return BOOKS.some(b=>!b.gone&&near(b.t.split(" : ")[0],t)&&(!a||near(b.a,a)||norm(b.last)===a.split(" ").pop()))?1:0};
 function multiReset(){MULTI.clear();multiDraw()}
-function multiDraw(){const n=MULTI.size;if(EDIT)return;$("#a-add").innerHTML=n>1?`Ranger ces ${n} livres <i>☞</i>`:"Ranger sur l'étagère <i>☞</i>";
+function multiDraw(){const n=MULTI.size,fb=$("#a-multi");fb.hidden=EDIT||n<2;fb.innerHTML=`Ranger ces ${n} livres <i>☞</i>`;if(EDIT)return;$("#a-add").innerHTML=n>1?`Ranger ces ${n} livres <i>☞</i>`:"Ranger sur l'étagère <i>☞</i>";
   document.querySelectorAll("#a-res .rc").forEach(c=>{c.setAttribute("aria-pressed",MULTI.has(+c.dataset.k));c.classList.toggle("has",!!c.querySelector(".own"))})}
 function multiToggle(c){const k=+c.dataset.k;MULTI.has(k)?MULTI.delete(k):MULTI.add(k);SND.rustle();
   if(MULTI.size===1){pick=MDOCS[[...MULTI][0]];if(pick.number_of_pages_median)$("#a-p").value=pick.number_of_pages_median;if(pick.publisher)$("#a-ed").value=pick.publisher;if(pick.first_publish_year)$("#a-py").value=pick.first_publish_year;if((pick.author_name||[])[0])$("#a-a").value=pick.author_name[0];const m=$("#a-msg").innerHTML;autoGenre(pick);$("#a-msg").innerHTML=m}
@@ -1926,6 +1922,9 @@ $("#a-add").addEventListener("click",e=>{if(EDIT||MULTI.size<2)return;e.stopImme
   setTimeout(()=>{const p=nb[0].el.getBoundingClientRect();tgt.x+=innerWidth/2-(p.left+p.width/2);tgt.y+=innerHeight/2-(p.top+p.height/2);K=.08;toast(`${nb.length} livres rangés sur l'étagère.`)},1100);
   nb.forEach(b=>coverURL(b).then(u=>u&&applyCover(b,u)).catch(()=>{}));verifyQueue(nb,3500)},true);
 {const _oe=openEdit;openEdit=b=>{multiReset();pickOn(false);_oe(b)}}
+$("#a-multi").addEventListener("click",()=>$("#a-add").click());
+$("#stage").addEventListener("contextmenu",e=>e.preventDefault());
+$("#add .pclose").addEventListener("click",multiReset);
 $("#fab").addEventListener("click",()=>pickOn(false));
 </script>
 
